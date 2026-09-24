@@ -210,6 +210,7 @@ const scanConsole=document.getElementById('scan-console');
 const scanFindings=document.getElementById('scan-findings');
 const scanSummary=document.getElementById('scan-summary');
 const premiumReport=document.getElementById('premium-report');
+let lastScanId='';
 const scanProcessing=document.getElementById('scan-processing');
 const scanProgressBar=document.getElementById('scan-progress-bar');
 const scanStage=document.getElementById('scan-stage');
@@ -240,7 +241,7 @@ scanBtn?.addEventListener('click',async()=>{
   const pending=setTimeout(()=>setScanProgress(58,'Analizando evidencia…'),650);
   const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,asset_type:assetType,authorized:true,mode:'safe'})});
   clearTimeout(pending);if(!r.ok) throw new Error('backend no disponible');
-  setScanProgress(82,'Normalizando y priorizando hallazgos…');const data=await r.json();
+  setScanProgress(82,'Normalizando y priorizando hallazgos…');const data=await r.json();lastScanId=data.scan_id||'';
   setScanProgress(100,'Quality Brief preparado.');
   const total=data.total_findings??(data.findings||[]).length;
   const risks=data.prioritized_risks??Math.min(total,Math.max(0,Math.ceil(total/3)));
@@ -250,7 +251,7 @@ scanBtn?.addEventListener('click',async()=>{
  }catch(e){setScanProgress(0,'No se pudo completar el análisis.');scanConsole.textContent='No pudimos completar SCAN. Revisá el objetivo o la disponibilidad del backend BREAKERS.';}finally{scanBtn.disabled=false}
 });
 document.getElementById('unlock-report')?.addEventListener('click',()=>{
-  window.location.href='/checkout.html';
+  window.location.href='/checkout.html'+(lastScanId?'?scan_id='+encodeURIComponent(lastScanId):'');
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script>
