@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+reports/
+trivy.json
+gitleaks.json
+.DS_Store

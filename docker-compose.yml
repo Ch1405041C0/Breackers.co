@@ -1,0 +1,30 @@
+services:
+  breakers-scan:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/workspace:ro
+    environment:
+      - BREAKERS_SCAN_ROOT=/workspace
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    command: ["zap.sh","-daemon","-host","0.0.0.0","-port","8090","-config","api.disablekey=true"]
+    ports:
+      - "8090:8090"
+  jmeter:
+    image: justb4/jmeter:latest
+    entrypoint: ["sh","-c","sleep infinity"]
+    volumes:
+      - ./tests/jmeter:/tests
+      - ./reports/jmeter:/reports
+volumes:
+  sonar_data:
+  sonar_extensions:
