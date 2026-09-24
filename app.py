@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
-import subprocess, json, shutil, os, urllib.request, urllib.parse
+import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
+SCAN_STORE = ROOT / "data" / "scans"
+SCAN_STORE.mkdir(parents=True, exist_ok=True)
 
 TOOLS = [
     ("Trivy", "trivy", "dependencias / configuración / secretos"),
@@ -90,6 +92,29 @@ def checkout(): return send_from_directory(ROOT,"checkout.html")
 @app.get("/api/tools")
 def tools(): return jsonify(tools=installed_tools())
 
+def scan_id():
+    return "BRK-" + datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d") + "-" + uuid.uuid4().hex[:8].upper()
+
+def save_scan(record):
+    path = SCAN_STORE / f"{record['scan_id']}.json"
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.replace(path)
+
+def load_scan(sid):
+    if not sid or not sid.startswith("BRK-") or any(c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-" for c in sid):
+        return None
+    path = SCAN_STORE / f"{sid}.json"
+    if not path.exists(): return None
+    try: return json.loads(path.read_text(encoding="utf-8"))
+    except Exception: return None
+
+@app.get("/api/scan/<sid>/preview")
+def scan_preview(sid):
+    record=load_scan(sid)
+    if not record: return jsonify(error="scan not found"),404
+    return jsonify(scan_id=sid,status=record["status"],engines=record["engines"],findings=record["preview"],total_findings=record["total_findings"],prioritized_risks=record["prioritized_risks"],score=record["score"],report_locked=not record.get("paid",False))
+
 @app.post("/api/scan")
 def scan():
     d=request.get_json(force=True) or {}
@@ -112,10 +137,13 @@ def scan():
     penalty=sum(weights.get(str(x["severity"]).upper(),1) for x in findings)
     severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
     ordered=sorted(findings,key=lambda x:severity_rank.get(str(x.get("severity","UNKNOWN")).upper(),0),reverse=True)
-    # Preview never sends the full report to the browser. Premium delivery will be unlocked server-side after verified payment.
+    # Persist the complete result server-side. Only the preview is returned before verified payment.
     preview=ordered[:3]
     risk_keys={(x.get("engine"),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
-    return jsonify(engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=max(0,100-min(100,penalty)),report_locked=bool(ordered),mode="authorized-safe")
+    sid=scan_id(); score=max(0,100-min(100,penalty))
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":str(d.get("asset_type","unknown")),"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"paid":False}
+    save_scan(record)
+    return jsonify(scan_id=sid,status="READY",engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,report_locked=bool(ordered),mode="authorized-safe")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=8080,debug=False)
