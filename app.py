@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
-import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime, tempfile
+import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime, tempfile, re, zipfile
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -101,6 +101,67 @@ def add_sonar(findings):
             findings.append(finding("SonarQube",sevmap.get(x.get("severity"),"UNKNOWN"),x.get("message","Issue"),x.get("component","")))
     except Exception: pass
 
+
+DOC_EXTENSIONS={".pdf",".docx",".txt",".md"}
+UPLOAD_EXTENSIONS=DOC_EXTENSIONS|{".zip",".apk",".aab"}
+
+def extract_document_text(path):
+    ext=path.suffix.lower()
+    try:
+        if ext in (".txt",".md"):
+            return path.read_text(encoding="utf-8",errors="ignore")
+        if ext==".pdf":
+            from pypdf import PdfReader
+            return "\n".join((p.extract_text() or "") for p in PdfReader(str(path)).pages)
+        if ext==".docx":
+            from docx import Document
+            doc=Document(str(path))
+            return "\n".join(p.text for p in doc.paragraphs)
+    except Exception:
+        return ""
+    return ""
+
+def document_finding(severity,title,evidence,category="Documentación"):
+    x=finding("BREAKERS Document Review",severity,title,evidence)
+    x["category"]=category
+    return x
+
+def analyze_document(path, findings):
+    text=extract_document_text(path)
+    compact=re.sub(r"\s+"," ",text).strip()
+    low=compact.lower()
+    if len(compact)<120:
+        findings.append(document_finding("HIGH","Documento con información insuficiente","No hay contenido suficiente para evaluar alcance, reglas y escenarios.","Completitud"))
+        return
+    checks=[
+      ("criterio de aceptación|criterios de aceptación|acceptance criteria","MEDIUM","No se identifican criterios de aceptación","Definir resultados observables que permitan determinar cuándo el comportamiento es correcto.","Testabilidad"),
+      ("error|excepción|excepcion|timeout|rechazo|fallo","HIGH","Manejo de errores y excepciones no explicitado","No se identificó una definición clara de errores, excepciones, rechazos o timeouts.","Flujos alternativos"),
+      ("rol|roles|permiso|permisos|autoriz","HIGH","Roles y permisos no explicitados","No se identificó una definición clara de actores, roles o permisos.","Seguridad"),
+      ("api|endpoint|servicio|integración|integracion","MEDIUM","Integraciones técnicas no explicitadas","No se identificaron contratos, endpoints o dependencias de integración.","Dependencias"),
+      ("límite|limite|máximo|maximo|mínimo|minimo|rango","MEDIUM","Límites y validaciones no explicitados","No se identificaron límites, rangos o restricciones de los datos de entrada.","Validaciones"),
+      ("auditor|log|traza|trazabilidad|monitore","LOW","Trazabilidad u observabilidad no explicitada","No se identificó cómo registrar, auditar u observar el comportamiento del flujo.","Observabilidad"),
+    ]
+    for pattern,sev,title,evidence,cat in checks:
+        if not re.search(pattern,low):
+            findings.append(document_finding(sev,title,evidence,cat))
+    vague=re.findall(r"\b(?:etc(?:étera)?|según corresponda|cuando aplique|de ser necesario|normalmente|adecuadamente)\b",low)
+    if vague:
+        findings.append(document_finding("MEDIUM","Lenguaje potencialmente ambiguo",f"Se detectaron {len(vague)} expresiones que pueden admitir más de una interpretación.","Ambigüedad"))
+    if "http://" in low:
+        findings.append(document_finding("MEDIUM","Referencia técnica sin HTTPS", "El documento contiene al menos una referencia HTTP; revisar si corresponde a un entorno controlado o si debe exigirse TLS.","Seguridad"))
+    return text
+
+def safe_extract_zip(src, dst):
+    with zipfile.ZipFile(src) as z:
+        root=Path(dst).resolve()
+        for info in z.infolist():
+            out=(root/info.filename).resolve()
+            if root not in out.parents and out != root:
+                raise ValueError("invalid archive path")
+            if info.file_size > 50*1024*1024:
+                raise ValueError("archive member too large")
+        z.extractall(root)
+
 @app.get("/")
 def index(): return send_from_directory(ROOT,"index.html")
 
@@ -132,6 +193,48 @@ def scan_preview(sid):
     record=load_scan(sid)
     if not record: return jsonify(error="scan not found"),404
     return jsonify(scan_id=sid,status=record["status"],engines=record["engines"],findings=record["preview"],total_findings=record["total_findings"],prioritized_risks=record["prioritized_risks"],score=record["score"],report_locked=not record.get("paid",False))
+
+
+@app.post("/api/scan/upload")
+def scan_upload():
+    if str(request.form.get("authorized","")).lower() not in ("1","true","yes"):
+        return jsonify(error="authorization required"),400
+    asset_type=str(request.form.get("asset_type","file"))
+    up=request.files.get("file")
+    if not up or not up.filename:
+        return jsonify(error="file required"),400
+    ext=Path(up.filename).suffix.lower()
+    if ext not in UPLOAD_EXTENSIONS:
+        return jsonify(error="unsupported file type"),400
+    findings=[]; engines=[]
+    with tempfile.TemporaryDirectory(prefix="breakers-upload-") as td:
+        source=Path(td)/("input"+ext)
+        up.save(source)
+        if source.stat().st_size > 100*1024*1024:
+            return jsonify(error="file too large"),413
+        target=source
+        if ext in DOC_EXTENSIONS or asset_type=="document":
+            engines.append("BREAKERS Document Review")
+            analyze_document(source,findings)
+        else:
+            if ext in (".zip",".apk",".aab"):
+                unpack=Path(td)/"unpacked";unpack.mkdir()
+                try: safe_extract_zip(source,unpack)
+                except Exception: return jsonify(error="invalid or unsafe archive"),400
+                target=unpack
+            if shutil.which("trivy"): engines.append("Trivy"); add_trivy(target,findings)
+            if shutil.which("gitleaks"): engines.append("Gitleaks"); add_gitleaks(target,findings)
+            if shutil.which("semgrep"): engines.append("Semgrep"); add_semgrep(target,findings)
+    weights={"CRITICAL":10,"HIGH":6,"ERROR":6,"MEDIUM":3,"WARNING":3,"LOW":1,"INFO":1,"UNKNOWN":1}
+    severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
+    ordered=sorted(findings,key=lambda x:severity_rank.get(str(x.get("severity","UNKNOWN")).upper(),0),reverse=True)
+    penalty=sum(weights.get(str(x["severity"]).upper(),1) for x in ordered)
+    preview=ordered[:3]
+    risk_keys={(x.get("category",x.get("engine")),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
+    sid=scan_id(); score=max(0,100-min(100,penalty))
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":asset_type,"target":up.filename,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"paid":False}
+    save_scan(record)
+    return jsonify(scan_id=sid,status="READY",engines=engines,findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,report_locked=bool(ordered),mode="authorized-upload")
 
 @app.post("/api/scan")
 def scan():
