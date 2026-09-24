@@ -1,1 +1,2 @@
-Flask>=3.0,<4\npytest>=8.0,<9\n
+Flask>=3.0,<4
+pytest>=8.0,<9
