@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
-import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime
+import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime, tempfile
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -31,6 +31,24 @@ def finding(engine, severity, title, evidence):
 def local_target(value):
     p = Path(value).expanduser().resolve()
     return p if p.exists() else None
+
+def github_public_repo(value):
+    """Return a normalized public GitHub clone URL or None."""
+    try:
+        u=urllib.parse.urlparse(value)
+        if u.scheme != "https" or u.netloc.lower() != "github.com":
+            return None
+        parts=[x for x in u.path.strip("/").split("/") if x]
+        if len(parts) != 2:
+            return None
+        owner, name=parts
+        if name.endswith(".git"): name=name[:-4]
+        allowed="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_."
+        if not owner or not name or any(c not in allowed for c in owner+name):
+            return None
+        return f"https://github.com/{owner}/{name}.git"
+    except Exception:
+        return None
 
 def installed_tools():
     return [{"name": name, "available": bool(shutil.which(exe)), "coverage": coverage}
@@ -121,7 +139,16 @@ def scan():
     target=str(d.get("target","")).strip()
     if not d.get("authorized") or not target:
         return jsonify(error="authorization and target required"),400
-    p=local_target(target); findings=[]; engines=[]
+    p=local_target(target); findings=[]; engines=[]; tempdir=None
+    repo_url=github_public_repo(target) if str(d.get("asset_type",""))=="repo" else None
+    if not p and repo_url:
+        tempdir=tempfile.TemporaryDirectory(prefix="breakers-scan-")
+        clone_path=Path(tempdir.name)/"repo"
+        code,_,err=run(["git","clone","--depth","1","--",repo_url,str(clone_path)],120)
+        if code != 0:
+            tempdir.cleanup()
+            return jsonify(error="No pudimos leer el repositorio público de GitHub.",detail=err[-300:]),400
+        p=clone_path
     if p:
         if shutil.which("trivy"): engines.append("Trivy"); add_trivy(p,findings)
         if shutil.which("gitleaks"): engines.append("Gitleaks"); add_gitleaks(p,findings)
@@ -143,6 +170,7 @@ def scan():
     sid=scan_id(); score=max(0,100-min(100,penalty))
     record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":str(d.get("asset_type","unknown")),"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"paid":False}
     save_scan(record)
+    if tempdir: tempdir.cleanup()
     return jsonify(scan_id=sid,status="READY",engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,report_locked=bool(ordered),mode="authorized-safe")
 
 if __name__=="__main__":
