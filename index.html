@@ -98,7 +98,6 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <button class="asset-type" type="button" data-asset="repo">⌘ Repositorio</button>
     <button class="asset-type" type="button" data-asset="api">↔ API</button>
     <button class="asset-type" type="button" data-asset="app">▣ App</button>
-    <button class="asset-type" type="button" data-asset="document">▤ Documento</button>
     <button class="asset-type" type="button" data-asset="file">＋ Archivo</button>
    </div>
    <input id="scan-asset-type" type="hidden" value="web">
@@ -175,18 +174,17 @@ const assetCopy={
  repo:['Repositorio','https://github.com/organizacion/proyecto','Pegá la URL del repositorio. Los repositorios privados requerirán conexión/autorización.'],
  api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
  app:['Aplicación','APK / AAB','Seleccioná un APK o AAB autorizado para analizar su contenido.'],
- document:['Documento funcional / técnico','PDF / DOCX / TXT / MD','BREAKERS revisa completitud, ambigüedades, validaciones, seguridad, dependencias y testabilidad antes de que exista código.'],
- file:['Proyecto / archivo','ZIP del proyecto','Seleccioná un ZIP del proyecto para analizarlo de forma aislada.']
+ file:['Archivo','PDF / DOCX / TXT / MD / ZIP','Subí la evidencia que tengas. BREAKERS identifica el formato y aplica la lectura de calidad disponible para ese estadio.']
 };
 document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
  document.querySelectorAll('.asset-type').forEach(x=>x.classList.toggle('active',x===b));
  document.getElementById('scan-asset-type').value=b.dataset.asset;
  const c=assetCopy[b.dataset.asset];document.getElementById('scan-target-label').textContent=c[0];
  const input=document.getElementById('scan-target');const picker=document.getElementById('scan-file-picker');
- const isUpload=['file','app','document'].includes(b.dataset.asset);
+ const isUpload=['file','app'].includes(b.dataset.asset);
  input.hidden=isUpload;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
  const fileInput=document.getElementById('scan-file');fileInput.value='';document.getElementById('scan-file-name').textContent='Ningún archivo seleccionado.';
- if(b.dataset.asset==='document') fileInput.accept='.pdf,.docx,.txt,.md'; else if(b.dataset.asset==='app') fileInput.accept='.apk,.aab'; else fileInput.accept='.zip';
+ if(b.dataset.asset==='app') fileInput.accept='.apk,.aab'; else fileInput.accept='.pdf,.docx,.txt,.md,.zip';
  document.getElementById('scan-input-help').textContent=c[2];scanBtn.textContent='Preparar diagnóstico ↗';
 }));
 document.getElementById('scan-file')?.addEventListener('change',e=>{
@@ -197,7 +195,7 @@ function setScanProgress(p,label){scanProcessing.hidden=false;scanProgressBar.st
 scanBtn?.addEventListener('click',async()=>{
  const assetType=document.getElementById('scan-asset-type').value;
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
- const isUpload=['file','app','document'].includes(assetType);const selectedFile=document.getElementById('scan-file').files?.[0];
+ const isUpload=['file','app'].includes(assetType);const selectedFile=document.getElementById('scan-file').files?.[0];
  if(isUpload&&!selectedFile){scanConsole.textContent='Falta seleccionar el archivo.';return}
  if(!isUpload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true;scanSummary.hidden=true;premiumReport.hidden=true;scanFindings.innerHTML='';
