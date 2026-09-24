@@ -98,13 +98,14 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <button class="asset-type" type="button" data-asset="repo">⌘ Repositorio</button>
     <button class="asset-type" type="button" data-asset="api">↔ API</button>
     <button class="asset-type" type="button" data-asset="app">▣ App</button>
+    <button class="asset-type" type="button" data-asset="document">▤ Documento</button>
     <button class="asset-type" type="button" data-asset="file">＋ Archivo</button>
    </div>
    <input id="scan-asset-type" type="hidden" value="web">
    <label id="scan-target-label" for="scan-target">URL del sitio</label>
    <input id="scan-target" placeholder="https://staging.ejemplo.com">
    <div id="scan-file-picker" class="file-picker" hidden>
-    <input id="scan-file" type="file" accept=".zip,.apk,.aab,.ipa">
+    <input id="scan-file" type="file" accept=".zip,.apk,.aab,.pdf,.docx,.txt,.md">
     <label class="btn" for="scan-file">Seleccionar archivo <span aria-hidden="true">↗</span></label>
     <span id="scan-file-name" class="file-picker-name">Ningún archivo seleccionado.</span>
    </div>
@@ -173,18 +174,20 @@ const assetCopy={
  web:['URL del sitio','https://staging.ejemplo.com','Ingresá una URL propia o un entorno para el que tengas autorización expresa.'],
  repo:['Repositorio','https://github.com/organizacion/proyecto','Pegá la URL del repositorio. Los repositorios privados requerirán conexión/autorización.'],
  api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
- app:['Aplicación','APK / AAB / IPA','La carga directa de aplicaciones se habilitará en el siguiente paso del flujo.'],
- file:['Proyecto / archivo','ZIP del proyecto','La carga directa y aislada de archivos se habilitará en el siguiente paso del flujo.']
+ app:['Aplicación','APK / AAB','Seleccioná un APK o AAB autorizado para analizar su contenido.'],
+ document:['Documento funcional / técnico','PDF / DOCX / TXT / MD','BREAKERS revisa completitud, ambigüedades, validaciones, seguridad, dependencias y testabilidad antes de que exista código.'],
+ file:['Proyecto / archivo','ZIP del proyecto','Seleccioná un ZIP del proyecto para analizarlo de forma aislada.']
 };
 document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
  document.querySelectorAll('.asset-type').forEach(x=>x.classList.toggle('active',x===b));
  document.getElementById('scan-asset-type').value=b.dataset.asset;
  const c=assetCopy[b.dataset.asset];document.getElementById('scan-target-label').textContent=c[0];
  const input=document.getElementById('scan-target');const picker=document.getElementById('scan-file-picker');
- const isUpload=b.dataset.asset==='file'||b.dataset.asset==='app';
+ const isUpload=['file','app','document'].includes(b.dataset.asset);
  input.hidden=isUpload;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
- document.getElementById('scan-file').value='';document.getElementById('scan-file-name').textContent='Ningún archivo seleccionado.';
- document.getElementById('scan-input-help').textContent=isUpload?(b.dataset.asset==='file'?'Seleccioná un ZIP del proyecto desde tu equipo.':'Seleccioná un APK, AAB o IPA desde tu equipo.'):c[2];
+ const fileInput=document.getElementById('scan-file');fileInput.value='';document.getElementById('scan-file-name').textContent='Ningún archivo seleccionado.';
+ if(b.dataset.asset==='document') fileInput.accept='.pdf,.docx,.txt,.md'; else if(b.dataset.asset==='app') fileInput.accept='.apk,.aab'; else fileInput.accept='.zip';
+ document.getElementById('scan-input-help').textContent=c[2];
 }));
 document.getElementById('scan-file')?.addEventListener('change',e=>{
  const file=e.target.files?.[0];
@@ -194,14 +197,15 @@ function setScanProgress(p,label){scanProcessing.hidden=false;scanProgressBar.st
 scanBtn?.addEventListener('click',async()=>{
  const assetType=document.getElementById('scan-asset-type').value;
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
- if(assetType==='file'||assetType==='app'){scanConsole.textContent='Carga de '+(assetType==='file'?'archivos':'apps')+' en preparación. Próximo paso: upload seguro dentro de BREAKERS.';return}
- if(!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
+ const isUpload=['file','app','document'].includes(assetType);const selectedFile=document.getElementById('scan-file').files?.[0];
+ if(isUpload&&!selectedFile){scanConsole.textContent='Falta seleccionar el archivo.';return}
+ if(!isUpload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true;scanSummary.hidden=true;premiumReport.hidden=true;scanFindings.innerHTML='';
- setScanProgress(12,'Validando objetivo y alcance…');scanConsole.textContent='DISCOVERY → '+target;
+ setScanProgress(12,'Validando objetivo y alcance…');scanConsole.textContent='DISCOVERY → '+(isUpload?selectedFile.name:target);
  try{
   setScanProgress(28,'Detectando motores aplicables…');
   const pending=setTimeout(()=>setScanProgress(58,'Analizando evidencia…'),650);
-  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,asset_type:assetType,authorized:true,mode:'safe'})});
+  let r;if(isUpload){const fd=new FormData();fd.append('file',selectedFile);fd.append('asset_type',assetType);fd.append('authorized','true');r=await fetch('/api/scan/upload',{method:'POST',body:fd});}else{r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,asset_type:assetType,authorized:true,mode:'safe'})});}
   clearTimeout(pending);if(!r.ok) throw new Error('backend no disponible');
   setScanProgress(82,'Normalizando y priorizando hallazgos…');const data=await r.json();lastScanId=data.scan_id||'';
   setScanProgress(100,'Quality Brief preparado.');
