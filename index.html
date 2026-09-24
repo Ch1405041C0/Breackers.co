@@ -99,6 +99,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <button class="asset-type" type="button" data-asset="api">↔ API</button>
     <button class="asset-type" type="button" data-asset="app">▣ App</button>
     <button class="asset-type" type="button" data-asset="document">▤ Documento</button>
+    <button class="asset-type" type="button" data-asset="design">▧ Pantallas / Diseño</button>
     <button class="asset-type" type="button" data-asset="file">＋ Archivo</button>
    </div>
    <input id="scan-asset-type" type="hidden" value="web">
@@ -176,6 +177,7 @@ const assetCopy={
  api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
  app:['Aplicación','APK / AAB','Seleccioná un APK o AAB autorizado para analizar su contenido.'],
  document:['Documento funcional / técnico','PDF / DOCX / TXT / MD','BREAKERS revisa completitud, ambigüedades, validaciones, seguridad, dependencias y testabilidad antes de que exista código.'],
+ design:['Pantallas / Diseño','Figma / PNG / JPG / PDF','Si el producto todavía está en diseño, hacemos el SCAN asistido sobre las pantallas, prototipo y documentación disponible.'],
  file:['Proyecto / archivo','ZIP del proyecto','Seleccioná un ZIP del proyecto para analizarlo de forma aislada.']
 };
 document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
@@ -183,11 +185,11 @@ document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',(
  document.getElementById('scan-asset-type').value=b.dataset.asset;
  const c=assetCopy[b.dataset.asset];document.getElementById('scan-target-label').textContent=c[0];
  const input=document.getElementById('scan-target');const picker=document.getElementById('scan-file-picker');
- const isUpload=['file','app','document'].includes(b.dataset.asset);
- input.hidden=isUpload;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
+ const isUpload=['file','app','document'].includes(b.dataset.asset);const isDesign=b.dataset.asset==='design';
+ input.hidden=isUpload||isDesign;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
  const fileInput=document.getElementById('scan-file');fileInput.value='';document.getElementById('scan-file-name').textContent='Ningún archivo seleccionado.';
  if(b.dataset.asset==='document') fileInput.accept='.pdf,.docx,.txt,.md'; else if(b.dataset.asset==='app') fileInput.accept='.apk,.aab'; else fileInput.accept='.zip';
- document.getElementById('scan-input-help').textContent=c[2];
+ document.getElementById('scan-input-help').textContent=c[2];scanBtn.textContent=isDesign?'Enviar material por WhatsApp ↗':'Preparar diagnóstico ↗';
 }));
 document.getElementById('scan-file')?.addEventListener('change',e=>{
  const file=e.target.files?.[0];
@@ -198,6 +200,7 @@ scanBtn?.addEventListener('click',async()=>{
  const assetType=document.getElementById('scan-asset-type').value;
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
  const isUpload=['file','app','document'].includes(assetType);const selectedFile=document.getElementById('scan-file').files?.[0];
+ if(assetType==='design'){window.open('https://wa.me/541164627789?text='+encodeURIComponent('Hola BREAKERS, quiero hacer un SCAN de calidad sobre pantallas/diseño de un producto.'),'_blank','noopener');return}
  if(isUpload&&!selectedFile){scanConsole.textContent='Falta seleccionar el archivo.';return}
  if(!isUpload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true;scanSummary.hidden=true;premiumReport.hidden=true;scanFindings.innerHTML='';
@@ -211,9 +214,10 @@ scanBtn?.addEventListener('click',async()=>{
   setScanProgress(100,'Quality Brief preparado.');
   const total=data.total_findings??(data.findings||[]).length;
   const risks=data.prioritized_risks??Math.min(total,Math.max(0,Math.ceil(total/3)));
-  scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+total+'\nRiesgos priorizados: '+risks+'\nScore: '+(data.score??'N/D');
-  document.getElementById('scan-total').textContent=total;document.getElementById('scan-risk').textContent=risks;scanSummary.hidden=false;premiumReport.hidden=total===0;
-  scanFindings.innerHTML=(data.findings||[]).slice(0,3).map(x=>{const v=presentFinding(x);return '<div class="scan-finding"><span class="sev">'+esc(v.severity)+'</span><strong>'+esc(v.title)+'</strong><br><span class="muted">'+esc(v.detail)+'</span></div>'}).join('');
+  const state=data.status==='LIMITED'?'SCAN PREPARADO / COBERTURA LIMITADA':'SCAN COMPLETO';const coverage=(data.coverage||[]).join(' · ');const limits=(data.limitations||[]).join(' ');
+  scanConsole.textContent=state+'\nMotores: '+((data.engines||[]).join(' · ')||'BREAKERS')+'\nCobertura: '+(coverage||'según evidencia disponible')+'\nHallazgos: '+total+'\nRiesgos priorizados: '+risks+'\nScore: '+(data.score??'N/D')+(limits?'\nLímites: '+limits:'');
+  document.getElementById('scan-total').textContent=total;document.getElementById('scan-risk').textContent=risks;scanSummary.hidden=false;premiumReport.hidden=total===0||data.status==='LIMITED';
+  if(total===0&&data.status!=='LIMITED'){scanFindings.innerHTML='<div class="scan-finding"><strong>No detectamos riesgos con la cobertura ejecutada.</strong><br><span class="muted">Esto no equivale a afirmar que el producto no tenga riesgos. Revisá la cobertura y los límites del análisis.</span></div>';}else{scanFindings.innerHTML=(data.findings||[]).slice(0,3).map(x=>{const v=presentFinding(x);return '<div class="scan-finding"><span class="sev">'+esc(v.severity)+'</span><strong>'+esc(v.title)+'</strong><br><span class="muted">'+esc(v.detail)+'</span></div>'}).join('');}
  }catch(e){setScanProgress(0,'No se pudo completar el análisis.');scanConsole.textContent='No pudimos completar SCAN. Revisá el objetivo o la disponibilidad del backend BREAKERS.';}finally{scanBtn.disabled=false}
 });
 document.getElementById('unlock-report')?.addEventListener('click',()=>{
