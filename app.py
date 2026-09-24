@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
-import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime, tempfile, re, zipfile
+import subprocess, json, shutil, os, urllib.request, urllib.parse, uuid, datetime, tempfile, re, zipfile, hashlib
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -151,6 +151,30 @@ def analyze_document(path, findings):
         findings.append(document_finding("MEDIUM","Referencia técnica sin HTTPS", "El documento contiene al menos una referencia HTTP; revisar si corresponde a un entorno controlado o si debe exigirse TLS.","Seguridad"))
     return text
 
+def fingerprint_finding(x):
+    raw="|".join(str(x.get(k,"")).strip().lower() for k in ("engine","category","severity","title","evidence"))
+    return hashlib.sha256(raw.encode("utf-8",errors="ignore")).hexdigest()[:16]
+
+def normalize_findings(items):
+    severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
+    seen=set(); normalized=[]
+    for raw in items:
+        x=dict(raw)
+        x["severity"]=str(x.get("severity","UNKNOWN")).upper()
+        x["fingerprint"]=fingerprint_finding(x)
+        if x["fingerprint"] in seen:
+            continue
+        seen.add(x["fingerprint"])
+        normalized.append(x)
+    return sorted(normalized,key=lambda x:severity_rank.get(x["severity"],0),reverse=True)
+
+def summarize_result(findings):
+    weights={"CRITICAL":10,"HIGH":6,"ERROR":6,"MEDIUM":3,"WARNING":3,"LOW":1,"INFO":1,"UNKNOWN":1}
+    ordered=normalize_findings(findings)
+    penalty=sum(weights.get(x["severity"],1) for x in ordered)
+    risk_keys={(x.get("category",x.get("engine","BREAKERS")),x["severity"]) for x in ordered}
+    return ordered, ordered[:3], len(risk_keys), max(0,100-min(100,penalty))
+
 def safe_extract_zip(src, dst):
     with zipfile.ZipFile(src) as z:
         root=Path(dst).resolve()
@@ -225,18 +249,13 @@ def scan_upload():
             if shutil.which("trivy"): engines.append("Trivy"); add_trivy(target,findings)
             if shutil.which("gitleaks"): engines.append("Gitleaks"); add_gitleaks(target,findings)
             if shutil.which("semgrep"): engines.append("Semgrep"); add_semgrep(target,findings)
-    weights={"CRITICAL":10,"HIGH":6,"ERROR":6,"MEDIUM":3,"WARNING":3,"LOW":1,"INFO":1,"UNKNOWN":1}
-    severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
-    ordered=sorted(findings,key=lambda x:severity_rank.get(str(x.get("severity","UNKNOWN")).upper(),0),reverse=True)
-    penalty=sum(weights.get(str(x["severity"]).upper(),1) for x in ordered)
-    preview=ordered[:3]
-    risk_keys={(x.get("category",x.get("engine")),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
-    sid=scan_id(); score=max(0,100-min(100,penalty))
+    ordered,preview,prioritized_risks,score=summarize_result(findings)
+    sid=scan_id()
     coverage=(["completitud","ambigüedad","validaciones","seguridad documental","dependencias","testabilidad"] if asset_type=="document" or ext in DOC_EXTENSIONS else ["código","dependencias","configuración","secretos"])
     limitations=(["No verifica comportamiento real, APIs, performance ni seguridad dinámica en esta etapa."] if asset_type=="document" or ext in DOC_EXTENSIONS else ["El análisis cubre únicamente los motores disponibles en este entorno."])
-    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":asset_type,"target":up.filename,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":asset_type,"target":up.filename,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":prioritized_risks,"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
     save_scan(record)
-    return jsonify(scan_id=sid,status="READY",engines=engines,findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-upload")
+    return jsonify(scan_id=sid,status="READY",engines=engines,findings=preview,total_findings=len(ordered),prioritized_risks=prioritized_risks,score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-upload")
 
 @app.post("/api/scan")
 def scan():
@@ -265,23 +284,18 @@ def scan():
         # URL targets are inventoried only here. Active DAST/load execution stays explicitly configured.
         for name,exe,_ in TOOLS:
             if name in ("OWASP ZAP","JMeter","Newman","Playwright") and shutil.which(exe): engines.append(name)
-    weights={"CRITICAL":10,"HIGH":6,"ERROR":6,"MEDIUM":3,"WARNING":3,"LOW":1,"INFO":1,"UNKNOWN":1}
-    penalty=sum(weights.get(str(x["severity"]).upper(),1) for x in findings)
-    severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
-    ordered=sorted(findings,key=lambda x:severity_rank.get(str(x.get("severity","UNKNOWN")).upper(),0),reverse=True)
     # Persist the complete result server-side. Only the preview is returned before verified payment.
-    preview=ordered[:3]
-    risk_keys={(x.get("engine"),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
-    sid=scan_id(); score=max(0,100-min(100,penalty))
+    ordered,preview,prioritized_risks,score=summarize_result(findings)
+    sid=scan_id()
     asset_type=str(d.get("asset_type","unknown"))
     remote_only=not bool(p)
     status="LIMITED" if remote_only else "READY"
     coverage=(["capacidad de análisis detectada"] if remote_only else ["código","dependencias","configuración","secretos"])
     limitations=(["Objetivo remoto preparado, pero no se ejecutan DAST, carga ni navegación activa automáticamente. Requiere una ejecución configurada y autorizada."] if remote_only else ["La cobertura depende de los motores disponibles en el entorno BREAKERS."])
-    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":status,"asset_type":asset_type,"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":status,"asset_type":asset_type,"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":prioritized_risks,"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
     save_scan(record)
     if tempdir: tempdir.cleanup()
-    return jsonify(scan_id=sid,status=status,engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-safe")
+    return jsonify(scan_id=sid,status=status,engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=prioritized_risks,score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-safe")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=8080,debug=False)
