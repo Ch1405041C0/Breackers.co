@@ -212,6 +212,10 @@ def load_scan(sid):
     try: return json.loads(path.read_text(encoding="utf-8"))
     except Exception: return None
 
+@app.get("/api/health")
+def health():
+    return jsonify(status="ok",service="BREAKERS SCAN",tools=installed_tools())
+
 @app.get("/api/scan/<sid>/preview")
 def scan_preview(sid):
     record=load_scan(sid)
