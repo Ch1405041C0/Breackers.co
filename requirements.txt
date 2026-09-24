@@ -1,1 +1,3 @@
 Flask>=3.0,<4
+semgrep>=1.90
+playwright>=1.48
