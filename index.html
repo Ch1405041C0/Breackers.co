@@ -174,7 +174,7 @@ const assetCopy={
  repo:['Repositorio','https://github.com/organizacion/proyecto','Pegá la URL del repositorio. Los repositorios privados requerirán conexión/autorización.'],
  api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
  app:['Aplicación','APK / AAB','Seleccioná un APK o AAB autorizado para analizar su contenido.'],
- file:['Archivo','PDF / DOCX / TXT / MD / ZIP','Subí la evidencia que tengas. BREAKERS identifica el formato y aplica la lectura de calidad disponible para ese estadio.']
+ file:['Archivo','PDF / DOCX / TXT / MD / ZIP','Soporta documentación funcional y técnica, pantallas o diseños exportados a PDF, proyectos comprimidos y otras evidencias compatibles. Subí lo que tengas: BREAKERS identifica el formato y aplica la lectura de calidad disponible para ese estadio del producto.']
 };
 document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
  document.querySelectorAll('.asset-type').forEach(x=>x.classList.toggle('active',x===b));
