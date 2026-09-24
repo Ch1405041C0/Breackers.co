@@ -192,7 +192,7 @@ def load_scan(sid):
 def scan_preview(sid):
     record=load_scan(sid)
     if not record: return jsonify(error="scan not found"),404
-    return jsonify(scan_id=sid,status=record["status"],engines=record["engines"],findings=record["preview"],total_findings=record["total_findings"],prioritized_risks=record["prioritized_risks"],score=record["score"],report_locked=not record.get("paid",False))
+    return jsonify(scan_id=sid,status=record["status"],engines=record["engines"],findings=record["preview"],total_findings=record["total_findings"],prioritized_risks=record["prioritized_risks"],score=record["score"],coverage=record.get("coverage",[]),limitations=record.get("limitations",[]),report_locked=not record.get("paid",False))
 
 
 @app.post("/api/scan/upload")
@@ -232,9 +232,11 @@ def scan_upload():
     preview=ordered[:3]
     risk_keys={(x.get("category",x.get("engine")),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
     sid=scan_id(); score=max(0,100-min(100,penalty))
-    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":asset_type,"target":up.filename,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"paid":False}
+    coverage=(["completitud","ambigüedad","validaciones","seguridad documental","dependencias","testabilidad"] if asset_type=="document" or ext in DOC_EXTENSIONS else ["código","dependencias","configuración","secretos"])
+    limitations=(["No verifica comportamiento real, APIs, performance ni seguridad dinámica en esta etapa."] if asset_type=="document" or ext in DOC_EXTENSIONS else ["El análisis cubre únicamente los motores disponibles en este entorno."])
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":asset_type,"target":up.filename,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
     save_scan(record)
-    return jsonify(scan_id=sid,status="READY",engines=engines,findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,report_locked=bool(ordered),mode="authorized-upload")
+    return jsonify(scan_id=sid,status="READY",engines=engines,findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-upload")
 
 @app.post("/api/scan")
 def scan():
@@ -271,10 +273,15 @@ def scan():
     preview=ordered[:3]
     risk_keys={(x.get("engine"),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
     sid=scan_id(); score=max(0,100-min(100,penalty))
-    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":"READY","asset_type":str(d.get("asset_type","unknown")),"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"paid":False}
+    asset_type=str(d.get("asset_type","unknown"))
+    remote_only=not bool(p)
+    status="LIMITED" if remote_only else "READY"
+    coverage=(["capacidad de análisis detectada"] if remote_only else ["código","dependencias","configuración","secretos"])
+    limitations=(["Objetivo remoto preparado, pero no se ejecutan DAST, carga ni navegación activa automáticamente. Requiere una ejecución configurada y autorizada."] if remote_only else ["La cobertura depende de los motores disponibles en el entorno BREAKERS."])
+    record={"scan_id":sid,"created_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"status":status,"asset_type":asset_type,"target":target,"engines":engines,"findings":ordered,"preview":preview,"total_findings":len(ordered),"prioritized_risks":len(risk_keys),"score":score,"coverage":coverage,"limitations":limitations,"paid":False}
     save_scan(record)
     if tempdir: tempdir.cleanup()
-    return jsonify(scan_id=sid,status="READY",engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,report_locked=bool(ordered),mode="authorized-safe")
+    return jsonify(scan_id=sid,status=status,engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=score,coverage=coverage,limitations=limitations,report_locked=bool(ordered),mode="authorized-safe")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=8080,debug=False)
