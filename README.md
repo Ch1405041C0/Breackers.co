@@ -17,3 +17,23 @@ El catálogo y estado de integración está en `docs/ENGINE_CATALOG.md`. Regla d
 
 ## Seguridad
 El MVP sólo ejecuta scanners pasivos contra rutas locales autorizadas. DAST, carga y otros motores activos requieren alcance y configuración explícitos.
+
+
+## Docker (entorno oficial)
+
+BREAKERS se ejecuta oficialmente con Docker sobre el puerto 8080.
+
+```bash
+git pull origin main
+docker compose down
+docker compose up --build -d
+docker compose ps
+```
+
+Abrir: `http://localhost:8080`
+
+Para ver logs:
+
+```bash
+docker compose logs -f breakers-scan
+```
