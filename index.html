@@ -23,7 +23,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 /* BREAKERS SCAN ENGINE */
-.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.scan-metric{border:1px solid var(--line);border-radius:9px;padding:14px;background:#101812}.scan-metric b{display:block;font-size:26px;color:var(--lime);line-height:1.1}.scan-metric span{font-size:10px;color:var(--muted)}.premium-box{margin-top:16px;border:1px solid #657254;border-radius:12px;padding:18px;background:#182017}.premium-box h4{margin:0 0 7px;font-size:16px}.premium-box p{font-size:12px;color:var(--muted);margin-bottom:14px}.premium-lock{font:10px ui-monospace,monospace;color:var(--yellow);letter-spacing:.7px}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
+.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.scan-metric{border:1px solid var(--line);border-radius:9px;padding:14px;background:#101812}.scan-metric b{display:block;font-size:26px;color:var(--lime);line-height:1.1}.scan-metric span{font-size:10px;color:var(--muted)}.premium-box{margin-top:16px;border:1px solid #657254;border-radius:12px;padding:18px;background:#182017}.premium-box h4{margin:0 0 7px;font-size:16px}.premium-box p{font-size:12px;color:var(--muted);margin-bottom:14px}.premium-lock{font:10px ui-monospace,monospace;color:var(--yellow);letter-spacing:.7px}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.asset-types{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}.asset-type{border:1px solid var(--line);background:#121a15;color:var(--ink);padding:12px 8px;border-radius:8px;font-size:11px}.asset-type.active{border-color:var(--lime);color:var(--lime);background:#1a2418}.scan-progress{height:9px;background:#0a100c;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:14px 0 8px}.scan-progress>i{display:block;height:100%;width:0;background:var(--lime);transition:width .35s ease}.scan-stage{font:11px ui-monospace,monospace;color:var(--muted)}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}.asset-types{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body id="inicio">
@@ -92,12 +92,27 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
  <div class="scan-engine">
   <div class="scan-grid"><div>
    <h3>Preparar SCAN</h3><p class="muted">Indicá el objetivo autorizado. Esta interfaz prepara el trabajo y puede consumir resultados del backend/orquestador.</p>
-   <label for="scan-target">URL / proyecto / repositorio</label><input id="scan-target" placeholder="https://staging.ejemplo.com o proyecto-local">
+   <label>¿Qué querés analizar?</label>
+   <div class="asset-types" role="group" aria-label="Tipo de activo">
+    <button class="asset-type active" type="button" data-asset="web">🌐 Sitio web</button>
+    <button class="asset-type" type="button" data-asset="repo">⌘ Repositorio</button>
+    <button class="asset-type" type="button" data-asset="api">↔ API</button>
+    <button class="asset-type" type="button" data-asset="app">▣ App</button>
+    <button class="asset-type" type="button" data-asset="file">＋ Archivo</button>
+   </div>
+   <input id="scan-asset-type" type="hidden" value="web">
+   <label id="scan-target-label" for="scan-target">URL del sitio</label>
+   <input id="scan-target" placeholder="https://staging.ejemplo.com">
+   <p id="scan-input-help" class="scan-warning">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p>
    <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
    <div class="scan-tools"><div class="scan-tool"><b>SonarQube</b>SAST / calidad</div><div class="scan-tool"><b>OWASP ZAP</b>DAST web/API</div><div class="scan-tool"><b>JMeter</b>Performance</div><div class="scan-tool"><b>Trivy</b>CVE / config / secrets</div><div class="scan-tool"><b>Gitleaks</b>Secretos</div><div class="scan-tool"><b>Breakers</b>Correlación</div></div>
    <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button><p class="scan-warning">Por seguridad, el HTML no lanza ataques ni carga contra terceros. Los motores activos se ejecutan en el backend únicamente sobre objetivos autorizados.</p>
   </div><div><span class="small-label">QUALITY BRIEF / LIVE</span><div id="scan-console" class="scan-console">SCAN listo.
 Esperando objetivo autorizado…</div>
+<div id="scan-processing" hidden>
+ <div class="scan-progress" aria-label="Progreso del análisis"><i id="scan-progress-bar"></i></div>
+ <div id="scan-stage" class="scan-stage">Preparando análisis…</div>
+</div>
 <div id="scan-summary" class="scan-summary" hidden>
  <div class="scan-metric"><b id="scan-total">0</b><span>HALLAZGOS DETECTADOS</span></div>
  <div class="scan-metric"><b id="scan-risk">0</b><span>RIESGOS PRIORIZADOS</span></div>
@@ -195,16 +210,44 @@ const scanConsole=document.getElementById('scan-console');
 const scanFindings=document.getElementById('scan-findings');
 const scanSummary=document.getElementById('scan-summary');
 const premiumReport=document.getElementById('premium-report');
+const scanProcessing=document.getElementById('scan-processing');
+const scanProgressBar=document.getElementById('scan-progress-bar');
+const scanStage=document.getElementById('scan-stage');
+const assetCopy={
+ web:['URL del sitio','https://staging.ejemplo.com','Ingresá una URL propia o un entorno para el que tengas autorización expresa.'],
+ repo:['Repositorio','https://github.com/organizacion/proyecto','Pegá la URL del repositorio. Los repositorios privados requerirán conexión/autorización.'],
+ api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
+ app:['Aplicación','APK / AAB / IPA','La carga directa de aplicaciones se habilitará en el siguiente paso del flujo.'],
+ file:['Proyecto / archivo','ZIP del proyecto','La carga directa y aislada de archivos se habilitará en el siguiente paso del flujo.']
+};
+document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.asset-type').forEach(x=>x.classList.toggle('active',x===b));
+ document.getElementById('scan-asset-type').value=b.dataset.asset;
+ const c=assetCopy[b.dataset.asset];document.getElementById('scan-target-label').textContent=c[0];
+ const input=document.getElementById('scan-target');input.placeholder=c[1];input.value='';
+ document.getElementById('scan-input-help').textContent=c[2];
+}));
+function setScanProgress(p,label){scanProcessing.hidden=false;scanProgressBar.style.width=p+'%';scanStage.textContent=label}
 scanBtn?.addEventListener('click',async()=>{
+ const assetType=document.getElementById('scan-asset-type').value;
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
+ if(assetType==='file'||assetType==='app'){scanConsole.textContent='Carga de '+(assetType==='file'?'archivos':'apps')+' en preparación. Próximo paso: upload seguro dentro de BREAKERS.';return}
  if(!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
- scanBtn.disabled=true; scanConsole.textContent='DISCOVERY → '+target+'\nPreparando motores: SonarQube · ZAP · JMeter · Trivy · Gitleaks · Semgrep · Newman · Playwright…'; scanFindings.innerHTML='';
+ scanBtn.disabled=true;scanSummary.hidden=true;premiumReport.hidden=true;scanFindings.innerHTML='';
+ setScanProgress(12,'Validando objetivo y alcance…');scanConsole.textContent='DISCOVERY → '+target;
  try{
-  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,authorized:true,mode:'safe'})});
-  if(!r.ok) throw new Error('backend no disponible'); const data=await r.json();
-  scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+(data.findings||[]).length+'\nScore: '+(data.score??'N/D');
-  scanFindings.innerHTML=(data.findings||[]).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
- }catch(e){scanConsole.textContent='Motor web preparado.\n\nPara ejecutar herramientas reales conectá este frontend al backend BREAKERS SCAN (/api/scan).\nEl navegador por sí solo no puede ejecutar SonarQube, ZAP, JMeter, Trivy o Gitleaks.';}finally{scanBtn.disabled=false}
+  setScanProgress(28,'Detectando motores aplicables…');
+  const pending=setTimeout(()=>setScanProgress(58,'Analizando evidencia…'),650);
+  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,asset_type:assetType,authorized:true,mode:'safe'})});
+  clearTimeout(pending);if(!r.ok) throw new Error('backend no disponible');
+  setScanProgress(82,'Normalizando y priorizando hallazgos…');const data=await r.json();
+  setScanProgress(100,'Quality Brief preparado.');
+  const total=data.total_findings??(data.findings||[]).length;
+  const risks=data.prioritized_risks??Math.min(total,Math.max(0,Math.ceil(total/3)));
+  scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+total+'\nRiesgos priorizados: '+risks+'\nScore: '+(data.score??'N/D');
+  document.getElementById('scan-total').textContent=total;document.getElementById('scan-risk').textContent=risks;scanSummary.hidden=false;premiumReport.hidden=total===0;
+  scanFindings.innerHTML=(data.findings||[]).slice(0,3).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
+ }catch(e){setScanProgress(0,'No se pudo completar el análisis.');scanConsole.textContent='No pudimos completar SCAN. Revisá el objetivo o la disponibilidad del backend BREAKERS.';}finally{scanBtn.disabled=false}
 });
 document.getElementById('unlock-report')?.addEventListener('click',()=>{
   window.location.href='/checkout.html';
