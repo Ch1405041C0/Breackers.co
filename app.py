@@ -84,6 +84,9 @@ def add_sonar(findings):
 @app.get("/")
 def index(): return send_from_directory(ROOT,"index.html")
 
+@app.get("/checkout.html")
+def checkout(): return send_from_directory(ROOT,"checkout.html")
+
 @app.get("/api/tools")
 def tools(): return jsonify(tools=installed_tools())
 
@@ -107,7 +110,12 @@ def scan():
             if name in ("OWASP ZAP","JMeter","Newman","Playwright") and shutil.which(exe): engines.append(name)
     weights={"CRITICAL":10,"HIGH":6,"ERROR":6,"MEDIUM":3,"WARNING":3,"LOW":1,"INFO":1,"UNKNOWN":1}
     penalty=sum(weights.get(str(x["severity"]).upper(),1) for x in findings)
-    return jsonify(engines=engines,tools=installed_tools(),findings=findings[:300],score=max(0,100-min(100,penalty)),mode="authorized-safe")
+    severity_rank={"CRITICAL":4,"HIGH":3,"ERROR":3,"MEDIUM":2,"WARNING":2,"LOW":1,"INFO":0,"UNKNOWN":0}
+    ordered=sorted(findings,key=lambda x:severity_rank.get(str(x.get("severity","UNKNOWN")).upper(),0),reverse=True)
+    # Preview never sends the full report to the browser. Premium delivery will be unlocked server-side after verified payment.
+    preview=ordered[:3]
+    risk_keys={(x.get("engine"),str(x.get("severity","UNKNOWN")).upper()) for x in ordered}
+    return jsonify(engines=engines,tools=installed_tools(),findings=preview,total_findings=len(ordered),prioritized_risks=len(risk_keys),score=max(0,100-min(100,penalty)),report_locked=bool(ordered),mode="authorized-safe")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=8080,debug=False)
