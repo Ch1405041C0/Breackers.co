@@ -1,9 +1,10 @@
 from pathlib import Path
 import shutil
 
-from .analyzers import analyzers_for
+from .analyzers import analyzers_for, analyze_requirements_file
 from .inputs import detect_input
 from .report import build_report
+from .risk.engine import assess_risks
 from .scanners import GitleaksScanner, TrivyScanner
 
 PASSIVE_SCANNERS = (TrivyScanner, GitleaksScanner)
@@ -16,8 +17,10 @@ def run_scan(target: str) -> dict:
 
     source = detect_input(target)
     analyzers = analyzers_for(source["type"])
-    engines = []
-    findings = []
+    engines, findings, candidate_risks, limitations = [], [], [], []
+
+    if source["type"] == "functional_document":
+        candidate_risks, limitations = analyze_requirements_file(target)
 
     # Repository tools are one capability of SCAN, not SCAN itself.
     if source["type"] == "repository":
@@ -29,9 +32,11 @@ def run_scan(target: str) -> dict:
         for name, executable in OPTIONAL_ENGINES:
             if shutil.which(executable): engines.append(name)
 
+    risks = assess_risks(candidate_risks)
     report = build_report(target, engines, findings)
     report["source"] = source
     report["analyzers"] = analyzers
-    report["risks"] = []
+    report["risks"] = [risk.to_dict() for risk in risks]
+    report["risk_summary"] = {"identified": len(risks), "limitations": limitations}
     report["risk_contract"] = "v0.1"
     return report
