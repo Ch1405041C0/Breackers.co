@@ -23,7 +23,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 /* BREAKERS SCAN ENGINE */
-.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
+.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.scan-metric{border:1px solid var(--line);border-radius:9px;padding:14px;background:#101812}.scan-metric b{display:block;font-size:26px;color:var(--lime);line-height:1.1}.scan-metric span{font-size:10px;color:var(--muted)}.premium-box{margin-top:16px;border:1px solid #657254;border-radius:12px;padding:18px;background:#182017}.premium-box h4{margin:0 0 7px;font-size:16px}.premium-box p{font-size:12px;color:var(--muted);margin-bottom:14px}.premium-lock{font:10px ui-monospace,monospace;color:var(--yellow);letter-spacing:.7px}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body id="inicio">
@@ -97,7 +97,18 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
    <div class="scan-tools"><div class="scan-tool"><b>SonarQube</b>SAST / calidad</div><div class="scan-tool"><b>OWASP ZAP</b>DAST web/API</div><div class="scan-tool"><b>JMeter</b>Performance</div><div class="scan-tool"><b>Trivy</b>CVE / config / secrets</div><div class="scan-tool"><b>Gitleaks</b>Secretos</div><div class="scan-tool"><b>Breakers</b>Correlación</div></div>
    <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button><p class="scan-warning">Por seguridad, el HTML no lanza ataques ni carga contra terceros. Los motores activos se ejecutan en el backend únicamente sobre objetivos autorizados.</p>
   </div><div><span class="small-label">QUALITY BRIEF / LIVE</span><div id="scan-console" class="scan-console">SCAN listo.
-Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findings"></div></div></div>
+Esperando objetivo autorizado…</div>
+<div id="scan-summary" class="scan-summary" hidden>
+ <div class="scan-metric"><b id="scan-total">0</b><span>HALLAZGOS DETECTADOS</span></div>
+ <div class="scan-metric"><b id="scan-risk">0</b><span>RIESGOS PRIORIZADOS</span></div>
+</div>
+<div id="scan-findings" class="scan-findings"></div>
+<div id="premium-report" class="premium-box" hidden>
+ <span class="premium-lock">QUALITY REPORT / BLOQUEADO</span>
+ <h4>El informe técnico completo está listo.</h4>
+ <p>Desbloqueá todos los hallazgos, evidencia, ubicación, severidad, riesgos correlacionados y recomendaciones. Incluye descarga del reporte completo.</p>
+ <button class="btn" id="unlock-report" type="button">Desbloquear informe completo <span>↗</span></button>
+</div></div></div>
  </div>
 </div></section>
 <section class="content method" id="enfoque" aria-labelledby="method-title"><div class="wrap">
@@ -134,6 +145,10 @@ Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findin
     <div class="tooling-card"><strong>Lighthouse</strong><span>Performance · calidad web</span></div>
     <div class="tooling-card"><strong>axe-core</strong><span>Accesibilidad</span></div>
   </div>
+</div></section>
+
+<section class="content" id="premium-explainer"><div class="wrap">
+ <div class="section-head"><div><span class="small-label">BREAKERS / QUALITY REPORT</span><h2>Primero ves el riesgo.<br>Después decidís cuánto profundizar.</h2></div><p>SCAN Preview muestra el volumen, la prioridad y una muestra de hallazgos. El Quality Report completo agrega evidencia, ubicación, correlación y recomendaciones accionables.</p></div>
 </div></section>
 </main>
 <footer><div class="wrap footer-grid"><a class="brand" href="#inicio">BREAKERS<span>CO</span></a><p>Calidad de software con criterio y evidencia.</p><nav class="footer-links" aria-label="Productos"><a href="#productos">SCAN</a><a href="#productos">STRIKE</a><a href="#productos">CONTROL</a></nav><p>© 2026 BREAKERS CO</p></div></footer>
@@ -178,6 +193,8 @@ document.getElementById('download-brief').addEventListener('click',()=>{
 const scanBtn=document.getElementById('run-scan');
 const scanConsole=document.getElementById('scan-console');
 const scanFindings=document.getElementById('scan-findings');
+const scanSummary=document.getElementById('scan-summary');
+const premiumReport=document.getElementById('premium-report');
 scanBtn?.addEventListener('click',async()=>{
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
  if(!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
@@ -188,6 +205,9 @@ scanBtn?.addEventListener('click',async()=>{
   scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+(data.findings||[]).length+'\nScore: '+(data.score??'N/D');
   scanFindings.innerHTML=(data.findings||[]).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
  }catch(e){scanConsole.textContent='Motor web preparado.\n\nPara ejecutar herramientas reales conectá este frontend al backend BREAKERS SCAN (/api/scan).\nEl navegador por sí solo no puede ejecutar SonarQube, ZAP, JMeter, Trivy o Gitleaks.';}finally{scanBtn.disabled=false}
+});
+document.getElementById('unlock-report')?.addEventListener('click',()=>{
+  window.location.href='/checkout.html';
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script>
