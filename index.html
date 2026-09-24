@@ -99,7 +99,6 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <button class="asset-type" type="button" data-asset="api">↔ API</button>
     <button class="asset-type" type="button" data-asset="app">▣ App</button>
     <button class="asset-type" type="button" data-asset="document">▤ Documento</button>
-    <button class="asset-type" type="button" data-asset="design">▧ Pantallas / Diseño</button>
     <button class="asset-type" type="button" data-asset="file">＋ Archivo</button>
    </div>
    <input id="scan-asset-type" type="hidden" value="web">
@@ -177,7 +176,6 @@ const assetCopy={
  api:['API / especificación','https://api.ejemplo.com o URL de OpenAPI','Podés indicar la API autorizada; luego sumaremos carga de OpenAPI/Swagger y colecciones Postman.'],
  app:['Aplicación','APK / AAB','Seleccioná un APK o AAB autorizado para analizar su contenido.'],
  document:['Documento funcional / técnico','PDF / DOCX / TXT / MD','BREAKERS revisa completitud, ambigüedades, validaciones, seguridad, dependencias y testabilidad antes de que exista código.'],
- design:['Pantallas / Diseño','Figma / PNG / JPG / PDF','Si el producto todavía está en diseño, hacemos el SCAN asistido sobre las pantallas, prototipo y documentación disponible.'],
  file:['Proyecto / archivo','ZIP del proyecto','Seleccioná un ZIP del proyecto para analizarlo de forma aislada.']
 };
 document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',()=>{
@@ -185,11 +183,11 @@ document.querySelectorAll('.asset-type').forEach(b=>b.addEventListener('click',(
  document.getElementById('scan-asset-type').value=b.dataset.asset;
  const c=assetCopy[b.dataset.asset];document.getElementById('scan-target-label').textContent=c[0];
  const input=document.getElementById('scan-target');const picker=document.getElementById('scan-file-picker');
- const isUpload=['file','app','document'].includes(b.dataset.asset);const isDesign=b.dataset.asset==='design';
- input.hidden=isUpload||isDesign;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
+ const isUpload=['file','app','document'].includes(b.dataset.asset);
+ input.hidden=isUpload;picker.hidden=!isUpload;input.placeholder=c[1];input.value='';
  const fileInput=document.getElementById('scan-file');fileInput.value='';document.getElementById('scan-file-name').textContent='Ningún archivo seleccionado.';
  if(b.dataset.asset==='document') fileInput.accept='.pdf,.docx,.txt,.md'; else if(b.dataset.asset==='app') fileInput.accept='.apk,.aab'; else fileInput.accept='.zip';
- document.getElementById('scan-input-help').textContent=c[2];scanBtn.textContent=isDesign?'Enviar material por WhatsApp ↗':'Preparar diagnóstico ↗';
+ document.getElementById('scan-input-help').textContent=c[2];scanBtn.textContent='Preparar diagnóstico ↗';
 }));
 document.getElementById('scan-file')?.addEventListener('change',e=>{
  const file=e.target.files?.[0];
@@ -200,7 +198,6 @@ scanBtn?.addEventListener('click',async()=>{
  const assetType=document.getElementById('scan-asset-type').value;
  const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
  const isUpload=['file','app','document'].includes(assetType);const selectedFile=document.getElementById('scan-file').files?.[0];
- if(assetType==='design'){window.open('https://wa.me/541164627789?text='+encodeURIComponent('Hola BREAKERS, quiero hacer un SCAN de calidad sobre pantallas/diseño de un producto.'),'_blank','noopener');return}
  if(isUpload&&!selectedFile){scanConsole.textContent='Falta seleccionar el archivo.';return}
  if(!isUpload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true;scanSummary.hidden=true;premiumReport.hidden=true;scanFindings.innerHTML='';
