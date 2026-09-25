@@ -19,23 +19,39 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
         source.update(source_overrides)
     analyzers = analyzers_for(source["type"])
     engines, findings, candidate_risks, limitations = [], [], [], []
+    required_engines, unavailable_engines, failed_engines = [], [], []
 
     if source["type"] == "functional_document":
         candidate_risks, limitations = analyze_requirements_file(target)
 
     # Repository scanners inspect files only; SCAN never executes repository code.
     if source["type"] == "repository":
+        required_engines = [scanner_type.name for scanner_type in PASSIVE_SCANNERS]
         for scanner_type in PASSIVE_SCANNERS:
             scanner = scanner_type()
-            if scanner.available() and scanner.supports(target):
+            if not scanner.available():
+                unavailable_engines.append(scanner.name)
+                continue
+            if not scanner.supports(target):
+                failed_engines.append({"engine": scanner.name, "error": "target is not supported"})
+                continue
+
+            result = scanner.scan(target)
+            if result.status == "completed":
                 engines.append(scanner.name)
-                findings.extend(scanner.scan(target))
-        for name, executable in OPTIONAL_ENGINES:
-            if shutil.which(executable):
-                engines.append(name)
+                findings.extend(result.findings)
+            else:
+                failed_engines.append({"engine": scanner.name, "error": result.error or "scanner failed"})
 
     risks = assess_risks(candidate_risks)
-    report = build_report(public_target or target, engines, findings)
+    report = build_report(
+        public_target or target,
+        engines,
+        findings,
+        required_engines=required_engines,
+        unavailable_engines=unavailable_engines,
+        failed_engines=failed_engines,
+    )
     report["source"] = source
     report["analyzers"] = analyzers
     report["risks"] = [risk.to_dict() for risk in risks]
