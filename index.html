@@ -22,7 +22,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 /* BREAKERS SCAN ENGINE */
-.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
+.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-progress-title{font:700 15px/1.3 system-ui,sans-serif;color:#f0f2e9;margin-bottom:12px}.scan-progress-line{display:flex;align-items:center;gap:10px;margin:8px 0;color:#7d8b80}.scan-progress-line.done{color:#88dfb4}.scan-progress-line.active{color:#f0f2e9;font-weight:700}.scan-progress-symbol{width:14px;text-align:center}.scan-progress-bar{height:8px;border-radius:99px;background:#17221b;overflow:hidden;margin:10px 0 5px}.scan-progress-fill{height:100%;background:#d0f77a;transition:width .2s ease}.scan-progress-meta{display:flex;justify-content:space-between;gap:12px;color:#adb8aa;margin-bottom:14px}.scan-progress-time{margin-top:14px;color:#adb8aa}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
 
 .scan-grid>div{min-width:0}.scan-mode-label{font-size:13px;font-weight:700;margin:18px 0 9px}.scan-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.scan-mode{border:1px solid #364235;background:#111911;color:#f0f2e9;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:650}.scan-mode:hover,.scan-mode.active{border-color:#d0f77a;color:#d0f77a}.scan-help{font-size:10px;color:#adb8aa;margin:7px 0 0}.engine-carousel{width:100%;max-width:100%;overflow:hidden;margin:24px 0 0}.engine-track{will-change:transform}.engine-badge small{display:none}@media(max-width:760px){.scan-modes{display:grid;grid-template-columns:1fr 1fr}.scan-mode{text-align:left}}
 
@@ -225,6 +225,56 @@ scanFile.addEventListener('change',()=>{scanFileName.textContent=scanFile.files[
 const scanBtn=document.getElementById('run-scan');
 const scanConsole=document.getElementById('scan-console');
 const scanFindings=document.getElementById('scan-findings');
+const scanStageLabels=[
+ 'Objetivo recibido',
+ 'Identificando tu proyecto',
+ 'Eligiendo el mejor análisis para tu proyecto',
+ 'Buscando riesgos',
+ 'Comprobando lo encontrado',
+ 'Organizando la evidencia',
+ 'Priorizando lo importante',
+ 'Preparando tu reporte',
+ 'SCAN completo'
+];
+function elapsedLabel(seconds){
+ const m=Math.floor(seconds/60),s=seconds%60;
+ return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function renderScanProgress(data){
+ const states=new Map((data.stages||[]).map(x=>[x.label,x.status]));
+ const rows=scanStageLabels.map(label=>{
+  const state=states.get(label)||'pending';
+  const symbol=state==='completed'?'✓':state==='active'?'●':'○';
+  return '<div class="scan-progress-line '+(state==='completed'?'done':state==='active'?'active':'')+'"><span class="scan-progress-symbol">'+symbol+'</span><span>'+esc(label)+'</span></div>';
+ }).join('');
+ scanConsole.innerHTML='<div class="scan-progress-title">Analizando tu proyecto</div>'+
+  '<div class="scan-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+data.percent+'"><div class="scan-progress-fill" style="width:'+data.percent+'%"></div></div>'+
+  '<div class="scan-progress-meta"><span>'+data.percent+'%</span><span>'+esc(data.stage_label||'')+'</span></div>'+
+  rows+'<div class="scan-progress-time">Tiempo transcurrido: '+elapsedLabel(data.elapsed_seconds||0)+'</div>';
+}
+function renderScanResult(data){
+ const status=data.analysis_status||'completed';
+ const findings=data.findings||[];
+ if(status==='partial'){
+  scanConsole.textContent='ANÁLISIS PARCIAL\n\nPudimos completar parte del análisis.\nAlgunos controles no pudieron finalizar.\nScore: —';
+ }else if(status==='incomplete'){
+  scanConsole.textContent='NO PUDIMOS COMPLETAR EL ANÁLISIS\n\nNo hay evidencia suficiente para asignar un score.\nScore: —';
+ }else{
+  scanConsole.textContent='✓ SCAN COMPLETO\n\nEncontramos '+findings.length+' hallazgos\nScore: '+(data.score??'—');
+ }
+ scanFindings.innerHTML=findings.map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
+}
+async function pollScan(jobId){
+ while(true){
+  const r=await fetch('/api/scan/'+encodeURIComponent(jobId),{cache:'no-store'});
+  const data=await r.json();
+  if(!r.ok) throw new Error(data.error||'No pudimos consultar el estado de SCAN.');
+  renderScanProgress(data);
+  if(data.state==='completed'){renderScanResult(data.result||{});return}
+  if(data.state==='failed') throw new Error(data.error||'SCAN no pudo completar el análisis.');
+  await new Promise(resolve=>setTimeout(resolve,1000));
+ }
+}
 scanBtn?.addEventListener('click',async()=>{
  const authorized=document.getElementById('scan-auth').checked;
  const upload=scanModeConfig[scanMode].kind==='upload';
@@ -234,8 +284,6 @@ scanBtn?.addEventListener('click',async()=>{
  if(!upload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return}
  if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true; scanFindings.innerHTML='';
- const displayTarget=upload?file.name:target;
- scanConsole.textContent='DISCOVERY → '+displayTarget+'\nDetectando evidencia y seleccionando motores BREAKERS…';
  try{
   let options;
   if(upload){
@@ -246,8 +294,8 @@ scanBtn?.addEventListener('click',async()=>{
   }
   const r=await fetch('/api/scan',options); const data=await r.json();
   if(!r.ok) throw new Error(data.error||'backend no disponible');
-  scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+(data.findings||[]).length+'\nScore: '+(data.score??'N/D');
-  scanFindings.innerHTML=(data.findings||[]).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
+  renderScanProgress({percent:5,stage_label:'Objetivo recibido',elapsed_seconds:0,stages:scanStageLabels.map((label,index)=>({label,status:index===0?'active':'pending'}))});
+  await pollScan(data.job_id);
  }catch(e){scanConsole.textContent='SCAN no pudo procesar la evidencia.\n'+e.message;}finally{scanBtn.disabled=false}
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
