@@ -92,3 +92,20 @@ class ReportStore:
                 "SELECT snapshot FROM scan_antecedents WHERE intervention_id = ?", (intervention_id,)
             ).fetchone()
         return json.loads(row["snapshot"]) if row else None
+
+    def get_report_context(self, report_id: str) -> dict | None:
+        with self.database.connect() as connection:
+            row = connection.execute(
+                """SELECT r.full_report, r.created_at, i.public_breakers_id
+                   FROM reports r
+                   JOIN interventions i ON i.resource_id = r.scan_id AND i.product = 'scan'
+                   WHERE r.report_id = ?""",
+                (report_id,),
+            ).fetchone()
+        if not row:
+            return None
+        return {
+            "full_report": json.loads(row["full_report"]),
+            "created_at": row["created_at"],
+            "breakers_id": row["public_breakers_id"],
+        }
