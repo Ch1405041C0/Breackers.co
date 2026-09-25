@@ -19,6 +19,11 @@ class ExistingCoverage(str, Enum):
     NOT_EVALUABLE = "NOT_EVALUABLE"
 
 
+class CriticalSelectionPolicy(str, Enum):
+    INCLUDE_ALL_CRITICAL = "INCLUDE_ALL_CRITICAL"
+    RESPECT_REQUESTED_TARGET = "RESPECT_REQUESTED_TARGET"
+
+
 class TargetState(str, Enum):
     SELECTED = "SELECTED"
     NOT_SELECTED = "NOT_SELECTED"
@@ -135,6 +140,7 @@ class TargetSelection:
     effective_target: int
     selected_coverage_units: tuple[str, ...] = ()
     exclusions: tuple[str, ...] = ()
+    critical_policy: CriticalSelectionPolicy | None = None
 
     def __post_init__(self) -> None:
         if self.requested_target not in {25, 50, 75, 100}:
