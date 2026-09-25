@@ -193,13 +193,15 @@ def _map_test(unit: CoverageUnit, test: ExistingTestEvidence) -> CoverageMapping
         return None
 
     anchors = _anchors(unit.statement)
+    behavior_anchor = _behavior_phrase(_normalize(unit.statement))
     present = {anchor for anchor in anchors if _contains_phrase(combined, anchor)}
     missing = tuple(anchor for anchor in anchors if anchor not in present)
     evidence = tuple(f"{field}: {value}" for field, value in test_parts.items() if value and (_meaningful_terms(value) & overlap))
     explicit_reference = bool(test.story_ref and _contains_phrase(" ".join(unit.source_refs), test.story_ref))
     anchors_present = bool(present)
     substantial = len(overlap) >= 2
-    if not (anchors_present and substantial) and not explicit_reference:
+    behavior_present = bool(behavior_anchor and _contains_phrase(combined, behavior_anchor))
+    if not ((anchors_present and substantial and behavior_present) or explicit_reference):
         return None
 
     contribution = MappingContribution.FULL if anchors and not missing and bool(test.expected_result) else MappingContribution.PARTIAL
