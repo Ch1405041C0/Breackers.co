@@ -54,6 +54,7 @@ def test_remote_repository_uses_temporary_clone_and_cleans_up(monkeypatch):
         return destination
 
     monkeypatch.setattr("breakers.orchestrator.clone_repository", fake_clone)
+    monkeypatch.setattr("breakers.orchestrator.repository_commit_sha", lambda path: "c" * 40)
     monkeypatch.setattr("breakers.orchestrator.TrivyScanner.available", lambda self: False)
     monkeypatch.setattr("breakers.orchestrator.GitleaksScanner.available", lambda self: False)
 
@@ -61,5 +62,6 @@ def test_remote_repository_uses_temporary_clone_and_cleans_up(monkeypatch):
     assert report["source"]["type"] == "repository"
     assert report["source"]["target"] == "https://github.com/acme/demo"
     assert report["source"]["workspace"] == "temporary_clone"
+    assert report["source"]["commit_sha"] == "c" * 40
     assert report["target"] == "https://github.com/acme/demo"
     assert not seen["workspace"].exists()
