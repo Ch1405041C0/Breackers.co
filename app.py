@@ -21,6 +21,11 @@ def index():
     return send_from_directory(ROOT, "index.html")
 
 
+@app.get("/assets/<path:filename>")
+def assets(filename):
+    return send_from_directory(ROOT / "assets", filename)
+
+
 @app.post("/api/scan")
 def scan():
     if request.content_type and request.content_type.startswith("multipart/form-data"):
