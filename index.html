@@ -43,7 +43,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 .scan-summary-cta .arrow{font-size:18px;font-weight:800;line-height:1}
 .scan-progress-line{display:flex;align-items:center;gap:10px;margin:8px 0;color:#7d8b80}.scan-progress-line.done{color:#88dfb4}.scan-progress-line.active{color:#f0f2e9;font-weight:700}.scan-progress-symbol{width:14px;text-align:center}.scan-progress-bar{height:8px;border-radius:99px;background:#17221b;overflow:hidden;margin:10px 0 5px}.scan-progress-fill{height:100%;background:#d0f77a;transition:width .2s ease}.scan-progress-meta{display:flex;justify-content:space-between;gap:12px;color:#adb8aa;margin-bottom:14px}.scan-progress-time{margin-top:14px;color:#adb8aa}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
 
-.scan-grid>div{min-width:0}.scan-mode-label{font-size:13px;font-weight:700;margin:18px 0 9px}.scan-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.scan-mode{border:1px solid #364235;background:#111911;color:#f0f2e9;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:650}.scan-mode:hover,.scan-mode.active{border-color:#d0f77a;color:#d0f77a}.scan-help{font-size:10px;color:#adb8aa;margin:7px 0 0}.engine-carousel{width:100%;max-width:100%;overflow:hidden;margin:24px 0 0}.engine-track{will-change:transform}.engine-badge small{display:none}@media(max-width:760px){.scan-modes{display:grid;grid-template-columns:1fr 1fr}.scan-mode{text-align:left}}
+.workspace-back{appearance:none;background:transparent;border:0;color:var(--muted);padding:0 0 15px;font-weight:700}.workspace-back:hover{color:var(--lime)}.wizard-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px}.strike-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0}.strike-options button{border:1px solid var(--line);background:#111911;color:var(--ink);border-radius:7px;padding:13px;text-align:left;font-weight:650}.strike-options button:hover,.strike-options button:focus-visible{border-color:var(--mint);color:var(--mint)}@media(max-width:760px){.strike-options{grid-template-columns:1fr}}.scan-grid>div{min-width:0}.scan-mode-label{font-size:13px;font-weight:700;margin:18px 0 9px}.scan-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.scan-mode{border:1px solid #364235;background:#111911;color:#f0f2e9;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:650}.scan-mode:hover,.scan-mode.active{border-color:#d0f77a;color:#d0f77a}.scan-help{font-size:10px;color:#adb8aa;margin:7px 0 0}.engine-carousel{width:100%;max-width:100%;overflow:hidden;margin:24px 0 0}.engine-track{will-change:transform}.engine-badge small{display:none}@media(max-width:760px){.scan-modes{display:grid;grid-template-columns:1fr 1fr}.scan-mode{text-align:left}}
 
 .tech-stack{padding:48px 0 34px;border-top:1px solid var(--line);background:#0b1210;overflow:hidden}.tech-head{display:flex;justify-content:space-between;align-items:center;gap:40px;margin-bottom:20px}.tech-head h2{font-size:clamp(28px,3.5vw,43px);line-height:1.08;letter-spacing:-1.5px;font-weight:550;margin:0}.tech-head p{max-width:430px;color:var(--muted);font-size:14px;margin:0}.tool-carousel{overflow:hidden;width:100%;padding:16px 0 2px}.tool-track{display:flex;align-items:center;gap:34px;width:max-content;animation:tool-scroll 40s linear infinite;transform:translate3d(0,0,0)}.tool-carousel:hover .tool-track{animation-play-state:paused}.tool-logo{position:relative;width:104px;height:92px;flex:0 0 104px;margin:0;display:grid;place-items:center;background:transparent!important;border:0!important;cursor:default}.tool-logo img{display:block;width:auto;height:auto;object-fit:contain;opacity:1;filter:saturate(1.12) contrast(1.06);transition:filter .22s ease,opacity .22s ease,transform .22s ease}.tool-logo span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:800;line-height:1.1;color:#f3f5ef;opacity:0;transform:scale(.96);transition:opacity .2s ease,transform .2s ease;pointer-events:none;text-shadow:0 2px 10px #000}.tool-logo:hover img{filter:saturate(1.12) contrast(1.06);opacity:.12;transform:scale(1.03)}.tool-logo:hover span{opacity:1;transform:scale(1)}@keyframes tool-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-50% - 10px),0,0)}}@media(max-width:760px){.tech-head{display:block}.tech-head p{margin-top:14px}.tool-track{gap:18px}.tool-logo{width:90px;height:80px;flex-basis:90px}.tool-logo img{transform:scale(.88)}}@media(prefers-reduced-motion:reduce){.tool-track{animation:none;flex-wrap:wrap;width:auto}}
 
@@ -162,87 +162,77 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
  </div>
 </section>
 <section class="content" id="productos" aria-labelledby="products-title">
-    <div class="wrap">
-      <div class="section-head"><div><span class="small-label">01 / LOS PRODUCTOS</span><h2>De la incertidumbre<br>a una decisión.</h2></div><p>Elegí el punto de partida según lo que tu equipo necesita resolver. Cada producto tiene una entrada, un resultado y un alcance definido.</p></div>
-      <div class="products-grid">
-        <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">◎</span><span class="mono">PRODUCTO / 01</span></div><h3>SCAN</h3><h4>Entendé dónde está el riesgo.</h4><p>Revisar requisitos, flujos y evidencias para identificar huecos, priorizar riesgos y orientar la investigación.</p><ul><li>Mapa de riesgos y cobertura</li><li>Preguntas y supuestos visibles</li><li>Próximas acciones priorizadas</li></ul><button type="button" data-example="scan">Explorar SCAN <span aria-hidden="true">↗</span></button></article>
-        <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">↗</span><span class="mono">PRODUCTO / 02</span></div><h3>STRIKE</h3><h4>Diseñá qué necesitás probar.</h4><p>Transformá definiciones y pruebas existentes en cobertura priorizada y un plan ejecutable.</p><ul><li>Cobertura priorizada</li><li>Pruebas existentes y brechas</li><li>Plan ejecutable y recursos necesarios</li></ul><button type="button" data-example="strike">Explorar STRIKE <span aria-hidden="true">↗</span></button></article>
-        <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">≡</span><span class="mono">PRODUCTO / 03</span></div><h3>CONTROL</h3><h4>Seguí la calidad entre versiones.</h4><p>Relacionar ejecuciones y evidencias para detectar regresiones y evaluar los criterios de cada entrega.</p><ul><li>Resultados comparables</li><li>Alertas con contexto</li><li>Decisiones explicadas</li></ul><button type="button" data-example="control">Explorar CONTROL <span aria-hidden="true">↗</span></button></article>
-      </div>
-      <div class="example" id="ejemplo">
-        <div class="example-header"><span>TRES PRODUCTOS. USALOS SEGÚN LO QUE NECESITE TU PROYECTO.</span><div class="tabs" role="tablist" aria-label="Ejemplo por producto"><button class="tab" role="tab" id="tab-scan" aria-selected="true" aria-controls="panel-scan" type="button">SCAN</button><button class="tab" role="tab" id="tab-strike" aria-selected="false" aria-controls="panel-strike" tabindex="-1" type="button">STRIKE</button><button class="tab" role="tab" id="tab-control" aria-selected="false" aria-controls="panel-control" tabindex="-1" type="button">CONTROL</button></div></div>
-        <div role="tabpanel" id="panel-scan" aria-labelledby="tab-scan" tabindex="0">
-          <div class="example-grid"><div><span class="small-label">ENTREGABLE / DIAGNÓSTICO</span><h3>Primero, confirmar qué<br>debería ocurrir.</h3><p>Antes de probar una reserva de stock, necesitamos entender la regla y el impacto de incumplirla.</p><button class="btn outline" type="button" data-prepare="scan">Preparar SCAN <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">RIESGO</span><span>Dos operaciones reservan la misma unidad disponible.</span></li><li><span class="tag">PREGUNTA</span><span>¿En qué momento se descuenta o reserva el stock?</span></li><li><span class="tag">EVIDENCIA</span><span>Regla funcional y estados de la operación.</span></li><li><span class="tag">ACCIÓN</span><span>Confirmar la regla y diseñar el escenario concurrente.</span></li></ul></div>
-        </div>
-        <div role="tabpanel" id="panel-strike" aria-labelledby="tab-strike" tabindex="0" hidden>
-          <div class="example-grid"><div><span class="small-label">DEFINICIONES → COBERTURA → PLAN EJECUTABLE</span><h3>Diseñá qué necesitás<br>probar.</h3><p>STRIKE parte de las definiciones disponibles y de las pruebas existentes cuando las haya. No requiere un SCAN previo.</p><button class="btn outline" type="button" data-prepare="strike">Preparar STRIKE <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">COBERTURA</span><span>Qué comportamientos, reglas y condiciones deben probarse.</span></li><li><span class="tag">EXISTENTE</span><span>Qué ya está cubierto y qué brechas permanecen.</span></li><li><span class="tag">PRIORIDAD</span><span>Qué cobertura merece atención primero según el contexto.</span></li><li><span class="tag">RECURSOS</span><span>Qué datos, estados y recursos necesita el plan para poder ejecutarse.</span></li></ul></div>
-        </div>
-        <div role="tabpanel" id="panel-control" aria-labelledby="tab-control" tabindex="0" hidden>
-          <div class="example-grid"><div><span class="small-label">ENTREGABLE / SEGUIMIENTO</span><h3>La decisión conserva<br>su evidencia.</h3><p>El resultado se interpreta según la regla de salida, la versión y la información disponible.</p><button class="btn outline" type="button" data-prepare="control">Preparar CONTROL <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">RESULTADO</span><span>Ejemplo: ambas reservas fueron confirmadas. El caso falla.</span></li><li><span class="tag">TRAZABILIDAD</span><span>Caso STOCK-01, versión evaluada y registro de las dos operaciones.</span></li><li><span class="tag">DECISIÓN</span><span>La regla crítica acordada bloquea la aprobación de esta prueba.</span></li><li><span class="tag">SI FALTA DATA</span><span>Se informa “no verificable” y se solicita la evidencia faltante.</span></li></ul></div>
-        </div>
-        <p class="example-disclaimer">Ejemplo con datos y resultados ilustrativos. No representa una prueba ejecutada sobre tu aplicación.</p>
-      </div>
+ <div class="wrap">
+  <div class="section-head"><div><span class="small-label">01 / LOS PRODUCTOS</span><h2 id="products-title">De la incertidumbre<br>a una decisión.</h2></div><p>Elegí el punto de partida según lo que tu equipo necesita resolver. Cada producto es independiente y combinable.</p></div>
+  <div id="product-workspace">
+   <div id="products-home" class="workspace-state">
+    <div class="products-grid">
+     <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">◎</span><span class="mono">PRODUCTO / 01</span></div><h3>SCAN</h3><h4>Entendé dónde está el riesgo.</h4><p>Revisar requisitos, flujos y evidencias para identificar huecos, priorizar riesgos y orientar la investigación.</p><ul><li>Mapa de riesgos y cobertura</li><li>Preguntas y supuestos visibles</li><li>Próximas acciones priorizadas</li></ul><button type="button" data-open-product="scan">Explorar SCAN <span aria-hidden="true">↗</span></button></article>
+     <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">↗</span><span class="mono">PRODUCTO / 02</span></div><h3>STRIKE</h3><h4>Diseñá qué necesitás probar.</h4><p>Transformá definiciones y pruebas existentes en cobertura priorizada y un plan ejecutable.</p><ul><li>Cobertura priorizada</li><li>Pruebas existentes y brechas</li><li>Plan ejecutable y recursos necesarios</li></ul><button type="button" data-open-product="strike">Explorar STRIKE <span aria-hidden="true">↗</span></button></article>
+     <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">≡</span><span class="mono">PRODUCTO / 03</span></div><h3>CONTROL</h3><h4>Ejecutá y conservá evidencia.</h4><p>CONTROL tendrá su propia entrada para ejecutar pruebas y relacionar resultados con evidencia.</p><ul><li>Ejecución</li><li>Resultados</li><li>Evidencia</li></ul><button type="button" data-open-product="control">Explorar CONTROL <span aria-hidden="true">↗</span></button></article>
     </div>
-  </section>
-  
-<section class="content" id="strike-prepare" tabindex="-1" aria-labelledby="strike-prepare-title"><div class="wrap">
- <div class="scan-engine">
-  <span class="small-label">STRIKE / PREPARACIÓN</span>
-  <h3 id="strike-prepare-title">Preparar STRIKE</h3>
-  <p class="muted">Convertí lo que ya definiste en cobertura y un plan de pruebas ejecutable.</p>
-  <p>STRIKE puede trabajar con requerimientos, historias y criterios de aceptación, reglas de negocio, documentación, diseños, contratos API, pruebas existentes y repositorio o código cuando aporte contexto.</p>
-  <div class="result"><h3>Motor STRIKE en preparación</h3><p class="muted">La carga y análisis de fuentes estará disponible cuando conectemos el motor STRIKE. Esta entrada es independiente de SCAN y no ejecuta ningún análisis todavía.</p></div>
- </div>
-</div></section>
-<section class="content" id="control-prepare" tabindex="-1" aria-labelledby="control-prepare-title"><div class="wrap">
- <div class="scan-engine">
-  <span class="small-label">CONTROL / PREPARACIÓN</span>
-  <h3 id="control-prepare-title">Preparar CONTROL</h3>
-  <p class="muted">CONTROL ejecuta y evidencia. Su entrada propia estará disponible cuando implementemos el producto.</p>
-  <div class="result"><h3>CONTROL todavía no está disponible</h3><p class="muted">No se redirige a SCAN: CONTROL es un producto independiente.</p></div>
- </div>
-</div></section>
-
-<section class="content" id="scan-prepare"><div id="scan-engine"><div class="wrap">
- <div class="scan-engine">
-  <div class="scan-grid">
-   <div>
-    <h3>Preparar SCAN</h3>
-    <p class="muted">Indicá el objetivo autorizado. Esta interfaz prepara el trabajo y puede consumir resultados del backend/orquestador.</p>
-    <div class="scan-mode-label">¿Qué querés analizar?</div>
-    <div class="scan-modes" role="group" aria-label="Tipo de evidencia">
-      <button class="scan-mode active" type="button" data-mode="web">◉ Sitio web</button>
-      <button class="scan-mode" type="button" data-mode="repository">⌘ Repositorio</button>
-      <button class="scan-mode" type="button" data-mode="api">↔ API</button>
-      <button class="scan-mode" type="button" data-mode="app">▣ App</button>
-      <button class="scan-mode" type="button" data-mode="file">＋ Archivo</button>
-    </div>
-    <div id="scan-text-input" class="scan-input-wrap">
-      <label id="scan-target-label" for="scan-target">URL del sitio</label>
-      <input id="scan-target" placeholder="https://staging.ejemplo.com">
-      <p id="scan-target-help" class="scan-help">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p>
-      <p id="scan-repo-options" class="scan-repo-options" hidden></p>
-    </div>
-    <div id="scan-upload-input" class="scan-upload" hidden>
-      <strong id="scan-upload-title">Subí evidencia</strong>
-      <p id="scan-upload-help">Arrastrá el archivo acá o seleccioná desde tu equipo.</p>
-      <label class="btn outline" for="scan-file">Seleccionar archivo <span aria-hidden="true">＋</span></label>
-      <input id="scan-file" type="file">
-      <span id="scan-file-name" class="scan-file-name">Ningún archivo seleccionado</span>
-    </div>
-    <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
-    <button class="btn" id="run-scan" type="button">Preparar SCAN <span>↗</span></button>
-    <p class="scan-warning">Por seguridad, BREAKERS no ejecuta pruebas activas contra terceros. Los motores se usan únicamente sobre objetivos autorizados.</p>
    </div>
-   <div>
-    <span class="small-label">QUALITY BRIEF / LIVE</span>
-    <div id="scan-console" class="scan-console">SCAN listo.
+
+   <div id="workspace-scan" class="workspace-state" hidden>
+    <button class="workspace-back" type="button" data-back-products>← Volver a productos</button>
+    <div class="scan-engine">
+     <div id="scan-step-1" class="scan-wizard-step">
+      <span class="small-label">SCAN · PASO 1</span><h3>¿Qué querés analizar?</h3>
+      <p class="muted">Elegí el tipo de entrada. Breakers decidirá qué análisis corresponde.</p>
+      <div class="scan-modes" role="group" aria-label="Tipo de evidencia">
+       <button class="scan-mode active" type="button" data-mode="web">◉ Sitio web</button>
+       <button class="scan-mode" type="button" data-mode="repository">⌘ Repositorio</button>
+       <button class="scan-mode" type="button" data-mode="api">↔ API</button>
+       <button class="scan-mode" type="button" data-mode="app">▣ App</button>
+       <button class="scan-mode" type="button" data-mode="file">＋ Archivo</button>
+      </div>
+      <div class="wizard-actions"><span></span><button class="btn" id="scan-to-step-2" type="button">Continuar →</button></div>
+     </div>
+     <div id="scan-step-2" class="scan-wizard-step" hidden>
+      <span class="small-label">SCAN · PASO 2</span><h3 id="scan-step-title">Sitio web</h3>
+      <div id="scan-text-input" class="scan-input-wrap"><label id="scan-target-label" for="scan-target">URL del sitio</label><input id="scan-target" placeholder="https://staging.ejemplo.com"><p id="scan-target-help" class="scan-help">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p><p id="scan-repo-options" class="scan-repo-options" hidden></p></div>
+      <div id="scan-upload-input" class="scan-upload" hidden><strong id="scan-upload-title">Subí evidencia</strong><p id="scan-upload-help">Arrastrá el archivo acá o seleccioná desde tu equipo.</p><label class="btn outline" for="scan-file">Seleccionar archivo <span aria-hidden="true">＋</span></label><input id="scan-file" type="file"><span id="scan-file-name" class="scan-file-name">Ningún archivo seleccionado</span></div>
+      <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
+      <p id="scan-step-error" class="form-status" aria-live="polite"></p>
+      <div class="wizard-actions"><button class="btn outline" id="scan-back-1" type="button">← Atrás</button><button class="btn" id="scan-to-confirm" type="button">Continuar →</button></div>
+     </div>
+     <div id="scan-step-confirm" class="scan-wizard-step" hidden>
+      <span class="small-label">SCAN · CONFIRMAR</span><h3>Vas a analizar: <span id="scan-confirm-mode">Sitio web</span></h3>
+      <p class="muted" id="scan-confirm-target"></p><p>Breakers identificará automáticamente qué análisis corresponden.</p>
+      <div class="wizard-actions"><button class="btn outline" id="scan-back-2" type="button">← Atrás</button><button class="btn" id="run-scan" type="button">Iniciar SCAN →</button></div>
+      <p class="scan-warning">Por seguridad, BREAKERS no ejecuta pruebas activas contra terceros. Los motores se usan únicamente sobre objetivos autorizados.</p>
+     </div>
+     <div id="scan-live" class="scan-wizard-step" hidden>
+      <span class="small-label">QUALITY BRIEF / LIVE</span>
+      <div id="scan-console" class="scan-console">SCAN listo.
 Esperando objetivo autorizado…</div>
-    <div id="scan-findings" class="scan-findings"></div>
+      <div id="scan-findings" class="scan-findings"></div>
+     </div>
+    </div>
+   </div>
+
+   <div id="workspace-strike" class="workspace-state" hidden>
+    <button class="workspace-back" type="button" data-back-products>← Volver a productos</button>
+    <div class="scan-engine">
+     <div id="strike-step-1"><span class="small-label">STRIKE · PASO 1</span><h3>¿Qué tenés hoy?</h3><p class="muted">Seleccioná la fuente que mejor representa tu punto de partida.</p>
+      <div class="strike-options">
+       <button type="button" data-strike-source="Requerimientos">Requerimientos</button><button type="button" data-strike-source="Historias / criterios">Historias / criterios</button><button type="button" data-strike-source="Reglas de negocio">Reglas de negocio</button><button type="button" data-strike-source="Documentación">Documentación</button><button type="button" data-strike-source="Diseños">Diseños</button><button type="button" data-strike-source="Contrato API">Contrato API</button><button type="button" data-strike-source="Pruebas existentes">Pruebas existentes</button><button type="button" data-strike-source="Código / repositorio">Código / repositorio</button>
+      </div>
+     </div>
+     <div id="strike-step-2" hidden><span class="small-label">STRIKE · PASO 2</span><h3>¿Ya tenés pruebas?</h3><div class="strike-options"><button type="button" data-strike-tests="no">No, quiero construir el plan</button><button type="button" data-strike-tests="yes">Sí, tengo pruebas existentes</button></div><div class="wizard-actions"><button class="btn outline" type="button" id="strike-back-1">← Atrás</button><span></span></div></div>
+     <div id="strike-step-3" hidden><span class="small-label">STRIKE · COBERTURA OBJETIVO</span><h3>¿Hasta dónde querés llegar?</h3><p class="muted">Esta decisión formará parte del flujo STRIKE cuando conectemos el motor. Todavía no procesa ni genera cobertura.</p><div class="strike-options"><button type="button" data-strike-target="25">25%</button><button type="button" data-strike-target="50">50%</button><button type="button" data-strike-target="75">75%</button><button type="button" data-strike-target="100">100%</button></div><div class="wizard-actions"><button class="btn outline" type="button" id="strike-back-2">← Atrás</button><span></span></div></div>
+     <div id="strike-unavailable" hidden><span class="small-label">STRIKE / PREPARACIÓN</span><h3>Motor STRIKE todavía no conectado.</h3><p class="muted">La selección visual quedó preparada. No se cargaron fuentes, no se generaron Coverage Units y no se diseñaron pruebas.</p><div class="wizard-actions"><button class="btn outline" type="button" id="strike-back-3">← Atrás</button><span></span></div></div>
+    </div>
+   </div>
+
+   <div id="workspace-control" class="workspace-state" hidden>
+    <button class="workspace-back" type="button" data-back-products>← Volver a productos</button>
+    <div class="scan-engine"><span class="small-label">CONTROL / PREPARACIÓN</span><h3>Preparación de CONTROL</h3><p class="muted">Esta capacidad todavía no está conectada.</p></div>
    </div>
   </div>
  </div>
-</div></section>
+</section>
+
 <section class="content method" id="enfoque" aria-labelledby="method-title"><div class="wrap">
     <div class="section-head"><div><span class="small-label">02 / NUESTRO ENFOQUE</span><h2>Calidad que se puede<br>explicar y comprobar.</h2></div><p>Combinamos criterio de QA, automatización e investigación para resolver problemas concretos del producto.</p></div>
     <div class="method-grid"><article class="method-card"><span class="mono">01 — CONTEXTO</span><h3>Entender el negocio.</h3><p>Partimos de las reglas, los usuarios y los flujos críticos. Las dudas se convierten en preguntas explícitas.</p></article><article class="method-card"><span class="mono">02 — EVIDENCIA</span><h3>Hacer visible el resultado.</h3><p>Cada conclusión debe poder relacionarse con un requisito, una observación o una prueba reproducible.</p></article><article class="method-card"><span class="mono">03 — APRENDIZAJE</span><h3>Mejorar con cada versión.</h3><p>Los defectos y sus causas alimentan nuevos escenarios, prioridades y criterios de seguimiento.</p></article></div>
@@ -296,11 +286,34 @@ menuButton.addEventListener('click',()=>setMenu(menuButton.getAttribute('aria-ex
 menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setMenu(false)));
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu.classList.contains('open')){setMenu(false);menuButton.focus();}});
 window.matchMedia('(min-width:761px)').addEventListener('change',event=>{if(event.matches)setMenu(false);});
-const products=['scan','strike','control'];
-function showExample(product,focus=false){if(!products.includes(product))return;products.forEach(key=>{const active=key===product;const tab=document.getElementById('tab-'+key);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;document.getElementById('panel-'+key).hidden=!active;});if(focus)document.getElementById('tab-'+product).focus();}
-products.forEach(product=>{const tab=document.getElementById('tab-'+product);tab.addEventListener('click',()=>showExample(product));tab.addEventListener('keydown',event=>{let next=products.indexOf(product);if(event.key==='ArrowRight')next=(next+1)%products.length;else if(event.key==='ArrowLeft')next=(next+products.length-1)%products.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=products.length-1;else return;event.preventDefault();showExample(products[next],true);});});
-document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{showExample(button.dataset.example,true);document.getElementById('ejemplo').scrollIntoView({block:'start'});}));
-document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{const product=button.dataset.prepare;const target=document.getElementById(product+'-prepare');if(!target)return;target.scrollIntoView({block:'start'});if(product==='scan')(scanModeConfig[scanMode].kind==='upload'?document.querySelector('#scan-upload-input label'):document.getElementById('scan-target')).focus({preventScroll:true});else target.focus({preventScroll:true});}));
+const workspaceStates=['products-home','workspace-scan','workspace-strike','workspace-control'];
+function showWorkspace(state){
+ workspaceStates.forEach(id=>{document.getElementById(id).hidden=id!==state;});
+ if(state==='products-home')resetProductWorkspace();
+}
+function resetProductWorkspace(){
+ showScanStep(1);
+ showStrikeStep(1);
+}
+document.querySelectorAll('[data-open-product]').forEach(button=>button.addEventListener('click',()=>showWorkspace('workspace-'+button.dataset.openProduct)));
+document.querySelectorAll('[data-back-products]').forEach(button=>button.addEventListener('click',()=>showWorkspace('products-home')));
+document.querySelectorAll('a[href="#productos"]').forEach(link=>link.addEventListener('click',()=>showWorkspace('products-home')));
+
+function showScanStep(step){
+ ['scan-step-1','scan-step-2','scan-step-confirm','scan-live'].forEach(id=>document.getElementById(id).hidden=true);
+ const id=step===1?'scan-step-1':step===2?'scan-step-2':step==='confirm'?'scan-step-confirm':'scan-live';
+ document.getElementById(id).hidden=false;
+}
+function showStrikeStep(step){
+ ['strike-step-1','strike-step-2','strike-step-3','strike-unavailable'].forEach(id=>document.getElementById(id).hidden=true);
+ document.getElementById(step===1?'strike-step-1':step===2?'strike-step-2':step===3?'strike-step-3':'strike-unavailable').hidden=false;
+}
+document.querySelectorAll('[data-strike-source]').forEach(button=>button.addEventListener('click',()=>showStrikeStep(2)));
+document.querySelectorAll('[data-strike-tests]').forEach(button=>button.addEventListener('click',()=>showStrikeStep(3)));
+document.querySelectorAll('[data-strike-target]').forEach(button=>button.addEventListener('click',()=>showStrikeStep('unavailable')));
+document.getElementById('strike-back-1').addEventListener('click',()=>showStrikeStep(1));
+document.getElementById('strike-back-2').addEventListener('click',()=>showStrikeStep(2));
+document.getElementById('strike-back-3').addEventListener('click',()=>showStrikeStep(3));
 
 const scanModeConfig={
  web:{kind:'text',label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
@@ -317,6 +330,7 @@ const scanFileName=document.getElementById('scan-file-name');
 function applyScanMode(mode){
  scanMode=mode; const c=scanModeConfig[mode];
  document.querySelectorAll('.scan-mode').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode));
+ document.getElementById('scan-step-title').textContent=mode==='web'?'Sitio web':mode==='repository'?'Repositorio':mode==='api'?'API':mode==='app'?'App':'Archivo';
  const upload=c.kind==='upload'; scanTextInput.hidden=upload; scanUploadInput.hidden=!upload;
  if(upload){
   document.getElementById('scan-upload-title').textContent=c.title;
@@ -331,6 +345,19 @@ function applyScanMode(mode){
 }
 document.querySelectorAll('.scan-mode').forEach(btn=>btn.addEventListener('click',()=>applyScanMode(btn.dataset.mode)));
 scanFile.addEventListener('change',()=>{scanFileName.textContent=scanFile.files[0]?.name||'Ningún archivo seleccionado';});
+document.getElementById('scan-to-step-2').addEventListener('click',()=>showScanStep(2));
+document.getElementById('scan-back-1').addEventListener('click',()=>showScanStep(1));
+document.getElementById('scan-back-2').addEventListener('click',()=>showScanStep(2));
+document.getElementById('scan-to-confirm').addEventListener('click',()=>{
+ const upload=scanModeConfig[scanMode].kind==='upload',file=scanFile.files[0],target=document.getElementById('scan-target').value.trim(),authorized=document.getElementById('scan-auth').checked,error=document.getElementById('scan-step-error');
+ if(upload&&!file){error.textContent='Falta seleccionar un archivo.';return}
+ if(!upload&&!target){error.textContent='Falta indicar el objetivo.';return}
+ if(!authorized){error.textContent='Necesitás confirmar autorización.';return}
+ error.textContent='';
+ document.getElementById('scan-confirm-mode').textContent=document.getElementById('scan-step-title').textContent;
+ document.getElementById('scan-confirm-target').textContent=upload?file.name:target;
+ showScanStep('confirm');
+});
 
 // BREAKERS SCAN front-end orchestrator. Real scanners live behind /api/scan.
 const scanBtn=document.getElementById('run-scan');
@@ -404,6 +431,7 @@ scanBtn?.addEventListener('click',async()=>{
  if(upload&&!file){scanConsole.textContent='Falta seleccionar un archivo.';return}
  if(!upload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return}
  if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
+ showScanStep('live');
  scanBtn.disabled=true; scanFindings.innerHTML='';
  try{
   let options;
