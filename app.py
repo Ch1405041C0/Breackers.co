@@ -1,13 +1,15 @@
 from flask import Flask, jsonify, request, send_from_directory
 from pathlib import Path
-from tempfile import TemporaryDirectory
+import tempfile
 from werkzeug.utils import secure_filename
 
+from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
+scan_jobs = ScanJobStore(ttl_seconds=900)
 
 ALLOWED_EVIDENCE_EXTENSIONS = {
     ".pdf", ".doc", ".docx", ".txt", ".md", ".json", ".yaml", ".yml",
@@ -26,6 +28,12 @@ def assets(filename):
     return send_from_directory(ROOT / "assets", filename)
 
 
+def _start_scan_job(target: str, cleanup_path: str | None = None):
+    job = scan_jobs.create()
+    scan_jobs.start(job, lambda progress: run_scan(target, progress=progress), cleanup_path=cleanup_path)
+    return jsonify(job_id=job.id, state="running"), 202
+
+
 @app.post("/api/scan")
 def scan():
     if request.content_type and request.content_type.startswith("multipart/form-data"):
@@ -39,22 +47,28 @@ def scan():
         if suffix not in ALLOWED_EVIDENCE_EXTENSIONS:
             return jsonify(error=f"unsupported evidence type: {suffix or 'unknown'}"), 400
 
-        with TemporaryDirectory(prefix="breakers-scan-") as tmp:
-            target = Path(tmp) / filename
+        workspace = tempfile.mkdtemp(prefix="breakers-scan-")
+        target = Path(workspace) / filename
+        try:
             uploaded.save(target)
-            try:
-                return jsonify(run_scan(str(target)))
-            except ValueError as exc:
-                return jsonify(error=str(exc)), 400
+        except Exception:
+            Path(workspace).rmdir()
+            raise
+        return _start_scan_job(str(target), cleanup_path=workspace)
 
     data = request.get_json(silent=True) or {}
     target = str(data.get("target", "")).strip()
     if not data.get("authorized") or not target:
         return jsonify(error="authorization and target required"), 400
-    try:
-        return jsonify(run_scan(target))
-    except ValueError as exc:
-        return jsonify(error=str(exc)), 400
+    return _start_scan_job(target)
+
+
+@app.get("/api/scan/<job_id>")
+def scan_status(job_id: str):
+    job = scan_jobs.get(job_id)
+    if job is None:
+        return jsonify(error="SCAN job not found or expired"), 404
+    return jsonify(job.public_status())
 
 
 @app.errorhandler(413)
