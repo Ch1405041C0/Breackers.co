@@ -13,10 +13,17 @@ PASSIVE_SCANNERS = (TrivyScanner, GitleaksScanner)
 OPTIONAL_ENGINES = (("SonarQube", "sonar-scanner"), ("OWASP ZAP", "zap.sh"), ("JMeter", "jmeter"))
 
 
-def _scan_local_target(target: str, public_target: str | None = None, source_overrides: dict | None = None) -> dict:
+def _emit(progress, stage: str) -> None:
+    if progress:
+        progress(stage)
+
+
+def _scan_local_target(target: str, public_target: str | None = None, source_overrides: dict | None = None, progress=None) -> dict:
+    _emit(progress, "identifying")
     source = detect_input(target)
     if source_overrides:
         source.update(source_overrides)
+    _emit(progress, "planning")
     analyzers = analyzers_for(source["type"])
     engines, findings, candidate_risks, limitations = [], [], [], []
     required_engines, unavailable_engines, failed_engines = [], [], []
@@ -26,6 +33,7 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
 
     # Repository scanners inspect files only; SCAN never executes repository code.
     if source["type"] == "repository":
+        _emit(progress, "scanning")
         required_engines = [scanner_type.name for scanner_type in PASSIVE_SCANNERS]
         for scanner_type in PASSIVE_SCANNERS:
             scanner = scanner_type()
@@ -43,7 +51,11 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
             else:
                 failed_engines.append({"engine": scanner.name, "error": result.error or "scanner failed"})
 
+    _emit(progress, "checking")
+    _emit(progress, "evidence")
+    _emit(progress, "prioritizing")
     risks = assess_risks(candidate_risks)
+    _emit(progress, "reporting")
     report = build_report(
         public_target or target,
         engines,
@@ -60,8 +72,9 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
     return report
 
 
-def run_scan(target: str) -> dict:
+def run_scan(target: str, progress=None) -> dict:
     target = str(target or "").strip()
+    _emit(progress, "received")
     if is_remote_repository(target):
         with TemporaryDirectory(prefix="breakers-repo-") as tmp:
             workspace = Path(tmp) / "repository"
@@ -74,9 +87,10 @@ def run_scan(target: str) -> dict:
                     "target": target,
                     "workspace": "temporary_clone",
                 },
+                progress=progress,
             )
 
     if not Path(target).exists():
         raise ValueError("SCAN v0.1 accepts authorized local evidence or a public GitHub/GitLab repository URL.")
 
-    return _scan_local_target(target)
+    return _scan_local_target(target, progress=progress)
