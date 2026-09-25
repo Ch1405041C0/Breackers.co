@@ -63,8 +63,10 @@ def test_public_summary_is_whitelisted_and_same_analysis(monkeypatch, tmp_path):
     assert summary["total_findings"] == 3
     assert summary["by_severity"]["CRITICAL"] == 1
     serialized = json.dumps(summary)
-    for forbidden in ("CVE-SECRET", "src/a.py:7", "findings", "engines", "InternalEngine"):
+    for forbidden in ("CVE-SECRET", "src/a.py:7", "InternalEngine"):
         assert forbidden not in serialized
+    assert "findings" not in summary
+    assert "engines" not in summary
     assert reports.get_full_report(summary["report_id"]) == FULL
 
 
