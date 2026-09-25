@@ -50,6 +50,47 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 .tool-track{gap:20px}.tool-logo.sonar img{width:74px;height:74px}.tool-logo.zap img{width:72px;height:72px}.tool-logo.jmeter img{width:78px;height:78px}.tool-logo.trivy img{width:78px;height:78px;filter:saturate(1.18) contrast(1.10)}.tool-logo.gitleaks img{width:72px;height:72px}.tool-logo.spectral img{width:72px;height:72px}.tool-logo.schemathesis img{width:80px;height:66px;filter:saturate(1.18) contrast(1.10)}.tool-logo.semgrep img{width:80px;height:72px}.tool-logo.axe img{width:70px;height:70px}.tool-logo.pa11y img{width:66px;height:66px}.tool-logo.k6 img{width:68px;height:68px}
 
 .scan-input-wrap{margin-top:4px}.scan-upload{border:1px dashed #53654f;border-radius:10px;background:#101812;padding:20px;margin-top:5px;text-align:center}.scan-upload strong{display:block;font-size:13px;margin-bottom:4px}.scan-upload p{font-size:11px;color:var(--muted);margin:0 0 12px}.scan-upload input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.scan-file-name{display:block;margin-top:10px;color:var(--lime);font:11px ui-monospace,monospace;overflow-wrap:anywhere}.scan-repo-options{font-size:11px;color:var(--muted);margin:8px 0 0}.footer-contact{display:inline-grid;place-items:center;width:36px;height:36px;color:var(--ink);border:1px solid #566451;border-radius:50%;transition:color .15s,border-color .15s,transform .15s}.footer-contact:hover{color:var(--lime);border-color:var(--lime);transform:translateY(-1px)}.footer-contact svg{width:20px;height:20px;fill:currentColor}.footer-socials{display:flex;align-items:center;gap:9px}.footer-socials .soon{opacity:.38;cursor:default}.footer-socials .soon:hover{color:var(--ink);border-color:#566451;transform:none}@media(max-width:760px){.scan-upload{text-align:left}}
+
+/* BREAKERS CONSTITUTION — editorial quality timeline */
+.quality-constitution{padding:82px 0 86px;border-top:1px solid var(--line);background:#0d1210;overflow:hidden}
+.quality-constitution .small-label{margin-bottom:18px}
+.quality-constitution h2{max-width:820px;margin:0;font-size:clamp(38px,5.2vw,64px);line-height:1.02;letter-spacing:-2.7px;font-weight:650}
+.quality-constitution .quality-lead{max-width:720px;margin:22px 0 0;color:var(--ink);font-size:clamp(18px,2vw,23px);line-height:1.45;font-weight:550}
+.quality-entry-map{margin:52px 0 0;padding:31px 28px 27px;border:1px solid var(--line);border-radius:var(--radius);background:#111813}
+.quality-entry-points{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.quality-entry-points:after{content:"";position:absolute;left:10%;right:10%;bottom:-35px;height:1px;background:#42503e}
+.quality-point{position:relative;min-width:0;text-align:center;font:800 11px ui-monospace,monospace;letter-spacing:.75px;color:#d5ddd0;padding-bottom:33px}
+.quality-point:before{content:"";position:absolute;left:50%;bottom:8px;width:7px;height:7px;border:2px solid var(--lime);border-radius:50%;background:#111813;transform:translateX(-50%);z-index:1}
+.quality-point:after{content:"";position:absolute;left:50%;bottom:-35px;width:1px;height:44px;background:#42503e}
+.quality-breakers{position:relative;width:max-content;margin:54px auto 0;padding:10px 18px;border:1px solid #60734c;border-radius:7px;color:#17200f;background:var(--lime);font:900 13px ui-monospace,monospace;letter-spacing:1px}
+.quality-breakers:before{content:"";position:absolute;left:50%;bottom:100%;width:1px;height:20px;background:#60734c}
+.quality-artifacts{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin:28px auto 0;max-width:900px;color:var(--muted);font:11px ui-monospace,monospace;letter-spacing:.35px}
+.quality-artifacts span:not(:last-child):after{content:"·";margin-left:18px;color:#53614d}
+.quality-statement{display:grid;grid-template-columns:.72fr 1.28fr;gap:55px;align-items:start;margin-top:45px;padding-top:34px;border-top:1px solid var(--line)}
+.quality-statement strong{font-size:22px;line-height:1.25;letter-spacing:-.6px}
+.quality-statement p{max-width:650px;margin:0;color:var(--muted);font-size:15px;line-height:1.75}
+.quality-close{margin-top:48px;padding:31px 0 0;border-top:1px solid var(--line);font-size:clamp(25px,3.2vw,39px);line-height:1.18;letter-spacing:-1.35px;font-weight:600}
+.quality-close span{display:block;color:var(--lime);margin-top:4px}
+@media(max-width:760px){
+ .quality-constitution{padding:58px 0 62px}
+ .quality-constitution h2{font-size:clamp(38px,11vw,52px);letter-spacing:-2px}
+ .quality-constitution .quality-lead{font-size:18px}
+ .quality-entry-map{margin-top:36px;padding:27px 23px}
+ .quality-entry-points{display:flex;flex-direction:column;gap:0;padding-left:30px}
+ .quality-entry-points:after{left:6px;right:auto;top:12px;bottom:12px;width:1px;height:auto;background:#42503e}
+ .quality-point{text-align:left;padding:0 0 27px;font-size:11px}
+ .quality-point:last-child{padding-bottom:0}
+ .quality-point:before{left:-24px;bottom:auto;top:4px;transform:none}
+ .quality-point:after{left:-20px;bottom:auto;top:11px;width:20px;height:1px}
+ .quality-breakers{margin:31px 0 0 30px}
+ .quality-breakers:before{left:-24px;top:50%;bottom:auto;width:24px;height:1px}
+ .quality-artifacts{justify-content:flex-start;margin-top:26px;gap:7px 13px;line-height:1.7}
+ .quality-artifacts span:not(:last-child):after{margin-left:13px}
+ .quality-statement{grid-template-columns:1fr;gap:12px;margin-top:34px;padding-top:28px}
+ .quality-statement strong{font-size:20px}
+ .quality-statement p{font-size:14px}
+ .quality-close{margin-top:36px;padding-top:27px;font-size:29px}
+}
 </style>
 </head>
 <body id="inicio">
@@ -157,6 +198,38 @@ Esperando objetivo autorizado…</div>
     <div class="section-head"><div><span class="small-label">02 / NUESTRO ENFOQUE</span><h2>Calidad que se puede<br>explicar y comprobar.</h2></div><p>Combinamos criterio de QA, automatización e investigación para resolver problemas concretos del producto.</p></div>
     <div class="method-grid"><article class="method-card"><span class="mono">01 — CONTEXTO</span><h3>Entender el negocio.</h3><p>Partimos de las reglas, los usuarios y los flujos críticos. Las dudas se convierten en preguntas explícitas.</p></article><article class="method-card"><span class="mono">02 — EVIDENCIA</span><h3>Hacer visible el resultado.</h3><p>Cada conclusión debe poder relacionarse con un requisito, una observación o una prueba reproducible.</p></article><article class="method-card"><span class="mono">03 — APRENDIZAJE</span><h3>Mejorar con cada versión.</h3><p>Los defectos y sus causas alimentan nuevos escenarios, prioridades y criterios de seguimiento.</p></article></div>
   </div></section>
+
+<section class="quality-constitution" aria-labelledby="quality-constitution-title">
+ <div class="wrap">
+  <span class="small-label">PRINCIPIO BREAKERS / 01</span>
+  <h2 id="quality-constitution-title">LA CALIDAD NO EMPIEZA EN QA</h2>
+  <p class="quality-lead">No necesitás tener un producto terminado para encontrar riesgos.</p>
+
+  <div class="quality-entry-map" aria-label="Breakers puede intervenir desde cualquier etapa del proyecto">
+   <div class="quality-entry-points">
+    <div class="quality-point">ANÁLISIS</div>
+    <div class="quality-point">UX / UI</div>
+    <div class="quality-point">DESARROLLO</div>
+    <div class="quality-point">QA</div>
+    <div class="quality-point">PRODUCCIÓN</div>
+   </div>
+   <div class="quality-breakers">BREAKERS</div>
+   <div class="quality-artifacts" aria-label="Artefactos que pueden analizarse">
+    <span>Requerimientos</span><span>Diseños</span><span>APIs</span><span>Código</span><span>Repositorios</span><span>Aplicaciones</span><span>Evidencia</span>
+   </div>
+  </div>
+
+  <div class="quality-statement">
+   <strong>Nos das lo que existe hoy.</strong>
+   <p>Breakers identifica qué es, decide cómo analizarlo y encuentra qué merece atención.</p>
+  </div>
+
+  <div class="quality-close">
+   No importa en qué etapa esté tu proyecto.
+   <span>Si hay algo para analizar, hay calidad para trabajar.</span>
+  </div>
+ </div>
+</section>
   </main>
 
 <section class="tech-stack" aria-labelledby="tech-title">
