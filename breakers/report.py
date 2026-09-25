@@ -36,7 +36,9 @@ def build_report(
         "engines": engines,
         "unavailable_engines": unavailable_engines,
         "failed_engines": failed_engines,
-        "findings": [f.to_dict() for f in findings[:200]],
+        # Persist the complete normalized finding set. Presentation layers may
+        # apply their own limits without changing the historical SCAN semantics.
+        "findings": [f.to_dict() for f in findings],
         "summary": {
             **scoring,
             "coverage_complete": coverage_complete,
