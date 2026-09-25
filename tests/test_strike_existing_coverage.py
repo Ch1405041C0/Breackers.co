@@ -20,7 +20,7 @@ def coverage(*units):
     return CoverageModelResult(tuple(units), (), (), ())
 
 
-def existing_existing_tests_source(csv_text, source_id="TESTS-1"):
+def existing_tests_source(csv_text, source_id="TESTS-1"):
     return ingest_source(Source(source_id, "EXISTING_TESTS"), "tests.csv", csv_text)
 
 
