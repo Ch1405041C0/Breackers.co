@@ -6,4 +6,11 @@ services:
     container_name: breakers-scan
     ports:
       - "8080:8080"
+    environment:
+      BREAKERS_DB_PATH: /data/breakers.db
+    volumes:
+      - breakers-data:/data
     restart: unless-stopped
+
+volumes:
+  breakers-data:
