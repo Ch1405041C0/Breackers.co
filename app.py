@@ -1,16 +1,25 @@
 from flask import Flask, jsonify, request, send_from_directory
 from pathlib import Path
-import tempfile
+import os
 import shutil
+import tempfile
 from werkzeug.utils import secure_filename
 
 from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
+from breakers.orders import OrderStore
+from breakers.reports import ReportStore
+from breakers.storage import SQLiteStore
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 scan_jobs = ScanJobStore(ttl_seconds=900)
+
+DATABASE_PATH = os.environ.get("BREAKERS_DB_PATH", str(ROOT / "data" / "breakers.db"))
+database = SQLiteStore(DATABASE_PATH)
+report_store = ReportStore(database)
+order_store = OrderStore(database)
 
 ALLOWED_EVIDENCE_EXTENSIONS = {
     ".pdf", ".doc", ".docx", ".txt", ".md", ".json", ".yaml", ".yml",
@@ -18,22 +27,23 @@ ALLOWED_EVIDENCE_EXTENSIONS = {
     ".html", ".zip", ".apk", ".ipa",
 }
 
-
 @app.get("/")
 def index():
     return send_from_directory(ROOT, "index.html")
-
 
 @app.get("/assets/<path:filename>")
 def assets(filename):
     return send_from_directory(ROOT / "assets", filename)
 
-
 def _start_scan_job(target: str, cleanup_path: str | None = None):
     job = scan_jobs.create()
-    scan_jobs.start(job, lambda progress: run_scan(target, progress=progress), cleanup_path=cleanup_path)
-    return jsonify(job_id=job.id, state="running"), 202
 
+    def scan_once(progress):
+        full_report = run_scan(target, progress=progress)
+        return report_store.save_scan_result(full_report)
+
+    scan_jobs.start(job, scan_once, cleanup_path=cleanup_path)
+    return jsonify(job_id=job.id, state="running"), 202
 
 @app.post("/api/scan")
 def scan():
@@ -42,12 +52,10 @@ def scan():
         uploaded = request.files.get("file")
         if not authorized or uploaded is None or not uploaded.filename:
             return jsonify(error="authorization and file required"), 400
-
         filename = secure_filename(uploaded.filename)
         suffix = Path(filename).suffix.lower()
         if suffix not in ALLOWED_EVIDENCE_EXTENSIONS:
             return jsonify(error=f"unsupported evidence type: {suffix or 'unknown'}"), 400
-
         workspace = tempfile.mkdtemp(prefix="breakers-scan-")
         target = Path(workspace) / filename
         try:
@@ -63,7 +71,6 @@ def scan():
         return jsonify(error="authorization and target required"), 400
     return _start_scan_job(target)
 
-
 @app.get("/api/scan/<job_id>")
 def scan_status(job_id: str):
     job = scan_jobs.get(job_id)
@@ -71,11 +78,51 @@ def scan_status(job_id: str):
         return jsonify(error="SCAN job not found or expired"), 404
     return jsonify(job.public_status())
 
+@app.post("/api/reports/<report_id>/orders")
+def create_report_order(report_id: str):
+    if report_store.get_public_summary(report_id) is None:
+        return jsonify(error="Informe no encontrado."), 404
+    existing = order_store.find_for_resource("scan", report_id)
+    order = existing or order_store.create("scan", report_id)
+    return jsonify({
+        "order_id": order["order_id"],
+        "product": order["product"],
+        "report_id": report_id,
+        "currency": order["currency"],
+        "amount": order["amount"],
+        "status": order["status"],
+        "payment_methods": [],
+        "payments_configured": False,
+    }), 201 if existing is None else 200
+
+@app.get("/api/orders/<order_id>")
+def order_status(order_id: str):
+    order = order_store.get(order_id)
+    if order is None:
+        return jsonify(error="Orden no encontrada."), 404
+    return jsonify({
+        "order_id": order["order_id"],
+        "product": order["product"],
+        "resource_id": order["resource_id"],
+        "currency": order["currency"],
+        "amount": order["amount"],
+        "status": order["status"],
+        "payment_methods": [],
+        "payments_configured": False,
+    })
+
+@app.get("/api/reports/<report_id>/full")
+def full_report(report_id: str):
+    if report_store.get_public_summary(report_id) is None:
+        return jsonify(error="Informe no encontrado."), 404
+    if not order_store.has_approved_access("scan", report_id):
+        return jsonify(error="El informe completo requiere una autorización de pago confirmada por Breakers."), 403
+    report = report_store.get_full_report(report_id)
+    return jsonify(report)
 
 @app.errorhandler(413)
 def file_too_large(_error):
     return jsonify(error="file too large; maximum size is 100 MB"), 413
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
