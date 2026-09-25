@@ -363,10 +363,8 @@ async function showCommercialStep(reportId){
   const order=await r.json();
   if(!r.ok) throw new Error(order.error||'No pudimos preparar la orden.');
   scanConsole.innerHTML='<strong>TU INFORME BREAKERS ESTÁ LISTO</strong>\n\nInforme completo de calidad\n\nIncluye:\n✓ Hallazgos priorizados\n✓ Ubicación\n✓ Evidencia\n✓ Riesgo\n✓ Explicación\n✓ Recomendaciones\n✓ Próximas acciones\n\nPRECIO\n'+moneyARS(order.amount);
-  const paymentMessage=order.payments_configured?'Elegí un medio de pago para continuar.':'Los medios de pago todavía no están configurados. Tu informe permanece guardado y bloqueado.';
-  scanFindings.innerHTML='<button class="scan-action" id="continue-payment" type="button">CONTINUAR AL PAGO</button><div class="muted" id="payment-status" style="margin-top:12px">'+esc(paymentMessage)+'</div>';
-  const btn=document.getElementById('continue-payment');
-  if(btn&&!order.payments_configured) btn.disabled=true;
+  const paymentMessage=order.payments_configured?'Elegí un medio de pago para continuar.':'Modo de prueba: la descarga está habilitada temporalmente mientras terminamos el flujo de pago.';
+  scanFindings.innerHTML='<a class="scan-action" id="download-report" href="/api/reports/'+encodeURIComponent(reportId)+'/pdf" download style="display:inline-block;text-decoration:none">DESCARGAR INFORME PDF ↗</a><div class="muted" id="payment-status" style="margin-top:12px">'+esc(paymentMessage)+'</div>';
  }catch(e){scanFindings.innerHTML='<div class="muted">'+esc(e.message)+'</div>'}
 }
 async function pollScan(jobId){
