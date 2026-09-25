@@ -1,7 +1,7 @@
 import pytest
 
 from breakers.strike.models import Source
-from breakers.strike.ingestion import SourceFormat, UnsupportedSourceFormat, ingest_source
+from breakers.strike.ingestion import SourceFormat, SourceLocation, UnsupportedSourceFormat, ingest_source
 from breakers.strike.interpretation import (
     InterpretationCertainty,
     InterpretationResult,
@@ -76,8 +76,7 @@ def test_explicit_interpretation_keeps_source_and_location():
 
 
 def test_inferred_and_ambiguous_items_remain_explicitly_marked():
-    normalized = ingest_source(source(), "rules.txt", "texto")
-    location = next(iter(__import__("breakers.strike.interpretation", fromlist=["_line_chunks"])._line_chunks(normalized))).location
+    location = SourceLocation("rules.txt / line 1", 1, 1)
     inferred = interpreted_item(item_id="I-1", item_type=InterpretationType.BEHAVIOR, statement="Possible behavior", certainty=InterpretationCertainty.INFERRED, source_id="SRC-001", location=location)
     ambiguous = interpreted_item(item_id="I-2", item_type=InterpretationType.CONDITION, statement="Ambiguous condition", certainty=InterpretationCertainty.AMBIGUOUS, source_id="SRC-001", location=location)
     assert inferred.certainty is InterpretationCertainty.INFERRED
@@ -92,7 +91,6 @@ def test_missing_expected_behavior_is_not_invented():
 
 
 def test_contradictions_are_represented_without_resolution():
-    from breakers.strike.ingestion import SourceLocation
     a = interpreted_item(item_id="I-A", item_type=InterpretationType.BUSINESS_RULE, statement="Cancelar hasta 24 h antes", certainty=InterpretationCertainty.EXPLICIT, source_id="SRC-A", location=SourceLocation("A"))
     b = interpreted_item(item_id="I-B", item_type=InterpretationType.BUSINESS_RULE, statement="Cancelar hasta 48 h antes", certainty=InterpretationCertainty.EXPLICIT, source_id="SRC-B", location=SourceLocation("B"))
     contradictions = find_contradictions((a, b), (("I-A", "I-B"),))
