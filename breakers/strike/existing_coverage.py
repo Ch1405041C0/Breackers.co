@@ -201,7 +201,10 @@ def _map_test(unit: CoverageUnit, test: ExistingTestEvidence) -> CoverageMapping
     anchors_present = bool(present)
     substantial = len(overlap) >= 2
     behavior_present = bool(behavior_anchor and _contains_phrase(combined, behavior_anchor))
-    if not ((anchors_present and substantial and behavior_present) or explicit_reference):
+    complementary_present = any(anchor != behavior_anchor and _contains_phrase(combined, anchor) for anchor in anchors)
+    behavior_related = behavior_present and substantial
+    complementary_related = complementary_present and _behavior_family_related(behavior_anchor, combined)
+    if not (behavior_related or complementary_related or explicit_reference):
         return None
 
     contribution = MappingContribution.FULL if anchors and not missing and bool(test.expected_result) else MappingContribution.PARTIAL
@@ -209,6 +212,20 @@ def _map_test(unit: CoverageUnit, test: ExistingTestEvidence) -> CoverageMapping
     if not test.expected_result and "expected result" not in missing:
         missing = (*missing, "expected result")
     return CoverageMapping(unit.id, test.internal_id, contribution, evidence, _ordered_unique(missing), certainty)
+
+
+
+def _behavior_family_related(behavior_anchor: str, text: str) -> bool:
+    if not behavior_anchor:
+        return False
+    behavior = _normalize(behavior_anchor)
+    normalized = _normalize(text)
+    if behavior in normalized:
+        return True
+    stem = behavior[:-2] if len(behavior) > 5 and behavior.endswith(("ar", "er", "ir")) else behavior
+    if len(stem) < 4:
+        return False
+    return any(term.startswith(stem) for term in _meaningful_terms(normalized))
 
 
 def _aggregate_status(unit: CoverageUnit, mappings: list[CoverageMapping]) -> tuple[ExistingCoverage, tuple[str, ...]]:
