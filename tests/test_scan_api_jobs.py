@@ -4,6 +4,15 @@ import time
 
 import app as scan_app
 from breakers.jobs import ScanJobStore
+from breakers.orders import OrderStore
+from breakers.reports import ReportStore
+from breakers.storage import SQLiteStore
+
+
+def _stores(monkeypatch, tmp_path):
+    db = SQLiteStore(str(tmp_path / 'api.db'))
+    monkeypatch.setattr(scan_app, 'report_store', ReportStore(db))
+    monkeypatch.setattr(scan_app, 'order_store', OrderStore(db))
 
 
 def _wait_for_terminal(client, job_id):
@@ -26,7 +35,8 @@ def test_scan_post_requires_authorization(monkeypatch):
     assert response.status_code == 400
 
 
-def test_scan_post_returns_job_id_and_polling_result(monkeypatch):
+def test_scan_post_returns_job_id_and_polling_result(monkeypatch, tmp_path):
+    _stores(monkeypatch, tmp_path)
     monkeypatch.setattr(scan_app, "scan_jobs", ScanJobStore(ttl_seconds=60))
 
     def fake_run_scan(target, progress=None):
@@ -60,7 +70,8 @@ def test_unknown_job_returns_404(monkeypatch):
     assert response.status_code == 404
 
 
-def test_uploaded_file_lives_for_job_and_workspace_is_cleaned(monkeypatch):
+def test_uploaded_file_lives_for_job_and_workspace_is_cleaned(monkeypatch, tmp_path):
+    _stores(monkeypatch, tmp_path)
     monkeypatch.setattr(scan_app, "scan_jobs", ScanJobStore(ttl_seconds=60))
     seen = {}
 
