@@ -200,7 +200,7 @@ def _map_test(unit: CoverageUnit, test: ExistingTestEvidence) -> CoverageMapping
     explicit_reference = bool(test.story_ref and _contains_phrase(" ".join(unit.source_refs), test.story_ref))
     anchors_present = bool(present)
     substantial = len(overlap) >= 2
-    behavior_present = bool(behavior_anchor and _contains_phrase(combined, behavior_anchor))
+    behavior_present = _behavior_family_related(behavior_anchor, combined)
     complementary_present = any(anchor != behavior_anchor and _contains_phrase(combined, anchor) for anchor in anchors)
     behavior_related = behavior_present and substantial
     complementary_related = complementary_present and _behavior_family_related(behavior_anchor, combined)
@@ -262,7 +262,7 @@ def _anchors(statement: str) -> tuple[str, ...]:
 
 
 def _behavior_phrase(text: str) -> str:
-    stop = {"validar", "que", "el", "la", "un", "una", "puede", "no", "debe", "tener", "al", "menos", "como", "estado"}
+    stop = {"validar", "que", "el", "la", "un", "una", "puede", "no", "debe", "tener", "al", "menos", "como", "estado", "administrador", "admin", "usuario", "cliente", "operator", "user"}
     terms = [term for term in text.split() if term not in stop and len(term) > 2]
     return terms[0] if terms else ""
 
