@@ -29,6 +29,21 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 .tech-stack{padding:72px 0 58px;border-top:1px solid var(--line);background:#0b1210;overflow:hidden}.tech-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:38px}.tech-head h2{font-size:clamp(28px,3.5vw,43px);line-height:1.08;letter-spacing:-1.5px;font-weight:550;margin:0}.tech-head p{max-width:430px;color:var(--muted);font-size:14px;margin:0}.tool-carousel{overflow:hidden;width:100%;padding:34px 0 12px}.tool-track{display:flex;align-items:center;gap:44px;width:max-content;animation:tool-scroll 46s linear infinite}.tool-carousel:hover .tool-track{animation-play-state:paused}.tool-logo{position:relative;width:138px;height:108px;flex:0 0 138px;margin:0;display:grid;place-items:center;background:transparent;border:0;cursor:default}.tool-logo img{display:block;max-width:116px;max-height:88px;width:auto;height:auto;object-fit:contain;opacity:1;transition:filter .24s ease,opacity .24s ease,transform .24s ease}.tool-logo span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:15px;font-weight:800;line-height:1.15;color:#f5f7ef;opacity:0;transform:scale(.96);transition:opacity .22s ease,transform .22s ease;pointer-events:none;text-shadow:0 2px 12px #000}.tool-logo:hover img{filter:blur(8px)!important;opacity:.14;transform:scale(1.1)}.tool-logo:hover span{opacity:1;transform:scale(1)}
 .tool-logo img{filter:none}.tool-logo.sonar img,.tool-logo.trivy img,.tool-logo.spectral img,.tool-logo.schemathesis img,.tool-logo.axe img,.tool-logo.pa11y img{filter:invert(1)}.tool-logo.semgrep img{filter:none}.tool-logo span.fallback{opacity:1;color:#d8ff3e;font-size:14px}.tool-logo:has(span.fallback) img{display:none!important}
 @keyframes tool-scroll{to{transform:translateX(calc(-50% - 31px))}}@media(max-width:760px){.tech-head{display:block}.tech-head p{margin-top:16px}.tool-track{gap:40px}.tool-logo{width:96px;height:82px;flex-basis:96px}.tool-logo img{max-width:78px;max-height:64px}}@media(prefers-reduced-motion:reduce){.tool-track{animation:none;flex-wrap:wrap;width:auto}}
+
+/* BREAKERS tool band — high-contrast, dependency-free */
+#como-trabajamos,.method,.approach{background:#0b1210!important;color:#f2f4ed!important}
+#como-trabajamos p,#como-trabajamos .muted,.method p,.approach p{color:#b9c1b8!important}
+.light-tools{background:#eef1e4!important;color:#0b1210!important;border-top:0!important}
+.light-tools .small-label{color:#55720d!important}
+.light-tools .tech-head h2{color:#0b1210!important}
+.light-tools .tech-head p{color:#394238!important}
+.light-tools .tool-carousel{overflow:hidden}
+.light-tools .tool-logo{background:transparent!important;border:0!important}
+.tool-mark{display:flex;align-items:center;justify-content:center;width:116px;height:78px;font:900 16px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:-.8px;color:#111;transition:filter .22s ease,opacity .22s ease,transform .22s ease}
+.tool-logo.sonar .tool-mark{color:#1596b8}.tool-logo.zap .tool-mark{color:#2674c9}.tool-logo.jmeter .tool-mark{color:#d34b34}.tool-logo.trivy .tool-mark{color:#342bd8}.tool-logo.gitleaks .tool-mark{color:#e64f39}.tool-logo.spectral .tool-mark{color:#6b57c8}.tool-logo.schemathesis .tool-mark{color:#659f2d}.tool-logo.semgrep .tool-mark{color:#00a67e}.tool-logo.axe .tool-mark{color:#1769aa}.tool-logo.pa11y .tool-mark{color:#18884f}.tool-logo.k6 .tool-mark{color:#7055e8;font-size:28px}
+.light-tools .tool-logo span{color:#0b1210!important;text-shadow:none!important;font-size:15px!important}
+.light-tools .tool-logo:hover .tool-mark{filter:blur(8px);opacity:.12;transform:scale(1.08)}
+.light-tools .tool-logo:hover span{opacity:1;transform:scale(1)}
 </style>
 </head>
 <body id="inicio">
@@ -128,7 +143,7 @@ Esperando objetivo autorizado…</div>
   </div></section>
   </main>
 
-<section class="tech-stack" aria-labelledby="tech-title">
+<section class="tech-stack light-tools" aria-labelledby="tech-title">
  <div class="wrap">
   <span class="small-label">TRABAJAMOS CON</span>
   <div class="tech-head">
@@ -137,28 +152,28 @@ Esperando objetivo autorizado…</div>
   </div>
   <div class="tool-carousel" aria-label="Herramientas con las que trabaja BREAKERS">
    <div class="tool-track">
-    <figure class="tool-logo sonar" data-name="SonarQube"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/sonarqubeserver.svg" alt="SonarQube" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>SonarQube</span></figure>
-    <figure class="tool-logo zap" data-name="OWASP ZAP"><img src="https://raw.githubusercontent.com/zaproxy/zaproxy/main/zap/src/main/resources/resource/zap128x128.png" alt="OWASP ZAP" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>OWASP ZAP</span></figure>
-    <figure class="tool-logo jmeter" data-name="Apache JMeter"><img src="https://jmeter.apache.org/images/logo.svg" alt="Apache JMeter" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Apache JMeter</span></figure>
-    <figure class="tool-logo trivy" data-name="Trivy"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/trivy.svg" alt="Trivy" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Trivy</span></figure>
-    <figure class="tool-logo gitleaks" data-name="Gitleaks"><img src="https://gitleaks.io/logo.png" alt="Gitleaks" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Gitleaks</span></figure>
-    <figure class="tool-logo spectral" data-name="Spectral"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/stoplight.svg" alt="Spectral" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Spectral</span></figure>
-    <figure class="tool-logo schemathesis" data-name="Schemathesis"><img src="https://raw.githubusercontent.com/schemathesis/schemathesis/master/docs/assets/favicon.svg" alt="Schemathesis" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Schemathesis</span></figure>
-    <figure class="tool-logo semgrep" data-name="Semgrep"><img src="https://raw.githubusercontent.com/semgrep/semgrep/develop/semgrep.svg" alt="Semgrep" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Semgrep</span></figure>
-    <figure class="tool-logo axe" data-name="axe-core"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/deque.svg" alt="axe-core" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>axe-core</span></figure>
-    <figure class="tool-logo pa11y" data-name="Pa11y"><img src="https://pa11y.org/img/logo.svg" alt="Pa11y" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Pa11y</span></figure>
-    <figure class="tool-logo k6" data-name="k6"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/k6.svg" alt="k6" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>k6</span></figure>
-    <figure class="tool-logo sonar" data-name="SonarQube" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/sonarqubeserver.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>SonarQube</span></figure>
-    <figure class="tool-logo zap" data-name="OWASP ZAP" aria-hidden="true"><img src="https://raw.githubusercontent.com/zaproxy/zaproxy/main/zap/src/main/resources/resource/zap128x128.png" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>OWASP ZAP</span></figure>
-    <figure class="tool-logo jmeter" data-name="Apache JMeter" aria-hidden="true"><img src="https://jmeter.apache.org/images/logo.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Apache JMeter</span></figure>
-    <figure class="tool-logo trivy" data-name="Trivy" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/trivy.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Trivy</span></figure>
-    <figure class="tool-logo gitleaks" data-name="Gitleaks" aria-hidden="true"><img src="https://gitleaks.io/logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Gitleaks</span></figure>
-    <figure class="tool-logo spectral" data-name="Spectral" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/stoplight.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Spectral</span></figure>
-    <figure class="tool-logo schemathesis" data-name="Schemathesis" aria-hidden="true"><img src="https://raw.githubusercontent.com/schemathesis/schemathesis/master/docs/assets/favicon.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Schemathesis</span></figure>
-    <figure class="tool-logo semgrep" data-name="Semgrep" aria-hidden="true"><img src="https://raw.githubusercontent.com/semgrep/semgrep/develop/semgrep.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Semgrep</span></figure>
-    <figure class="tool-logo axe" data-name="axe-core" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/deque.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>axe-core</span></figure>
-    <figure class="tool-logo pa11y" data-name="Pa11y" aria-hidden="true"><img src="https://pa11y.org/img/logo.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>Pa11y</span></figure>
-    <figure class="tool-logo k6" data-name="k6" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/k6.svg" alt="" onerror="this.style.display='none';this.nextElementSibling.classList.add('fallback')"><span>k6</span></figure>
+    <figure class="tool-logo sonar" data-name="SonarQube"><b class="tool-mark">SONAR</b><span>SonarQube</span></figure>
+    <figure class="tool-logo zap" data-name="OWASP ZAP"><b class="tool-mark">ZAP</b><span>OWASP ZAP</span></figure>
+    <figure class="tool-logo jmeter" data-name="Apache JMeter"><b class="tool-mark">JMETER</b><span>Apache JMeter</span></figure>
+    <figure class="tool-logo trivy" data-name="Trivy"><b class="tool-mark">TRIVY</b><span>Trivy</span></figure>
+    <figure class="tool-logo gitleaks" data-name="Gitleaks"><b class="tool-mark">GITLEAKS</b><span>Gitleaks</span></figure>
+    <figure class="tool-logo spectral" data-name="Spectral"><b class="tool-mark">SPECTRAL</b><span>Spectral</span></figure>
+    <figure class="tool-logo schemathesis" data-name="Schemathesis"><b class="tool-mark">SCHEMATHESIS</b><span>Schemathesis</span></figure>
+    <figure class="tool-logo semgrep" data-name="Semgrep"><b class="tool-mark">SEMGREP</b><span>Semgrep</span></figure>
+    <figure class="tool-logo axe" data-name="axe-core"><b class="tool-mark">axe</b><span>axe-core</span></figure>
+    <figure class="tool-logo pa11y" data-name="Pa11y"><b class="tool-mark">PA11Y</b><span>Pa11y</span></figure>
+    <figure class="tool-logo k6" data-name="k6"><b class="tool-mark">k6</b><span>k6</span></figure>
+    <figure class="tool-logo sonar" data-name="SonarQube" aria-hidden="true"><b class="tool-mark">SONAR</b><span>SonarQube</span></figure>
+    <figure class="tool-logo zap" data-name="OWASP ZAP" aria-hidden="true"><b class="tool-mark">ZAP</b><span>OWASP ZAP</span></figure>
+    <figure class="tool-logo jmeter" data-name="Apache JMeter" aria-hidden="true"><b class="tool-mark">JMETER</b><span>Apache JMeter</span></figure>
+    <figure class="tool-logo trivy" data-name="Trivy" aria-hidden="true"><b class="tool-mark">TRIVY</b><span>Trivy</span></figure>
+    <figure class="tool-logo gitleaks" data-name="Gitleaks" aria-hidden="true"><b class="tool-mark">GITLEAKS</b><span>Gitleaks</span></figure>
+    <figure class="tool-logo spectral" data-name="Spectral" aria-hidden="true"><b class="tool-mark">SPECTRAL</b><span>Spectral</span></figure>
+    <figure class="tool-logo schemathesis" data-name="Schemathesis" aria-hidden="true"><b class="tool-mark">SCHEMATHESIS</b><span>Schemathesis</span></figure>
+    <figure class="tool-logo semgrep" data-name="Semgrep" aria-hidden="true"><b class="tool-mark">SEMGREP</b><span>Semgrep</span></figure>
+    <figure class="tool-logo axe" data-name="axe-core" aria-hidden="true"><b class="tool-mark">axe</b><span>axe-core</span></figure>
+    <figure class="tool-logo pa11y" data-name="Pa11y" aria-hidden="true"><b class="tool-mark">PA11Y</b><span>Pa11y</span></figure>
+    <figure class="tool-logo k6" data-name="k6" aria-hidden="true"><b class="tool-mark">k6</b><span>k6</span></figure>
    </div>
   </div>
  </div>
