@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 
 from .analyzers import analyzers_for, analyze_requirements_file
 from .inputs import detect_input
-from .inputs.repository import clone_repository, is_remote_repository
+from .inputs.repository import clone_repository, is_remote_repository, repository_commit_sha
 from .report import build_report
 from .risk.engine import assess_risks
 from .scanners import GitleaksScanner, TrivyScanner
@@ -23,6 +23,10 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
     source = detect_input(target)
     if source_overrides:
         source.update(source_overrides)
+    if source["type"] == "repository" and "commit_sha" not in source:
+        commit_sha = repository_commit_sha(target)
+        if commit_sha:
+            source["commit_sha"] = commit_sha
     _emit(progress, "planning")
     analyzers = analyzers_for(source["type"])
     engines, findings, candidate_risks, limitations = [], [], [], []
@@ -80,6 +84,7 @@ def run_scan(target: str, progress=None) -> dict:
         with TemporaryDirectory(prefix="breakers-repo-") as tmp:
             workspace = Path(tmp) / "repository"
             clone_repository(target, workspace)
+            commit_sha = repository_commit_sha(workspace)
             return _scan_local_target(
                 str(workspace),
                 public_target=target,
@@ -87,6 +92,7 @@ def run_scan(target: str, progress=None) -> dict:
                     "type": "repository",
                     "target": target,
                     "workspace": "temporary_clone",
+                    **({"commit_sha": commit_sha} if commit_sha else {}),
                 },
                 progress=progress,
             )
