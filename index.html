@@ -30,6 +30,8 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 
 .tool-logo.jmeter img,.tool-logo.gitleaks img,.tool-logo.spectral img{width:78px;height:50px}
 .tool-logo.sonar img,.tool-logo.zap img,.tool-logo.trivy img,.tool-logo.schemathesis img,.tool-logo.semgrep img,.tool-logo.axe img,.tool-logo.pa11y img,.tool-logo.k6 img,.tool-logo.backstop img{width:64px;height:64px}
+
+.scan-input-wrap{margin-top:4px}.scan-upload{border:1px dashed #53654f;border-radius:10px;background:#101812;padding:20px;margin-top:5px;text-align:center}.scan-upload strong{display:block;font-size:13px;margin-bottom:4px}.scan-upload p{font-size:11px;color:var(--muted);margin:0 0 12px}.scan-upload input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.scan-file-name{display:block;margin-top:10px;color:var(--lime);font:11px ui-monospace,monospace;overflow-wrap:anywhere}.scan-repo-options{font-size:11px;color:var(--muted);margin:8px 0 0}.footer-contact{font-size:12px;color:var(--ink);border-bottom:1px solid #566451;padding-bottom:2px}.footer-contact:hover{color:var(--lime);border-color:var(--lime)}@media(max-width:760px){.scan-upload{text-align:left}}
 </style>
 </head>
 <body id="inicio">
@@ -107,9 +109,19 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
       <button class="scan-mode" type="button" data-mode="app">▣ App</button>
       <button class="scan-mode" type="button" data-mode="file">＋ Archivo</button>
     </div>
-    <label id="scan-target-label" for="scan-target">URL del sitio</label>
-    <input id="scan-target" placeholder="https://staging.ejemplo.com">
-    <p id="scan-target-help" class="scan-help">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p>
+    <div id="scan-text-input" class="scan-input-wrap">
+      <label id="scan-target-label" for="scan-target">URL del sitio</label>
+      <input id="scan-target" placeholder="https://staging.ejemplo.com">
+      <p id="scan-target-help" class="scan-help">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p>
+      <p id="scan-repo-options" class="scan-repo-options" hidden></p>
+    </div>
+    <div id="scan-upload-input" class="scan-upload" hidden>
+      <strong id="scan-upload-title">Subí evidencia</strong>
+      <p id="scan-upload-help">Arrastrá el archivo acá o seleccioná desde tu equipo.</p>
+      <label class="btn outline" for="scan-file">Seleccionar archivo <span aria-hidden="true">＋</span></label>
+      <input id="scan-file" type="file">
+      <span id="scan-file-name" class="scan-file-name">Ningún archivo seleccionado</span>
+    </div>
     <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
     <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button>
     <p class="scan-warning">Por seguridad, BREAKERS no ejecuta pruebas activas contra terceros. Los motores se usan únicamente sobre objetivos autorizados.</p>
@@ -164,7 +176,7 @@ Esperando objetivo autorizado…</div>
   </div>
  </div>
 </section>
-<footer><div class="wrap footer-grid"><a class="brand" href="#inicio">BREAKERS<span>CO</span></a><p>Calidad de software con criterio y evidencia.</p><nav class="footer-links" aria-label="Productos"><a href="#productos">SCAN</a><a href="#productos">STRIKE</a><a href="#productos">CONTROL</a></nav><p>© 2026 BREAKERS CO</p></div></footer>
+<footer><div class="wrap footer-grid"><a class="brand" href="#inicio">BREAKERS<span>CO</span></a><p>Calidad de software con criterio y evidencia.</p><a class="footer-contact" href="https://wa.me/541164627789?text=Hola%2C%20vi%20BREAKERS%20CO%20y%20quisiera%20conversar%20sobre%20calidad%20para%20mi%20producto." target="_blank" rel="noopener" aria-label="Contactar a BREAKERS CO por WhatsApp">WhatsApp · +54 11 6462-7789</a><p>© 2026 BREAKERS CO — Todos los derechos reservados.</p></div></footer>
 <script>
 'use strict';
 const menuButton=document.querySelector('.menu-toggle');
@@ -178,36 +190,66 @@ const products=['scan','strike','control'];
 function showExample(product,focus=false){if(!products.includes(product))return;products.forEach(key=>{const active=key===product;const tab=document.getElementById('tab-'+key);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;document.getElementById('panel-'+key).hidden=!active;});if(focus)document.getElementById('tab-'+product).focus();}
 products.forEach(product=>{const tab=document.getElementById('tab-'+product);tab.addEventListener('click',()=>showExample(product));tab.addEventListener('keydown',event=>{let next=products.indexOf(product);if(event.key==='ArrowRight')next=(next+1)%products.length;else if(event.key==='ArrowLeft')next=(next+products.length-1)%products.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=products.length-1;else return;event.preventDefault();showExample(products[next],true);});});
 document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{showExample(button.dataset.example,true);document.getElementById('ejemplo').scrollIntoView({block:'start'});}));
-document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('scan-engine').scrollIntoView({block:'start'});document.getElementById('scan-target').focus({preventScroll:true});}));
+document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('scan-engine').scrollIntoView({block:'start'});(scanModeConfig[scanMode].kind==='upload'?document.querySelector('#scan-upload-input label'):document.getElementById('scan-target')).focus({preventScroll:true});}));
 
 const scanModeConfig={
- web:{label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
- repository:{label:'Ruta del repositorio',placeholder:'C:\\\\proyectos\\\\mi-repo',help:'Usá una ruta local autorizada del repositorio.'},
- api:{label:'API / contrato',placeholder:'https://staging.ejemplo.com/openapi.json',help:'Indicá el endpoint o contrato OpenAPI autorizado.'},
- app:{label:'Aplicación',placeholder:'Ruta o referencia de la aplicación',help:'Indicá la aplicación o artefacto que querés evaluar.'},
- file:{label:'Archivo / evidencia',placeholder:'Ruta local del archivo',help:'Documento funcional, evidencia, especificación u otro artefacto disponible.'}
+ web:{kind:'text',label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
+ repository:{kind:'text',label:'Repositorio',placeholder:'https://github.com/organizacion/repositorio',help:'Pegá la URL o referencia de un repositorio autorizado.',extra:'Compatible con GitHub, GitLab, Bitbucket, otro proveedor Git o una ruta local autorizada.'},
+ api:{kind:'text',label:'API / contrato',placeholder:'https://staging.ejemplo.com/openapi.json',help:'Podés indicar OpenAPI / Swagger, colección Postman, contrato o endpoint autorizado.'},
+ app:{kind:'upload',title:'Subí la aplicación',help:'Arrastrá un APK o IPA acá, o seleccionalo desde tu equipo.',accept:'.apk,.ipa,application/vnd.android.package-archive'},
+ file:{kind:'upload',title:'Subí evidencia para SCAN',help:'Documentos funcionales o técnicos, PDF, DOCX, TXT, Markdown, imágenes, capturas, especificaciones, logs, casos o resultados de prueba y otros artefactos de calidad.',accept:'.pdf,.doc,.docx,.txt,.md,.json,.yaml,.yml,.csv,.log,.png,.jpg,.jpeg,.webp,.gif,.xml,.html,.zip'}
 };
 let scanMode='web';
-document.querySelectorAll('.scan-mode').forEach(btn=>btn.addEventListener('click',()=>{
- scanMode=btn.dataset.mode;
- document.querySelectorAll('.scan-mode').forEach(x=>x.classList.toggle('active',x===btn));
- const c=scanModeConfig[scanMode];document.getElementById('scan-target-label').textContent=c.label;document.getElementById('scan-target').placeholder=c.placeholder;document.getElementById('scan-target-help').textContent=c.help;
-}));
+const scanTextInput=document.getElementById('scan-text-input');
+const scanUploadInput=document.getElementById('scan-upload-input');
+const scanFile=document.getElementById('scan-file');
+const scanFileName=document.getElementById('scan-file-name');
+function applyScanMode(mode){
+ scanMode=mode; const c=scanModeConfig[mode];
+ document.querySelectorAll('.scan-mode').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode));
+ const upload=c.kind==='upload'; scanTextInput.hidden=upload; scanUploadInput.hidden=!upload;
+ if(upload){
+  document.getElementById('scan-upload-title').textContent=c.title;
+  document.getElementById('scan-upload-help').textContent=c.help;
+  scanFile.accept=c.accept||''; scanFile.value=''; scanFileName.textContent='Ningún archivo seleccionado';
+ }else{
+  document.getElementById('scan-target-label').textContent=c.label;
+  document.getElementById('scan-target').placeholder=c.placeholder;
+  document.getElementById('scan-target-help').textContent=c.help;
+  const extra=document.getElementById('scan-repo-options'); extra.textContent=c.extra||''; extra.hidden=!c.extra;
+ }
+}
+document.querySelectorAll('.scan-mode').forEach(btn=>btn.addEventListener('click',()=>applyScanMode(btn.dataset.mode)));
+scanFile.addEventListener('change',()=>{scanFileName.textContent=scanFile.files[0]?.name||'Ningún archivo seleccionado';});
 
 // BREAKERS SCAN front-end orchestrator. Real scanners live behind /api/scan.
 const scanBtn=document.getElementById('run-scan');
 const scanConsole=document.getElementById('scan-console');
 const scanFindings=document.getElementById('scan-findings');
 scanBtn?.addEventListener('click',async()=>{
- const target=document.getElementById('scan-target').value.trim(); const authorized=document.getElementById('scan-auth').checked;
- if(!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
- scanBtn.disabled=true; scanConsole.textContent='DISCOVERY → '+target+'\nDetectando evidencia y seleccionando motores BREAKERS…'; scanFindings.innerHTML='';
+ const authorized=document.getElementById('scan-auth').checked;
+ const upload=scanModeConfig[scanMode].kind==='upload';
+ const file=scanFile.files[0];
+ const target=document.getElementById('scan-target').value.trim();
+ if(upload&&!file){scanConsole.textContent='Falta seleccionar un archivo.';return}
+ if(!upload&&!target){scanConsole.textContent='Falta indicar el objetivo.';return}
+ if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
+ scanBtn.disabled=true; scanFindings.innerHTML='';
+ const displayTarget=upload?file.name:target;
+ scanConsole.textContent='DISCOVERY → '+displayTarget+'\nDetectando evidencia y seleccionando motores BREAKERS…';
  try{
-  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,authorized:true,mode:'safe',input_type:scanMode})});
-  if(!r.ok) throw new Error('backend no disponible'); const data=await r.json();
+  let options;
+  if(upload){
+   const body=new FormData(); body.append('file',file); body.append('authorized','true'); body.append('mode','safe'); body.append('input_type',scanMode);
+   options={method:'POST',body};
+  }else{
+   options={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,authorized:true,mode:'safe',input_type:scanMode})};
+  }
+  const r=await fetch('/api/scan',options); const data=await r.json();
+  if(!r.ok) throw new Error(data.error||'backend no disponible');
   scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+(data.findings||[]).length+'\nScore: '+(data.score??'N/D');
   scanFindings.innerHTML=(data.findings||[]).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
- }catch(e){scanConsole.textContent='Motor web preparado.\n\nPara ejecutar herramientas reales conectá este frontend al backend BREAKERS SCAN (/api/scan).\nEl navegador por sí solo no puede ejecutar SonarQube, ZAP, JMeter, Trivy o Gitleaks.';}finally{scanBtn.disabled=false}
+ }catch(e){scanConsole.textContent='SCAN no pudo procesar la evidencia.\n'+e.message;}finally{scanBtn.disabled=false}
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script>
