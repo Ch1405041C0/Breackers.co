@@ -99,3 +99,35 @@ def test_public_summary_does_not_leak_antecedent_snapshot(tmp_path):
 def test_no_public_antecedent_recovery_route_exists():
     rules = {rule.rule for rule in scan_app.app.url_map.iter_rules()}
     assert not any("antecedent" in rule.lower() for rule in rules)
+
+
+def test_local_temporary_path_is_not_persisted_in_snapshot(tmp_path):
+    reports = store(tmp_path)
+    temporary_target = "/tmp/breakers-scan-secret123/evidence.txt"
+    report = {
+        "target": temporary_target,
+        "source": {"type": "functional_document", "target": temporary_target},
+        "analysis_status": "completed",
+        "score": 100,
+        "summary": {"score": 100, "coverage_complete": True},
+        "findings": [],
+        "risks": [],
+        "risk_summary": {"identified": 0, "limitations": []},
+    }
+    summary = reports.save_scan_result(report)
+    intervention = reports.get_intervention_by_public_id(summary["breakers_id"])
+    snapshot = reports.get_scan_antecedent_for_intervention(intervention["intervention_id"])
+    serialized = json.dumps(snapshot)
+    assert "breakers-scan-secret123" not in serialized
+    assert snapshot["analyzed"]["target_reference"] == "evidence.txt"
+    assert snapshot["analyzed"]["source"]["target"] == "evidence.txt"
+
+
+def test_evidence_contract_declares_all_supported_availability_states(tmp_path):
+    reports = store(tmp_path)
+    summary = reports.save_scan_result(report_with_findings())
+    intervention = reports.get_intervention_by_public_id(summary["breakers_id"])
+    snapshot = reports.get_scan_antecedent_for_intervention(intervention["intervention_id"])
+    assert set(snapshot["evidence_policy"]["states"]) == {
+        "preserved", "referenced_only", "source_not_retained"
+    }
