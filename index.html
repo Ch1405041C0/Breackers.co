@@ -252,17 +252,30 @@ function renderScanProgress(data){
   '<div class="scan-progress-meta"><span>'+data.percent+'%</span><span>'+esc(data.stage_label||'')+'</span></div>'+
   rows+'<div class="scan-progress-time">Tiempo transcurrido: '+elapsedLabel(data.elapsed_seconds||0)+'</div>';
 }
+function moneyARS(amount){return new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(amount)}
 function renderScanResult(data){
- const status=data.analysis_status||'completed';
- const findings=data.findings||[];
- if(status==='partial'){
-  scanConsole.textContent='ANÁLISIS PARCIAL\n\nPudimos completar parte del análisis.\nAlgunos controles no pudieron finalizar.\nScore: —';
- }else if(status==='incomplete'){
-  scanConsole.textContent='NO PUDIMOS COMPLETAR EL ANÁLISIS\n\nNo hay evidencia suficiente para asignar un score.\nScore: —';
- }else{
-  scanConsole.textContent='✓ SCAN COMPLETO\n\nEncontramos '+findings.length+' hallazgos\nScore: '+(data.score??'—');
- }
- scanFindings.innerHTML=findings.map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
+ const status=data.analysis_status||'incomplete';
+ const counts=data.by_severity||{};
+ const areas=(data.areas||[]).map(x=>'<div>'+esc(x.label)+' <strong>'+Number(x.count||0)+'</strong></div>').join('');
+ const score=status==='completed'&&data.score!==null&&data.score!==undefined?data.score+' / 100':'—';
+ scanConsole.innerHTML='<strong>✓ SCAN COMPLETO</strong>\n\nSCORE\n'+score+'\n\n'+Number(data.total_findings||0)+' hallazgos detectados\n\n'+
+  Number(counts.CRITICAL||0)+' CRÍTICOS\n'+Number(counts.HIGH||0)+' ALTOS\n'+Number(counts.MEDIUM||0)+' MEDIOS\n'+Number(counts.LOW||0)+' BAJOS\n\nPRINCIPALES ÁREAS\n'+
+  (areas||'Sin áreas con hallazgos')+'\n\n'+esc(data.priority_message||'');
+ scanFindings.innerHTML='<button class="scan-action" id="request-full-report" type="button">SOLICITAR INFORME COMPLETO</button>';
+ document.getElementById('request-full-report')?.addEventListener('click',()=>showCommercialStep(data.report_id));
+}
+async function showCommercialStep(reportId){
+ scanFindings.innerHTML='';
+ try{
+  const r=await fetch('/api/reports/'+encodeURIComponent(reportId)+'/orders',{method:'POST'});
+  const order=await r.json();
+  if(!r.ok) throw new Error(order.error||'No pudimos preparar la orden.');
+  scanConsole.innerHTML='<strong>TU INFORME BREAKERS ESTÁ LISTO</strong>\n\nInforme completo de calidad\n\nIncluye:\n✓ Hallazgos priorizados\n✓ Ubicación\n✓ Evidencia\n✓ Riesgo\n✓ Explicación\n✓ Recomendaciones\n✓ Próximas acciones\n\nPRECIO\n'+moneyARS(order.amount);
+  const paymentMessage=order.payments_configured?'Elegí un medio de pago para continuar.':'Los medios de pago todavía no están configurados. Tu informe permanece guardado y bloqueado.';
+  scanFindings.innerHTML='<button class="scan-action" id="continue-payment" type="button">CONTINUAR AL PAGO</button><div class="muted" id="payment-status" style="margin-top:12px">'+esc(paymentMessage)+'</div>';
+  const btn=document.getElementById('continue-payment');
+  if(btn&&!order.payments_configured) btn.disabled=true;
+ }catch(e){scanFindings.innerHTML='<div class="muted">'+esc(e.message)+'</div>'}
 }
 async function pollScan(jobId){
  while(true){
