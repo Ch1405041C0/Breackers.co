@@ -1,13 +1,15 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from pathlib import Path
 import os
 import shutil
 import tempfile
+from io import BytesIO
 from werkzeug.utils import secure_filename
 
 from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
 from breakers.orders import OrderStore
+from breakers.pdf_report import build_scan_pdf
 from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
 
@@ -110,6 +112,25 @@ def order_status(order_id: str):
         "payment_methods": [],
         "payments_configured": False,
     })
+
+@app.get("/api/reports/<report_id>/pdf")
+def download_scan_pdf(report_id: str):
+    context = report_store.get_report_context(report_id)
+    if context is None:
+        return jsonify(error="Informe no encontrado."), 404
+    pdf = build_scan_pdf(
+        breakers_id=context["breakers_id"],
+        created_at=context["created_at"],
+        report=context["full_report"],
+    )
+    filename = f'{context["breakers_id"]}-SCAN.pdf'
+    return send_file(
+        BytesIO(pdf),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=filename,
+        max_age=0,
+    )
 
 @app.get("/api/reports/<report_id>/full")
 def full_report(report_id: str):
