@@ -52,3 +52,16 @@ def clone_repository(url: str, destination: str | Path, timeout: int = 60) -> Pa
     if not destination.is_dir():
         raise RepositoryCloneError("Git finalizó sin crear el workspace esperado.")
     return destination
+
+
+def repository_commit_sha(repository: str | Path, timeout: int = 10) -> str | None:
+    repository = Path(repository)
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repository), "rev-parse", "HEAD"],
+            capture_output=True, text=True, timeout=timeout, check=False,
+        )
+    except (subprocess.TimeoutExpired, OSError):
+        return None
+    sha = (result.stdout or "").strip()
+    return sha if result.returncode == 0 and re.fullmatch(r"[0-9a-fA-F]{40}", sha) else None
