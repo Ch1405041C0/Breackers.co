@@ -28,12 +28,12 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
     engines, findings, candidate_risks, limitations = [], [], [], []
     required_engines, unavailable_engines, failed_engines = [], [], []
 
+    _emit(progress, "scanning")
     if source["type"] == "functional_document":
         candidate_risks, limitations = analyze_requirements_file(target)
 
     # Repository scanners inspect files only; SCAN never executes repository code.
     if source["type"] == "repository":
-        _emit(progress, "scanning")
         required_engines = [scanner_type.name for scanner_type in PASSIVE_SCANNERS]
         for scanner_type in PASSIVE_SCANNERS:
             scanner = scanner_type()
@@ -76,6 +76,7 @@ def run_scan(target: str, progress=None) -> dict:
     target = str(target or "").strip()
     _emit(progress, "received")
     if is_remote_repository(target):
+        _emit(progress, "identifying")
         with TemporaryDirectory(prefix="breakers-repo-") as tmp:
             workspace = Path(tmp) / "repository"
             clone_repository(target, workspace)
