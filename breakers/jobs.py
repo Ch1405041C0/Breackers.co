@@ -114,19 +114,20 @@ class ScanJobStore:
         def runner():
             try:
                 result = work(job.progress)
+                if cleanup_path:
+                    shutil.rmtree(cleanup_path, ignore_errors=True)
                 job.progress("completed")
                 with job.lock:
                     job.result = result
                     job.state = "completed"
                     job.finished_monotonic = time.monotonic()
             except Exception as exc:
+                if cleanup_path:
+                    shutil.rmtree(cleanup_path, ignore_errors=True)
                 with job.lock:
                     job.state = "failed"
                     job.error = _safe_error(exc)
                     job.finished_monotonic = time.monotonic()
-            finally:
-                if cleanup_path:
-                    shutil.rmtree(cleanup_path, ignore_errors=True)
 
         threading.Thread(target=runner, name=f"scan-{job.id[:8]}", daemon=True).start()
 
