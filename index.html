@@ -23,6 +23,8 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 
 /* BREAKERS SCAN ENGINE */
 .scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}.engine-carousel{overflow:hidden;margin:18px 0 22px;border-block:1px solid #364235;padding:13px 0}.engine-track{display:flex;gap:10px;width:max-content;animation:engine-scroll 32s linear infinite}.engine-badge{display:flex;align-items:center;gap:8px;border:1px solid #364235;border-radius:999px;padding:7px 12px;background:#141d18;color:#c7d2c1;font-size:11px;white-space:nowrap}.engine-logo{width:23px;height:23px;display:grid;place-items:center;border-radius:6px;background:#d0f77a;color:#182012;font:800 10px ui-monospace,monospace}.engine-badge b{color:#f0f2e9}.engine-badge small{color:#88dfb4;font-size:9px}.engine-badge.planned{opacity:.72}.engine-badge.planned small{color:#adb8aa}@keyframes engine-scroll{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
+
+.scan-grid>div{min-width:0}.scan-mode-label{font-size:13px;font-weight:700;margin:18px 0 9px}.scan-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.scan-mode{border:1px solid #364235;background:#111911;color:#f0f2e9;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:650}.scan-mode:hover,.scan-mode.active{border-color:#d0f77a;color:#d0f77a}.scan-help{font-size:10px;color:#adb8aa;margin:7px 0 0}.engine-carousel{width:100%;max-width:100%;overflow:hidden;margin:24px 0 0}.engine-track{will-change:transform}.engine-badge small{display:none}@media(max-width:760px){.scan-modes{display:grid;grid-template-columns:1fr 1fr}.scan-mode{text-align:left}}
 </style>
 </head>
 <body id="inicio">
@@ -32,7 +34,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <a class="brand" href="#inicio" aria-label="BREAKERS CO, inicio"><i class="brand-dot" aria-hidden="true"></i>BREAKERS<span>CO</span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">Menú <span aria-hidden="true">☰</span></button>
     <nav class="links" id="nav-links" aria-label="Navegación principal">
-      <a href="#productos">Productos</a><a href="#enfoque">Cómo trabajamos</a><a class="btn outline" href="#proyecto">Preparar diagnóstico <span aria-hidden="true">↗</span></a>
+      <a href="#productos">Productos</a><a href="#enfoque">Cómo trabajamos</a><a class="btn outline" href="#scan-engine">Preparar diagnóstico <span aria-hidden="true">↗</span></a>
     </nav>
   </div>
 </header>
@@ -87,62 +89,68 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
   </section>
   
 <section class="content" id="scan-engine"><div class="wrap">
- <div class="section-head"><div><span class="small-label">BREAKERS / SCAN ENGINE</span><h2>Un diagnóstico.<br>Múltiples motores.</h2></div><p>Orquesta evidencia de código, dependencias, seguridad y rendimiento y la normaliza en un único mapa de riesgos.</p></div>
  <div class="scan-engine">
-  <div class="scan-grid"><div>
-   <h3>Preparar SCAN</h3><p class="muted">Indicá el objetivo autorizado. Esta interfaz prepara el trabajo y puede consumir resultados del backend/orquestador.</p>
-   <label for="scan-target">URL / proyecto / repositorio</label><input id="scan-target" placeholder="https://staging.ejemplo.com o proyecto-local">
-   <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
-   <div class="engine-carousel" aria-label="Motores y herramientas BREAKERS"><div class="engine-track">
-<div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b><small>CORE</small></div>
-<div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b><small>INTEGRADO</small></div>
-<div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b><small>INTEGRADO</small></div>
-<div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b><small>DETECTADO</small></div>
-<div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b><small>DETECTADO</small></div>
-<div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b><small>DETECTADO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">SP</span><b>Spectral</b><small>PRÓXIMO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">ST</span><b>Schemathesis</b><small>PRÓXIMO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">SG</span><b>Semgrep</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">AX</span><b>axe-core</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">P</span><b>Pa11y</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">K6</span><b>k6</b><small>CATÁLOGO</small></div>
-<div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b><small>CORE</small></div>
-<div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b><small>INTEGRADO</small></div>
-<div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b><small>INTEGRADO</small></div>
-<div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b><small>DETECTADO</small></div>
-<div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b><small>DETECTADO</small></div>
-<div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b><small>DETECTADO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">SP</span><b>Spectral</b><small>PRÓXIMO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">ST</span><b>Schemathesis</b><small>PRÓXIMO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">SG</span><b>Semgrep</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">AX</span><b>axe-core</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">P</span><b>Pa11y</b><small>CATÁLOGO</small></div>
-<div class="engine-badge planned"><span class="engine-logo">K6</span><b>k6</b><small>CATÁLOGO</small></div>
-</div></div>
-   <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button><p class="scan-warning">Por seguridad, el HTML no lanza ataques ni carga contra terceros. Los motores activos se ejecutan en el backend únicamente sobre objetivos autorizados.</p>
-  </div><div><span class="small-label">QUALITY BRIEF / LIVE</span><div id="scan-console" class="scan-console">SCAN listo.
-Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findings"></div></div></div>
+  <div class="scan-grid">
+   <div>
+    <h3>Preparar SCAN</h3>
+    <p class="muted">Indicá el objetivo autorizado. Esta interfaz prepara el trabajo y puede consumir resultados del backend/orquestador.</p>
+    <div class="scan-mode-label">¿Qué querés analizar?</div>
+    <div class="scan-modes" role="group" aria-label="Tipo de evidencia">
+      <button class="scan-mode active" type="button" data-mode="web">◉ Sitio web</button>
+      <button class="scan-mode" type="button" data-mode="repository">⌘ Repositorio</button>
+      <button class="scan-mode" type="button" data-mode="api">↔ API</button>
+      <button class="scan-mode" type="button" data-mode="app">▣ App</button>
+      <button class="scan-mode" type="button" data-mode="file">＋ Archivo</button>
+    </div>
+    <label id="scan-target-label" for="scan-target">URL del sitio</label>
+    <input id="scan-target" placeholder="https://staging.ejemplo.com">
+    <p id="scan-target-help" class="scan-help">Ingresá una URL propia o un entorno para el que tengas autorización expresa.</p>
+    <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
+    <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button>
+    <p class="scan-warning">Por seguridad, BREAKERS no ejecuta pruebas activas contra terceros. Los motores se usan únicamente sobre objetivos autorizados.</p>
+   </div>
+   <div>
+    <span class="small-label">QUALITY BRIEF / LIVE</span>
+    <div id="scan-console" class="scan-console">SCAN listo.
+Esperando objetivo autorizado…</div>
+    <div id="scan-findings" class="scan-findings"></div>
+   </div>
+  </div>
+  <div class="engine-carousel" aria-label="Motores integrados en BREAKERS">
+   <div class="engine-track">
+    <div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b></div>
+    <div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b></div>
+    <div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b></div>
+    <div class="engine-badge"><span class="engine-logo">SP</span><b>Spectral</b></div>
+    <div class="engine-badge"><span class="engine-logo">ST</span><b>Schemathesis</b></div>
+    <div class="engine-badge"><span class="engine-logo">SG</span><b>Semgrep</b></div>
+    <div class="engine-badge"><span class="engine-logo">AX</span><b>axe-core</b></div>
+    <div class="engine-badge"><span class="engine-logo">P</span><b>Pa11y</b></div>
+    <div class="engine-badge"><span class="engine-logo">K6</span><b>k6</b></div>
+    <div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b></div>
+    <div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b></div>
+    <div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b></div>
+    <div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b></div>
+    <div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b></div>
+    <div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b></div>
+    <div class="engine-badge"><span class="engine-logo">SP</span><b>Spectral</b></div>
+    <div class="engine-badge"><span class="engine-logo">ST</span><b>Schemathesis</b></div>
+    <div class="engine-badge"><span class="engine-logo">SG</span><b>Semgrep</b></div>
+    <div class="engine-badge"><span class="engine-logo">AX</span><b>axe-core</b></div>
+    <div class="engine-badge"><span class="engine-logo">P</span><b>Pa11y</b></div>
+    <div class="engine-badge"><span class="engine-logo">K6</span><b>k6</b></div>
+    <div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b></div>
+    <div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b></div>
+    <div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b></div>
+   </div>
+  </div>
  </div>
 </div></section>
 <section class="content method" id="enfoque" aria-labelledby="method-title"><div class="wrap">
     <div class="section-head"><div><span class="small-label">02 / NUESTRO ENFOQUE</span><h2>Calidad que se puede<br>explicar y comprobar.</h2></div><p>Combinamos criterio de QA, automatización e investigación para resolver problemas concretos del producto.</p></div>
     <div class="method-grid"><article class="method-card"><span class="mono">01 — CONTEXTO</span><h3>Entender el negocio.</h3><p>Partimos de las reglas, los usuarios y los flujos críticos. Las dudas se convierten en preguntas explícitas.</p></article><article class="method-card"><span class="mono">02 — EVIDENCIA</span><h3>Hacer visible el resultado.</h3><p>Cada conclusión debe poder relacionarse con un requisito, una observación o una prueba reproducible.</p></article><article class="method-card"><span class="mono">03 — APRENDIZAJE</span><h3>Mejorar con cada versión.</h3><p>Los defectos y sus causas alimentan nuevos escenarios, prioridades y criterios de seguimiento.</p></article></div>
   </div></section>
-  <section class="content" id="proyecto" aria-labelledby="brief-title"><div class="wrap brief-grid">
-    <div class="brief-copy"><span class="small-label">03 / TU PUNTO DE PARTIDA</span><h2 id="brief-title">Dale contexto<br>al próximo paso.</h2><p>Prepará un resumen de tu proyecto y del problema que querés resolver. Te ayuda a definir qué producto explorar primero.</p><div class="brief-info"><p><strong>¿Todavía no sabés por dónde empezar?</strong><br>Elegí SCAN para ordenar los riesgos y las preguntas.</p><p>El resumen se genera en tu navegador. Podés descargarlo y compartirlo con tu equipo.</p></div></div>
-    <div><form id="brief-form">
-      <div class="fields">
-        <div class="field full"><label for="project-name">Nombre del proyecto</label><input id="project-name" name="project" maxlength="120" placeholder="Ej. Plataforma de pedidos" autocomplete="off" required></div>
-        <div class="field"><label for="project-type">Tipo de producto</label><select id="project-type" name="type" required><option value="">Elegí una opción</option><option>Aplicación web</option><option>Aplicación móvil</option><option>API o integración</option><option>Sistema con IA</option><option>Otro</option></select></div>
-        <div class="field"><label for="product-choice">Producto a explorar</label><select id="product-choice" name="product" required><option value="scan">SCAN · identificar riesgos</option><option value="strike">STRIKE · preparar pruebas</option><option value="control">CONTROL · seguir resultados</option></select></div>
-        <div class="field full"><label for="project-goal">¿Qué necesitás resolver?</label><textarea id="project-goal" name="goal" maxlength="2000" placeholder="Contanos el flujo afectado, qué observaste y qué esperás comprobar." required></textarea></div>
-        <div class="field"><label for="project-stage">Momento del proyecto</label><select id="project-stage" name="stage" required><option value="">Elegí una opción</option><option>En definición</option><option>En desarrollo</option><option>Antes de una entrega</option><option>En producción</option></select></div>
-        <div class="field"><label for="project-evidence">Evidencia disponible</label><select id="project-evidence" name="evidence" required><option value="">Elegí una opción</option><option>Requisitos o documentación</option><option>Casos o resultados de pruebas</option><option>Logs o reportes de incidentes</option><option>Varias de las anteriores</option><option>Todavía no tengo</option></select></div>
-      </div>
-      <div class="form-action"><button class="btn" type="submit">Preparar mi resumen <span class="arrow" aria-hidden="true">↗</span></button><p class="form-note">No incluyas contraseñas ni datos personales de clientes. Este formulario prepara un archivo local; no envía una consulta.</p></div>
-    </form><p id="brief-status" class="form-status" role="status" aria-live="polite"></p><section class="result" id="brief-result" aria-labelledby="result-title" hidden><h3 id="result-title">Tu resumen está listo.</h3><pre id="brief-preview"></pre><button id="download-brief" class="btn" type="button">Descargar resumen .txt <span aria-hidden="true">↓</span></button></section></div>
-  </div></section>
-</main>
+  </main>
 <footer><div class="wrap footer-grid"><a class="brand" href="#inicio">BREAKERS<span>CO</span></a><p>Calidad de software con criterio y evidencia.</p><nav class="footer-links" aria-label="Productos"><a href="#productos">SCAN</a><a href="#productos">STRIKE</a><a href="#productos">CONTROL</a></nav><p>© 2026 BREAKERS CO</p></div></footer>
 <script>
 'use strict';
@@ -157,29 +165,21 @@ const products=['scan','strike','control'];
 function showExample(product,focus=false){if(!products.includes(product))return;products.forEach(key=>{const active=key===product;const tab=document.getElementById('tab-'+key);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;document.getElementById('panel-'+key).hidden=!active;});if(focus)document.getElementById('tab-'+product).focus();}
 products.forEach(product=>{const tab=document.getElementById('tab-'+product);tab.addEventListener('click',()=>showExample(product));tab.addEventListener('keydown',event=>{let next=products.indexOf(product);if(event.key==='ArrowRight')next=(next+1)%products.length;else if(event.key==='ArrowLeft')next=(next+products.length-1)%products.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=products.length-1;else return;event.preventDefault();showExample(products[next],true);});});
 document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{showExample(button.dataset.example,true);document.getElementById('ejemplo').scrollIntoView({block:'start'});}));
-document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('product-choice').value=button.dataset.prepare;invalidateBrief();document.getElementById('proyecto').scrollIntoView({block:'start'});document.getElementById('project-name').focus({preventScroll:true});}));
-const briefForm=document.getElementById('brief-form');
-const result=document.getElementById('brief-result');
-const status=document.getElementById('brief-status');
-const nextSteps={scan:'Reunir las reglas del flujo, su documentación y las dudas que impiden evaluar el riesgo.',strike:'Confirmar las reglas, preparar datos y definir los resultados esperados para un primer conjunto de casos.',control:'Reunir el plan, los resultados de una misma versión y los criterios de salida acordados.'};
-let currentBrief='';let currentName='';
-function invalidateBrief(){if(!currentBrief)return;currentBrief='';currentName='';result.hidden=true;status.textContent='El proyecto cambió. Prepará el resumen de nuevo para incluir los cambios.';}
-briefForm.addEventListener('input',invalidateBrief);briefForm.addEventListener('change',invalidateBrief);
-briefForm.addEventListener('submit',event=>{
-  event.preventDefault();
-  for(const id of ['project-name','project-goal']){const input=document.getElementById(id);input.value=input.value.trim();}
-  if(!briefForm.reportValidity())return;
-  const d=new FormData(briefForm);const product=d.get('product');if(!products.includes(product))return;
-  currentName=d.get('project');
-  currentBrief=['BREAKERS CO · RESUMEN DE PROYECTO','','Proyecto: '+currentName,'Tipo: '+d.get('type'),'Producto a explorar: '+product.toUpperCase(),'Momento: '+d.get('stage'),'Evidencia disponible: '+d.get('evidence'),'','Problema y objetivo:',d.get('goal'),'','Primer paso propuesto:',nextSteps[product],'','Estado: resumen preparado por el usuario. No constituye un diagnóstico ni una prueba ejecutada.','No se envió información desde este formulario.'].join('\n');
-  document.getElementById('brief-preview').textContent=currentBrief;result.hidden=false;status.textContent='Resumen preparado. Revisalo y descargalo cuando esté listo.';result.scrollIntoView({block:'nearest'});
-});
-document.getElementById('download-brief').addEventListener('click',()=>{
-  if(!currentBrief)return;
-  const blob=new Blob(['\ufeff'+currentBrief],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  const name=currentName.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70)||'proyecto';
-  a.href=url;a.download='BREAKERS_'+name+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='Descarga iniciada. El resumen no fue enviado a terceros.';
-});
+document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('scan-engine').scrollIntoView({block:'start'});document.getElementById('scan-target').focus({preventScroll:true});}));
+
+const scanModeConfig={
+ web:{label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
+ repository:{label:'Ruta del repositorio',placeholder:'C:\\\\proyectos\\\\mi-repo',help:'Usá una ruta local autorizada del repositorio.'},
+ api:{label:'API / contrato',placeholder:'https://staging.ejemplo.com/openapi.json',help:'Indicá el endpoint o contrato OpenAPI autorizado.'},
+ app:{label:'Aplicación',placeholder:'Ruta o referencia de la aplicación',help:'Indicá la aplicación o artefacto que querés evaluar.'},
+ file:{label:'Archivo / evidencia',placeholder:'Ruta local del archivo',help:'Documento funcional, evidencia, especificación u otro artefacto disponible.'}
+};
+let scanMode='web';
+document.querySelectorAll('.scan-mode').forEach(btn=>btn.addEventListener('click',()=>{
+ scanMode=btn.dataset.mode;
+ document.querySelectorAll('.scan-mode').forEach(x=>x.classList.toggle('active',x===btn));
+ const c=scanModeConfig[scanMode];document.getElementById('scan-target-label').textContent=c.label;document.getElementById('scan-target').placeholder=c.placeholder;document.getElementById('scan-target-help').textContent=c.help;
+}));
 
 // BREAKERS SCAN front-end orchestrator. Real scanners live behind /api/scan.
 const scanBtn=document.getElementById('run-scan');
@@ -190,7 +190,7 @@ scanBtn?.addEventListener('click',async()=>{
  if(!target){scanConsole.textContent='Falta indicar el objetivo.';return} if(!authorized){scanConsole.textContent='SCAN bloqueado: necesitás confirmar autorización.';return}
  scanBtn.disabled=true; scanConsole.textContent='DISCOVERY → '+target+'\nDetectando evidencia y seleccionando motores BREAKERS…'; scanFindings.innerHTML='';
  try{
-  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,authorized:true,mode:'safe'})});
+  const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,authorized:true,mode:'safe',input_type:scanMode})});
   if(!r.ok) throw new Error('backend no disponible'); const data=await r.json();
   scanConsole.textContent='SCAN COMPLETO\nMotores: '+(data.engines||[]).join(' · ')+'\nHallazgos: '+(data.findings||[]).length+'\nScore: '+(data.score??'N/D');
   scanFindings.innerHTML=(data.findings||[]).map(x=>'<div class="scan-finding"><span class="sev">'+esc(x.severity||'INFO')+'</span><strong>'+esc(x.title||'Hallazgo')+'</strong><br><span class="muted">'+esc(x.engine||'BREAKERS')+' · '+esc(x.evidence||'')+'</span></div>').join('');
