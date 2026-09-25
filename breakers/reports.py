@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 import json
 import uuid
 
+from .antecedents import build_scan_antecedent_snapshot
+from .interventions import generate_public_breakers_id
 from .storage import SQLiteStore
 
 AREA_LABELS = {"dependency": "Dependencias y componentes", "configuration": "Seguridad y configuración", "secret": "Secretos / credenciales", "quality": "Calidad general"}
@@ -42,11 +44,27 @@ class ReportStore:
         self.database = database
 
     def save_scan_result(self, full_report: dict) -> dict:
-        scan_id, report_id, created_at = uuid.uuid4().hex, uuid.uuid4().hex, _now()
+        scan_id, report_id, intervention_id, created_at = uuid.uuid4().hex, uuid.uuid4().hex, uuid.uuid4().hex, _now()
+        public_breakers_id = generate_public_breakers_id("scan")
         summary = build_public_summary(scan_id, report_id, full_report)
+        snapshot = build_scan_antecedent_snapshot(
+            breakers_id=public_breakers_id, created_at=created_at, full_report=full_report
+        )
         with self.database.connect() as connection:
             connection.execute("INSERT INTO scans(scan_id, created_at) VALUES (?, ?)", (scan_id, created_at))
-            connection.execute("INSERT INTO reports(report_id, scan_id, public_summary, full_report, created_at) VALUES (?, ?, ?, ?, ?)", (report_id, scan_id, json.dumps(summary), json.dumps(full_report), created_at))
+            connection.execute(
+                "INSERT INTO reports(report_id, scan_id, public_summary, full_report, created_at) VALUES (?, ?, ?, ?, ?)",
+                (report_id, scan_id, json.dumps(summary), json.dumps(full_report), created_at),
+            )
+            connection.execute(
+                "INSERT INTO interventions(intervention_id, public_breakers_id, product, resource_id, created_at) VALUES (?, ?, 'scan', ?, ?)",
+                (intervention_id, public_breakers_id, scan_id, created_at),
+            )
+            connection.execute(
+                "INSERT INTO scan_antecedents(intervention_id, snapshot, created_at) VALUES (?, ?, ?)",
+                (intervention_id, json.dumps(snapshot), created_at),
+            )
+        summary["breakers_id"] = public_breakers_id
         return summary
 
     def get_public_summary(self, report_id: str) -> dict | None:
@@ -58,3 +76,19 @@ class ReportStore:
         with self.database.connect() as connection:
             row = connection.execute("SELECT full_report FROM reports WHERE report_id = ?", (report_id,)).fetchone()
         return json.loads(row["full_report"]) if row else None
+
+    def get_intervention_by_public_id(self, public_breakers_id: str) -> dict | None:
+        """Internal resolver only. Resolving identity does not authorize antecedent access."""
+        with self.database.connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM interventions WHERE public_breakers_id = ?", (public_breakers_id,)
+            ).fetchone()
+        return dict(row) if row else None
+
+    def get_scan_antecedent_for_intervention(self, intervention_id: str) -> dict | None:
+        """Internal storage primitive; no public route exposes this method."""
+        with self.database.connect() as connection:
+            row = connection.execute(
+                "SELECT snapshot FROM scan_antecedents WHERE intervention_id = ?", (intervention_id,)
+            ).fetchone()
+        return json.loads(row["snapshot"]) if row else None
