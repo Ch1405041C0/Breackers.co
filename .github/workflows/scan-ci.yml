@@ -1,0 +1,25 @@
+name: SCAN backend CI
+
+on:
+  push:
+    branches:
+      - fix/tool-carousel
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run pytest
+        run: python -m pytest -q
+      - name: Build SCAN image
+        run: docker build -t breakers-scan:test .
+      - name: Verify Trivy
+        run: docker run --rm breakers-scan:test sh -lc 'which trivy && trivy --version'
+      - name: Verify Gitleaks
+        run: docker run --rm breakers-scan:test sh -lc 'which gitleaks && gitleaks version'
