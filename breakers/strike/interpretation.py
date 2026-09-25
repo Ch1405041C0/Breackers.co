@@ -115,8 +115,6 @@ def _line_chunks(source: NormalizedSource):
 
 def _explicit_type(statement: str) -> InterpretationType | None:
     text = statement.lower()
-    if re.search(r"\b(actor|usuario|administrador|cliente|operator|user|admin)\b", text) and len(text.split()) <= 8:
-        return InterpretationType.ACTOR
     if re.search(r"\b(no puede|must not|prohibido|no se permite|cannot)\b", text):
         return InterpretationType.RESTRICTION
     if re.search(r"\b(puede|can|may|permite|allowed)\b", text):
@@ -127,4 +125,6 @@ def _explicit_type(statement: str) -> InterpretationType | None:
         return InterpretationType.STATE
     if re.search(r"\b(regla|rule|debe|must|required|requiere)\b", text):
         return InterpretationType.BUSINESS_RULE
+    if re.fullmatch(r"\s*(?:el|la|the)?\s*(actor|usuario|administrador|cliente|operator|user|admin)\s*[.!]?\s*", text):
+        return InterpretationType.ACTOR
     return None
