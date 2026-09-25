@@ -22,9 +22,11 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 /* BREAKERS SCAN ENGINE */
-.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}.engine-carousel{overflow:hidden;margin:18px 0 22px;border-block:1px solid #364235;padding:13px 0}.engine-track{display:flex;gap:10px;width:max-content;animation:engine-scroll 32s linear infinite}.engine-badge{display:flex;align-items:center;gap:8px;border:1px solid #364235;border-radius:999px;padding:7px 12px;background:#141d18;color:#c7d2c1;font-size:11px;white-space:nowrap}.engine-logo{width:23px;height:23px;display:grid;place-items:center;border-radius:6px;background:#d0f77a;color:#182012;font:800 10px ui-monospace,monospace}.engine-badge b{color:#f0f2e9}.engine-badge small{color:#88dfb4;font-size:9px}.engine-badge.planned{opacity:.72}.engine-badge.planned small{color:#adb8aa}@keyframes engine-scroll{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
+.scan-engine{margin-top:30px;border:1px solid #364235;border-radius:18px;background:#0d1411;padding:28px}.scan-engine h3{font-size:28px;margin:0 0 8px}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.scan-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.scan-tool{border:1px solid #364235;border-radius:8px;padding:12px;font-size:12px;color:#c7d2c1;background:#141d18}.scan-tool b{display:block;color:#d0f77a;margin-bottom:3px}.scan-console{background:#07100c;border:1px solid #33473a;border-radius:10px;padding:16px;min-height:170px;font:12px ui-monospace,monospace;white-space:pre-wrap;color:#88dfb4}.scan-warning{font-size:11px;color:#adb8aa;margin-top:12px}.scan-score{font-size:44px;color:#d0f77a;font-weight:800}.scan-findings{margin-top:16px}.scan-finding{border-top:1px solid #364235;padding:12px 0;font-size:12px}.sev{font:10px ui-monospace,monospace;padding:3px 6px;border:1px solid #657254;border-radius:4px;margin-right:7px}.scan-engine input{margin-top:5px}.scan-engine .auth{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;color:#adb8aa}.scan-engine .auth input{width:auto;margin-top:4px}}@media(prefers-reduced-motion:reduce){.engine-track{animation:none;flex-wrap:wrap;width:auto}}@media(max-width:760px){.scan-grid{grid-template-columns:1fr}.scan-tools{grid-template-columns:1fr 1fr}}
 
 .scan-grid>div{min-width:0}.scan-mode-label{font-size:13px;font-weight:700;margin:18px 0 9px}.scan-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.scan-mode{border:1px solid #364235;background:#111911;color:#f0f2e9;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:650}.scan-mode:hover,.scan-mode.active{border-color:#d0f77a;color:#d0f77a}.scan-help{font-size:10px;color:#adb8aa;margin:7px 0 0}.engine-carousel{width:100%;max-width:100%;overflow:hidden;margin:24px 0 0}.engine-track{will-change:transform}.engine-badge small{display:none}@media(max-width:760px){.scan-modes{display:grid;grid-template-columns:1fr 1fr}.scan-mode{text-align:left}}
+
+.tech-stack{padding:72px 0 58px;border-top:1px solid var(--line);background:#0b1210;overflow:hidden}.tech-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:38px}.tech-head h2{font-size:clamp(28px,3.5vw,43px);line-height:1.08;letter-spacing:-1.5px;font-weight:550;margin:0}.tech-head p{max-width:430px;color:var(--muted);font-size:14px;margin:0}.tool-carousel{overflow:hidden;width:100%;padding:18px 0}.tool-track{display:flex;align-items:center;gap:24px;width:max-content;animation:tool-scroll 42s linear infinite}.tool-carousel:hover .tool-track{animation-play-state:paused}.tool-logo{position:relative;width:88px;height:88px;flex:0 0 88px;margin:0;display:grid;place-items:center;border:1px solid #26372f;background:#101915}.tool-logo img{display:block;width:52px;height:52px;object-fit:contain;transition:transform .18s ease,filter .18s ease}.tool-logo:hover img{transform:scale(1.09)}.tool-logo:after{content:attr(data-name);position:absolute;left:50%;bottom:calc(100% + 10px);transform:translate(-50%,6px);background:#f0f2e9;color:#101411;padding:6px 9px;font:700 10px ui-monospace,monospace;white-space:nowrap;opacity:0;pointer-events:none;transition:.16s;border-radius:3px;z-index:4}.tool-logo:before{content:'';position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);border:5px solid transparent;border-top-color:#f0f2e9;opacity:0;transition:.16s}.tool-logo:hover:after,.tool-logo:hover:before{opacity:1}.tool-logo:hover:after{transform:translate(-50%,0)}@keyframes tool-scroll{to{transform:translateX(calc(-50% - 12px))}}@media(max-width:760px){.tech-head{display:block}.tech-head p{margin-top:16px}.tool-logo{width:74px;height:74px;flex-basis:74px}.tool-logo img{width:44px;height:44px}}@media(prefers-reduced-motion:reduce){.tool-track{animation:none;flex-wrap:wrap;width:auto}}
 </style>
 </head>
 <body id="inicio">
@@ -116,34 +118,6 @@ Esperando objetivo autorizado…</div>
     <div id="scan-findings" class="scan-findings"></div>
    </div>
   </div>
-  <div class="engine-carousel" aria-label="Motores integrados en BREAKERS">
-   <div class="engine-track">
-    <div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b></div>
-    <div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b></div>
-    <div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b></div>
-    <div class="engine-badge"><span class="engine-logo">SP</span><b>Spectral</b></div>
-    <div class="engine-badge"><span class="engine-logo">ST</span><b>Schemathesis</b></div>
-    <div class="engine-badge"><span class="engine-logo">SG</span><b>Semgrep</b></div>
-    <div class="engine-badge"><span class="engine-logo">AX</span><b>axe-core</b></div>
-    <div class="engine-badge"><span class="engine-logo">P</span><b>Pa11y</b></div>
-    <div class="engine-badge"><span class="engine-logo">K6</span><b>k6</b></div>
-    <div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b></div>
-    <div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b></div>
-    <div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b></div>
-    <div class="engine-badge"><span class="engine-logo">SQ</span><b>SonarQube</b></div>
-    <div class="engine-badge"><span class="engine-logo">Z</span><b>OWASP ZAP</b></div>
-    <div class="engine-badge"><span class="engine-logo">JM</span><b>JMeter</b></div>
-    <div class="engine-badge"><span class="engine-logo">SP</span><b>Spectral</b></div>
-    <div class="engine-badge"><span class="engine-logo">ST</span><b>Schemathesis</b></div>
-    <div class="engine-badge"><span class="engine-logo">SG</span><b>Semgrep</b></div>
-    <div class="engine-badge"><span class="engine-logo">AX</span><b>axe-core</b></div>
-    <div class="engine-badge"><span class="engine-logo">P</span><b>Pa11y</b></div>
-    <div class="engine-badge"><span class="engine-logo">K6</span><b>k6</b></div>
-    <div class="engine-badge"><span class="engine-logo">B</span><b>Breakers</b></div>
-    <div class="engine-badge"><span class="engine-logo">T</span><b>Trivy</b></div>
-    <div class="engine-badge"><span class="engine-logo">GL</span><b>Gitleaks</b></div>
-   </div>
-  </div>
  </div>
 </div></section>
 <section class="content method" id="enfoque" aria-labelledby="method-title"><div class="wrap">
@@ -151,6 +125,42 @@ Esperando objetivo autorizado…</div>
     <div class="method-grid"><article class="method-card"><span class="mono">01 — CONTEXTO</span><h3>Entender el negocio.</h3><p>Partimos de las reglas, los usuarios y los flujos críticos. Las dudas se convierten en preguntas explícitas.</p></article><article class="method-card"><span class="mono">02 — EVIDENCIA</span><h3>Hacer visible el resultado.</h3><p>Cada conclusión debe poder relacionarse con un requisito, una observación o una prueba reproducible.</p></article><article class="method-card"><span class="mono">03 — APRENDIZAJE</span><h3>Mejorar con cada versión.</h3><p>Los defectos y sus causas alimentan nuevos escenarios, prioridades y criterios de seguimiento.</p></article></div>
   </div></section>
   </main>
+
+<section class="tech-stack" aria-labelledby="tech-title">
+ <div class="wrap">
+  <span class="small-label">TRABAJAMOS CON</span>
+  <div class="tech-head">
+   <h2 id="tech-title">Herramientas especializadas,<br>un solo criterio de calidad.</h2>
+   <p>Integramos herramientas especializadas según el riesgo, la evidencia disponible y el estado del producto.</p>
+  </div>
+  <div class="tool-carousel" aria-label="Herramientas con las que trabaja BREAKERS">
+   <div class="tool-track">
+    <figure class="tool-logo" data-name="SonarQube"><img src="https://cdn.simpleicons.org/sonarqube/4E9BCD" alt="SonarQube"></figure>
+    <figure class="tool-logo" data-name="OWASP ZAP"><img src="https://raw.githubusercontent.com/zaproxy/zaproxy/main/zap/src/main/resources/resource/zap64x64.png" alt="OWASP ZAP"></figure>
+    <figure class="tool-logo" data-name="Apache JMeter"><img src="https://jmeter.apache.org/images/jmeter_square.svg" alt="Apache JMeter"></figure>
+    <figure class="tool-logo" data-name="Trivy"><img src="https://cdn.simpleicons.org/trivy/1904DA" alt="Trivy"></figure>
+    <figure class="tool-logo" data-name="Gitleaks"><img src="https://cdn.simpleicons.org/git/EE5A47" alt="Gitleaks"></figure>
+    <figure class="tool-logo" data-name="Spectral"><img src="https://cdn.simpleicons.org/stoplight/5A4FCF" alt="Spectral"></figure>
+    <figure class="tool-logo" data-name="Schemathesis"><img src="https://cdn.simpleicons.org/openapiinitiative/6BA539" alt="Schemathesis"></figure>
+    <figure class="tool-logo" data-name="Semgrep"><img src="https://cdn.simpleicons.org/semgrep/FFFFFF" alt="Semgrep"></figure>
+    <figure class="tool-logo" data-name="axe-core"><img src="https://cdn.simpleicons.org/deque/FFFFFF" alt="axe-core"></figure>
+    <figure class="tool-logo" data-name="Pa11y"><img src="https://cdn.simpleicons.org/accessibility/01A252" alt="Pa11y"></figure>
+    <figure class="tool-logo" data-name="k6"><img src="https://cdn.simpleicons.org/k6/7D64FF" alt="k6"></figure>
+    <figure class="tool-logo" data-name="SonarQube" aria-hidden="true"><img src="https://cdn.simpleicons.org/sonarqube/4E9BCD" alt=""></figure>
+    <figure class="tool-logo" data-name="OWASP ZAP" aria-hidden="true"><img src="https://raw.githubusercontent.com/zaproxy/zaproxy/main/zap/src/main/resources/resource/zap64x64.png" alt=""></figure>
+    <figure class="tool-logo" data-name="Apache JMeter" aria-hidden="true"><img src="https://jmeter.apache.org/images/jmeter_square.svg" alt=""></figure>
+    <figure class="tool-logo" data-name="Trivy" aria-hidden="true"><img src="https://cdn.simpleicons.org/trivy/1904DA" alt=""></figure>
+    <figure class="tool-logo" data-name="Gitleaks" aria-hidden="true"><img src="https://cdn.simpleicons.org/git/EE5A47" alt=""></figure>
+    <figure class="tool-logo" data-name="Spectral" aria-hidden="true"><img src="https://cdn.simpleicons.org/stoplight/5A4FCF" alt=""></figure>
+    <figure class="tool-logo" data-name="Schemathesis" aria-hidden="true"><img src="https://cdn.simpleicons.org/openapiinitiative/6BA539" alt=""></figure>
+    <figure class="tool-logo" data-name="Semgrep" aria-hidden="true"><img src="https://cdn.simpleicons.org/semgrep/FFFFFF" alt=""></figure>
+    <figure class="tool-logo" data-name="axe-core" aria-hidden="true"><img src="https://cdn.simpleicons.org/deque/FFFFFF" alt=""></figure>
+    <figure class="tool-logo" data-name="Pa11y" aria-hidden="true"><img src="https://cdn.simpleicons.org/accessibility/01A252" alt=""></figure>
+    <figure class="tool-logo" data-name="k6" aria-hidden="true"><img src="https://cdn.simpleicons.org/k6/7D64FF" alt=""></figure>
+   </div>
+  </div>
+ </div>
+</section>
 <footer><div class="wrap footer-grid"><a class="brand" href="#inicio">BREAKERS<span>CO</span></a><p>Calidad de software con criterio y evidencia.</p><nav class="footer-links" aria-label="Productos"><a href="#productos">SCAN</a><a href="#productos">STRIKE</a><a href="#productos">CONTROL</a></nav><p>© 2026 BREAKERS CO</p></div></footer>
 <script>
 'use strict';
