@@ -117,10 +117,10 @@ def _explicit_type(statement: str) -> InterpretationType | None:
     text = statement.lower()
     if re.search(r"\b(actor|usuario|administrador|cliente|operator|user|admin)\b", text) and len(text.split()) <= 8:
         return InterpretationType.ACTOR
-    if re.search(r"\b(puede|can|may|permite|allowed)\b", text):
-        return InterpretationType.PERMISSION
     if re.search(r"\b(no puede|must not|prohibido|no se permite|cannot)\b", text):
         return InterpretationType.RESTRICTION
+    if re.search(r"\b(puede|can|may|permite|allowed)\b", text):
+        return InterpretationType.PERMISSION
     if re.search(r"\b(estado|state)\b.*\b(a|to|->|→)\b", text):
         return InterpretationType.TRANSITION
     if re.search(r"\b(estado|state)\b", text):
