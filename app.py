@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, send_from_directory
 from pathlib import Path
 import tempfile
+import shutil
 from werkzeug.utils import secure_filename
 
 from breakers.jobs import ScanJobStore
@@ -52,7 +53,7 @@ def scan():
         try:
             uploaded.save(target)
         except Exception:
-            Path(workspace).rmdir()
+            shutil.rmtree(workspace, ignore_errors=True)
             raise
         return _start_scan_job(str(target), cleanup_path=workspace)
 
