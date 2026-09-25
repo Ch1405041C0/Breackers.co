@@ -100,7 +100,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     <a class="brand" href="#inicio" aria-label="BREAKERS CO, inicio"><i class="brand-dot" aria-hidden="true"></i>BREAKERS<span>CO</span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">Menú <span aria-hidden="true">☰</span></button>
     <nav class="links" id="nav-links" aria-label="Navegación principal">
-      <a href="#productos">Productos</a><a href="#enfoque">Cómo trabajamos</a><a class="btn outline" href="#scan-engine">Preparar diagnóstico <span aria-hidden="true">↗</span></a>
+      <a href="#productos">Productos</a><a href="#enfoque">Cómo trabajamos</a><a class="btn outline" href="#productos">Elegir producto <span aria-hidden="true">↗</span></a>
     </nav>
   </div>
 </header>
@@ -113,7 +113,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
           <h1 id="hero-title">Encontrá el riesgo.<br><em>Decidí el<br>próximo paso.</em></h1>
           <p class="hero-copy">Analizamos lo que existe hoy en tu proyecto, encontramos riesgos y los convertimos en decisiones respaldadas por evidencia.</p>
           <div class="actions"><a class="btn" href="#productos">Conocé los productos <span class="arrow" aria-hidden="true">↗</span></a><a class="btn outline" href="#ejemplo">Ver un ejemplo</a></div>
-          <p class="subnote">SCAN · STRIKE · CONTROL — tres productos, un recorrido de calidad.</p>
+          <p class="subnote">SCAN · STRIKE · CONTROL — tres productos independientes y combinables.</p>
         </div>
         <div class="report" aria-label="Ejemplo del recorrido de un hallazgo">
           <div class="report-head"><span class="mono">BREAKERS / QUALITY BRIEF</span><span class="chip">EJEMPLO</span></div>
@@ -166,16 +166,16 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
       <div class="section-head"><div><span class="small-label">01 / LOS PRODUCTOS</span><h2>De la incertidumbre<br>a una decisión.</h2></div><p>Elegí el punto de partida según lo que tu equipo necesita resolver. Cada producto tiene una entrada, un resultado y un alcance definido.</p></div>
       <div class="products-grid">
         <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">◎</span><span class="mono">PRODUCTO / 01</span></div><h3>SCAN</h3><h4>Entendé dónde está el riesgo.</h4><p>Revisar requisitos, flujos y evidencias para identificar huecos, priorizar riesgos y orientar la investigación.</p><ul><li>Mapa de riesgos y cobertura</li><li>Preguntas y supuestos visibles</li><li>Próximas acciones priorizadas</li></ul><button type="button" data-example="scan">Explorar SCAN <span aria-hidden="true">↗</span></button></article>
-        <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">↗</span><span class="mono">PRODUCTO / 02</span></div><h3>STRIKE</h3><h4>Convertí el riesgo en pruebas.</h4><p>Preparar un plan con escenarios, datos y resultados esperados que el equipo pueda llevar a la ejecución.</p><ul><li>Casos vinculados a reglas</li><li>Datos y precondiciones</li><li>Prioridades de automatización</li></ul><button type="button" data-example="strike">Explorar STRIKE <span aria-hidden="true">↗</span></button></article>
+        <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">↗</span><span class="mono">PRODUCTO / 02</span></div><h3>STRIKE</h3><h4>Diseñá qué necesitás probar.</h4><p>Transformá definiciones y pruebas existentes en cobertura priorizada y un plan ejecutable.</p><ul><li>Cobertura priorizada</li><li>Pruebas existentes y brechas</li><li>Plan ejecutable y recursos necesarios</li></ul><button type="button" data-example="strike">Explorar STRIKE <span aria-hidden="true">↗</span></button></article>
         <article class="product"><div class="product-top"><span class="product-symbol" aria-hidden="true">≡</span><span class="mono">PRODUCTO / 03</span></div><h3>CONTROL</h3><h4>Seguí la calidad entre versiones.</h4><p>Relacionar ejecuciones y evidencias para detectar regresiones y evaluar los criterios de cada entrega.</p><ul><li>Resultados comparables</li><li>Alertas con contexto</li><li>Decisiones explicadas</li></ul><button type="button" data-example="control">Explorar CONTROL <span aria-hidden="true">↗</span></button></article>
       </div>
       <div class="example" id="ejemplo">
-        <div class="example-header"><span>UN MISMO CASO, TRES ENTREGABLES</span><div class="tabs" role="tablist" aria-label="Ejemplo por producto"><button class="tab" role="tab" id="tab-scan" aria-selected="true" aria-controls="panel-scan" type="button">SCAN</button><button class="tab" role="tab" id="tab-strike" aria-selected="false" aria-controls="panel-strike" tabindex="-1" type="button">STRIKE</button><button class="tab" role="tab" id="tab-control" aria-selected="false" aria-controls="panel-control" tabindex="-1" type="button">CONTROL</button></div></div>
+        <div class="example-header"><span>TRES PRODUCTOS. USALOS SEGÚN LO QUE NECESITE TU PROYECTO.</span><div class="tabs" role="tablist" aria-label="Ejemplo por producto"><button class="tab" role="tab" id="tab-scan" aria-selected="true" aria-controls="panel-scan" type="button">SCAN</button><button class="tab" role="tab" id="tab-strike" aria-selected="false" aria-controls="panel-strike" tabindex="-1" type="button">STRIKE</button><button class="tab" role="tab" id="tab-control" aria-selected="false" aria-controls="panel-control" tabindex="-1" type="button">CONTROL</button></div></div>
         <div role="tabpanel" id="panel-scan" aria-labelledby="tab-scan" tabindex="0">
           <div class="example-grid"><div><span class="small-label">ENTREGABLE / DIAGNÓSTICO</span><h3>Primero, confirmar qué<br>debería ocurrir.</h3><p>Antes de probar una reserva de stock, necesitamos entender la regla y el impacto de incumplirla.</p><button class="btn outline" type="button" data-prepare="scan">Preparar SCAN <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">RIESGO</span><span>Dos operaciones reservan la misma unidad disponible.</span></li><li><span class="tag">PREGUNTA</span><span>¿En qué momento se descuenta o reserva el stock?</span></li><li><span class="tag">EVIDENCIA</span><span>Regla funcional y estados de la operación.</span></li><li><span class="tag">ACCIÓN</span><span>Confirmar la regla y diseñar el escenario concurrente.</span></li></ul></div>
         </div>
         <div role="tabpanel" id="panel-strike" aria-labelledby="tab-strike" tabindex="0" hidden>
-          <div class="example-grid"><div><span class="small-label">ENTREGABLE / PLAN EJECUTABLE</span><h3>Un escenario.<br>Un resultado comprobable.</h3><p>Con la regla confirmada, el plan define cómo preparar, ejecutar y verificar el caso.</p><button class="btn outline" type="button" data-prepare="strike">Preparar STRIKE <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">REGLA</span><span>Ejemplo asumido: el stock no admite reservas por encima de la disponibilidad.</span></li><li><span class="tag">DATOS</span><span>Un producto sintético con una unidad y dos compradores de prueba.</span></li><li><span class="tag">ESCENARIO</span><span>Solicitar ambas reservas y comprobar respuestas y estado final.</span></li><li><span class="tag">ESPERADO</span><span>Solo una reserva confirmada; la otra informa falta de disponibilidad.</span></li></ul></div>
+          <div class="example-grid"><div><span class="small-label">DEFINICIONES → COBERTURA → PLAN EJECUTABLE</span><h3>Diseñá qué necesitás<br>probar.</h3><p>STRIKE parte de las definiciones disponibles y de las pruebas existentes cuando las haya. No requiere un SCAN previo.</p><button class="btn outline" type="button" data-prepare="strike">Preparar STRIKE <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">COBERTURA</span><span>Qué comportamientos, reglas y condiciones deben probarse.</span></li><li><span class="tag">EXISTENTE</span><span>Qué ya está cubierto y qué brechas permanecen.</span></li><li><span class="tag">PRIORIDAD</span><span>Qué cobertura merece atención primero según el contexto.</span></li><li><span class="tag">RECURSOS</span><span>Qué datos, estados y recursos necesita el plan para poder ejecutarse.</span></li></ul></div>
         </div>
         <div role="tabpanel" id="panel-control" aria-labelledby="tab-control" tabindex="0" hidden>
           <div class="example-grid"><div><span class="small-label">ENTREGABLE / SEGUIMIENTO</span><h3>La decisión conserva<br>su evidencia.</h3><p>El resultado se interpreta según la regla de salida, la versión y la información disponible.</p><button class="btn outline" type="button" data-prepare="control">Preparar CONTROL <span aria-hidden="true">↗</span></button></div><ul class="example-list"><li><span class="tag">RESULTADO</span><span>Ejemplo: ambas reservas fueron confirmadas. El caso falla.</span></li><li><span class="tag">TRAZABILIDAD</span><span>Caso STOCK-01, versión evaluada y registro de las dos operaciones.</span></li><li><span class="tag">DECISIÓN</span><span>La regla crítica acordada bloquea la aprobación de esta prueba.</span></li><li><span class="tag">SI FALTA DATA</span><span>Se informa “no verificable” y se solicita la evidencia faltante.</span></li></ul></div>
@@ -185,7 +185,25 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
     </div>
   </section>
   
-<section class="content" id="scan-engine"><div class="wrap">
+<section class="content" id="strike-prepare" tabindex="-1" aria-labelledby="strike-prepare-title"><div class="wrap">
+ <div class="scan-engine">
+  <span class="small-label">STRIKE / PREPARACIÓN</span>
+  <h3 id="strike-prepare-title">Preparar STRIKE</h3>
+  <p class="muted">Convertí lo que ya definiste en cobertura y un plan de pruebas ejecutable.</p>
+  <p>STRIKE puede trabajar con requerimientos, historias y criterios de aceptación, reglas de negocio, documentación, diseños, contratos API, pruebas existentes y repositorio o código cuando aporte contexto.</p>
+  <div class="result"><h3>Motor STRIKE en preparación</h3><p class="muted">La carga y análisis de fuentes estará disponible cuando conectemos el motor STRIKE. Esta entrada es independiente de SCAN y no ejecuta ningún análisis todavía.</p></div>
+ </div>
+</div></section>
+<section class="content" id="control-prepare" tabindex="-1" aria-labelledby="control-prepare-title"><div class="wrap">
+ <div class="scan-engine">
+  <span class="small-label">CONTROL / PREPARACIÓN</span>
+  <h3 id="control-prepare-title">Preparar CONTROL</h3>
+  <p class="muted">CONTROL ejecuta y evidencia. Su entrada propia estará disponible cuando implementemos el producto.</p>
+  <div class="result"><h3>CONTROL todavía no está disponible</h3><p class="muted">No se redirige a SCAN: CONTROL es un producto independiente.</p></div>
+ </div>
+</div></section>
+
+<section class="content" id="scan-prepare"><div id="scan-engine"><div class="wrap">
  <div class="scan-engine">
   <div class="scan-grid">
    <div>
@@ -213,7 +231,7 @@ footer{padding:32px 0;border-top:1px solid var(--line)}.footer-grid{display:flex
       <span id="scan-file-name" class="scan-file-name">Ningún archivo seleccionado</span>
     </div>
     <div class="auth"><input id="scan-auth" type="checkbox"><label for="scan-auth">Confirmo que soy propietario del objetivo o tengo autorización expresa para evaluarlo.</label></div>
-    <button class="btn" id="run-scan" type="button">Preparar diagnóstico <span>↗</span></button>
+    <button class="btn" id="run-scan" type="button">Preparar SCAN <span>↗</span></button>
     <p class="scan-warning">Por seguridad, BREAKERS no ejecuta pruebas activas contra terceros. Los motores se usan únicamente sobre objetivos autorizados.</p>
    </div>
    <div>
@@ -282,7 +300,7 @@ const products=['scan','strike','control'];
 function showExample(product,focus=false){if(!products.includes(product))return;products.forEach(key=>{const active=key===product;const tab=document.getElementById('tab-'+key);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;document.getElementById('panel-'+key).hidden=!active;});if(focus)document.getElementById('tab-'+product).focus();}
 products.forEach(product=>{const tab=document.getElementById('tab-'+product);tab.addEventListener('click',()=>showExample(product));tab.addEventListener('keydown',event=>{let next=products.indexOf(product);if(event.key==='ArrowRight')next=(next+1)%products.length;else if(event.key==='ArrowLeft')next=(next+products.length-1)%products.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=products.length-1;else return;event.preventDefault();showExample(products[next],true);});});
 document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{showExample(button.dataset.example,true);document.getElementById('ejemplo').scrollIntoView({block:'start'});}));
-document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('scan-engine').scrollIntoView({block:'start'});(scanModeConfig[scanMode].kind==='upload'?document.querySelector('#scan-upload-input label'):document.getElementById('scan-target')).focus({preventScroll:true});}));
+document.querySelectorAll('[data-prepare]').forEach(button=>button.addEventListener('click',()=>{const product=button.dataset.prepare;const target=document.getElementById(product+'-prepare');if(!target)return;target.scrollIntoView({block:'start'});if(product==='scan')(scanModeConfig[scanMode].kind==='upload'?document.querySelector('#scan-upload-input label'):document.getElementById('scan-target')).focus({preventScroll:true});else target.focus({preventScroll:true});}));
 
 const scanModeConfig={
  web:{kind:'text',label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
