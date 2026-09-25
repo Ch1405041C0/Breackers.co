@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import tempfile
 
-from .base import Scanner
+from .base import ScanResult, Scanner
 from ..normalizer import normalize_finding
 
 
@@ -10,7 +10,7 @@ class TrivyScanner(Scanner):
     name = "Trivy"
     executable = "trivy"
 
-    def scan(self, target: str):
+    def scan(self, target: str) -> ScanResult:
         findings = []
         with tempfile.TemporaryDirectory(prefix="breakers-trivy-") as tmp:
             output = Path(tmp) / "trivy.json"
@@ -19,13 +19,16 @@ class TrivyScanner(Scanner):
                 "--format", "json", "-o", str(output), target
             ], 180)
             if isinstance(result, tuple):
-                return findings
+                return self.failed(result[1])
+            if result.returncode != 0:
+                return self.failed(f"scanner exited with code {result.returncode}")
             if not output.exists():
-                return findings
+                return self.failed("scanner completed without producing its JSON report")
             try:
                 data = json.loads(output.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
-                return findings
+                return self.failed("scanner produced an unreadable JSON report")
+
         for group in data.get("Results", []):
             for item in group.get("Vulnerabilities") or []:
                 findings.append(normalize_finding(self.name, item.get("Severity"), item.get("VulnerabilityID"), item.get("Title") or item.get("PkgName"), "dependency"))
@@ -33,4 +36,4 @@ class TrivyScanner(Scanner):
                 findings.append(normalize_finding(self.name, item.get("Severity"), item.get("Title"), item.get("Message"), "configuration"))
             for item in group.get("Secrets") or []:
                 findings.append(normalize_finding(self.name, "HIGH", item.get("Title", "Secret detected"), item.get("RuleID", ""), "secret"))
-        return findings
+        return ScanResult(self.name, "completed", findings=findings)
