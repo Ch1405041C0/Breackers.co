@@ -197,8 +197,9 @@ def _map_test(unit: CoverageUnit, test: ExistingTestEvidence) -> CoverageMapping
     missing = tuple(anchor for anchor in anchors if anchor not in present)
     evidence = tuple(f"{field}: {value}" for field, value in test_parts.items() if value and (_meaningful_terms(value) & overlap))
     explicit_reference = bool(test.story_ref and _contains_phrase(" ".join(unit.source_refs), test.story_ref))
-    substantial = len(overlap) >= max(2, min(3, len(unit_terms)))
-    if not substantial and not explicit_reference:
+    anchors_present = bool(present)
+    substantial = len(overlap) >= 2
+    if not (anchors_present and substantial) and not explicit_reference:
         return None
 
     contribution = MappingContribution.FULL if anchors and not missing and bool(test.expected_result) else MappingContribution.PARTIAL
@@ -214,8 +215,10 @@ def _aggregate_status(unit: CoverageUnit, mappings: list[CoverageMapping]) -> tu
     anchors = set(_anchors(unit.statement))
     missing_sets = [set(mapping.missing_aspects) for mapping in mappings]
     combined_missing = set.intersection(*missing_sets) if missing_sets else anchors
+    covered_anchors = set().union(*(anchors - missing for missing in missing_sets)) if missing_sets else set()
     has_expected = any("expected result" not in mapping.missing_aspects for mapping in mappings)
-    if not combined_missing and has_expected:
+    semantic_missing = {aspect for aspect in combined_missing if aspect != "expected result"}
+    if anchors and anchors.issubset(covered_anchors) and not semantic_missing and has_expected:
         return ExistingCoverage.COVERED, ()
     missing = tuple(sorted(combined_missing))
     return ExistingCoverage.PARTIAL, missing or ("complete evidence is not demonstrated",)
