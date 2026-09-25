@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from copy import deepcopy
+from pathlib import Path
 
 EVIDENCE_STATES = {"preserved", "referenced_only", "source_not_retained"}
 
@@ -77,6 +78,14 @@ def build_scan_antecedent_snapshot(*, breakers_id: str, created_at: str, full_re
     areas = Counter(item["area"] for item in findings)
     source = deepcopy(full_report.get("source") or {})
     source.pop("workspace", None)
+    input_type = source.get("type")
+    target_reference = full_report.get("target")
+    if input_type != "repository":
+        raw_source_target = source.get("target")
+        if raw_source_target:
+            source["target"] = Path(str(raw_source_target)).name
+        if target_reference:
+            target_reference = Path(str(target_reference)).name
     analyzed_state = source.get("commit_sha") or None
     coverage = _coverage(full_report)
     status = str(full_report.get("analysis_status") or "incomplete")
@@ -89,8 +98,8 @@ def build_scan_antecedent_snapshot(*, breakers_id: str, created_at: str, full_re
             "analysis_status": status,
         },
         "analyzed": {
-            "input_type": source.get("type"),
-            "target_reference": full_report.get("target"),
+            "input_type": input_type,
+            "target_reference": target_reference,
             "source": source,
             "analyzed_state_reference": analyzed_state,
             "objective": full_report.get("objective"),
