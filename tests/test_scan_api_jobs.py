@@ -1,3 +1,5 @@
+import io
+from pathlib import Path
 import time
 
 import app as scan_app
@@ -56,3 +58,40 @@ def test_unknown_job_returns_404(monkeypatch):
     response = client.get("/api/scan/not-a-real-job")
 
     assert response.status_code == 404
+
+
+def test_uploaded_file_lives_for_job_and_workspace_is_cleaned(monkeypatch):
+    monkeypatch.setattr(scan_app, "scan_jobs", ScanJobStore(ttl_seconds=60))
+    seen = {}
+
+    def fake_run_scan(target, progress=None):
+        path = Path(target)
+        seen["target"] = path
+        seen["exists_during_scan"] = path.exists()
+        progress("received")
+        progress("identifying")
+        progress("planning")
+        progress("scanning")
+        progress("checking")
+        progress("evidence")
+        progress("prioritizing")
+        progress("reporting")
+        return {"analysis_status": "completed", "score": 100, "findings": []}
+
+    monkeypatch.setattr(scan_app, "run_scan", fake_run_scan)
+    client = scan_app.app.test_client()
+
+    response = client.post(
+        "/api/scan",
+        data={
+            "authorized": "true",
+            "file": (io.BytesIO(b"evidence"), "evidence.txt"),
+        },
+        content_type="multipart/form-data",
+    )
+    job_id = response.get_json()["job_id"]
+    _wait_for_terminal(client, job_id)
+
+    assert seen["exists_during_scan"] is True
+    assert not seen["target"].exists()
+    assert not seen["target"].parent.exists()
