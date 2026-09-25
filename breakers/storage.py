@@ -7,6 +7,17 @@ import sqlite3
 SCHEMA = """
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE IF NOT EXISTS interventions (
+    intervention_id TEXT PRIMARY KEY,
+    public_breakers_id TEXT NOT NULL UNIQUE,
+    product TEXT NOT NULL CHECK(product IN ('scan', 'strike', 'control')),
+    resource_id TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_interventions_public_id ON interventions(public_breakers_id);
+CREATE INDEX IF NOT EXISTS idx_interventions_resource ON interventions(product, resource_id);
+
 CREATE TABLE IF NOT EXISTS scans (
     scan_id TEXT PRIMARY KEY,
     created_at TEXT NOT NULL
@@ -19,6 +30,13 @@ CREATE TABLE IF NOT EXISTS reports (
     full_report TEXT NOT NULL,
     created_at TEXT NOT NULL,
     FOREIGN KEY(scan_id) REFERENCES scans(scan_id)
+);
+
+CREATE TABLE IF NOT EXISTS scan_antecedents (
+    intervention_id TEXT PRIMARY KEY,
+    snapshot TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY(intervention_id) REFERENCES interventions(intervention_id)
 );
 
 CREATE TABLE IF NOT EXISTS orders (
