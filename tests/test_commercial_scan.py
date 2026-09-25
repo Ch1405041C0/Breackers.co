@@ -67,6 +67,7 @@ def test_public_summary_is_whitelisted_and_same_analysis(monkeypatch, tmp_path):
         assert forbidden not in serialized
     assert "findings" not in summary
     assert "engines" not in summary
+    assert summary["breakers_id"].startswith("BRK-SCN-")
     assert reports.get_full_report(summary["report_id"]) == FULL
 
 
@@ -142,3 +143,12 @@ def test_expired_job_does_not_delete_persistent_report(tmp_path):
     job.finished_monotonic -= 2
     assert store.get(job.id) is None
     assert reports.get_full_report(summary["report_id"]) == FULL
+
+
+def test_full_report_protection_is_unchanged_with_breakers_id(monkeypatch, tmp_path):
+    reports, _ = configure_app(monkeypatch, tmp_path)
+    summary = reports.save_scan_result(FULL)
+    client = scan_app.app.test_client()
+    assert summary["breakers_id"].startswith("BRK-SCN-")
+    assert client.get(f'/api/reports/{summary["report_id"]}/full').status_code == 403
+    assert client.get(f'/api/reports/{summary["breakers_id"]}/full').status_code == 404
