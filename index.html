@@ -321,7 +321,8 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu.classL
 window.matchMedia('(min-width:761px)').addEventListener('change',event=>{if(event.matches)setMenu(false);});
 const productNames=['scan','strike','control'];
 let activeProduct=null,scanWizardStep=1,strikeWizardStep=1;
-let strikeSources=[],strikeTests=[],strikeTarget=null,strikeDeliveryMode=null;\nlet strikeCriticalPolicy=null,strikeResult=null,strikeDecision=null;
+let strikeSources=[],strikeTests=[],strikeTarget=null,strikeDeliveryMode=null;
+let strikeCriticalPolicy=null,strikeResult=null,strikeDecision=null;
 
 const guideCopy={
  scan:{
