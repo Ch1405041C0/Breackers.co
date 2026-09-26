@@ -85,7 +85,11 @@ def execute_strike_request(request, *, max_file_bytes: int) -> dict[str, Any]:
             raise StrikeHttpError(400, "INVALID_EXCLUSIONS", message, field="exclusions") from exc
         raise
 
-    dto = strike_result_dto(result)\n    if dto["status"] == "ACTION_REQUIRED":\n        dto["decision"]["requested_target"] = target\n    return dto\n
+    dto = strike_result_dto(result)
+    if dto["status"] == "ACTION_REQUIRED":
+        dto["decision"]["requested_target"] = target
+    return dto
+
 
 def _read_uploads(
     uploads: Iterable[Any],
