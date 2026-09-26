@@ -12,10 +12,12 @@ from breakers.orders import OrderStore
 from breakers.pdf_report import build_scan_pdf
 from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
+from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
-app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("BREAKERS_MAX_REQUEST_BYTES", 100 * 1024 * 1024))
+app.config["STRIKE_MAX_FILE_BYTES"] = int(os.environ.get("BREAKERS_STRIKE_MAX_FILE_BYTES", 5 * 1024 * 1024))
 scan_jobs = ScanJobStore(ttl_seconds=900)
 
 DATABASE_PATH = os.environ.get("BREAKERS_DB_PATH", str(ROOT / "data" / "breakers.db"))
@@ -80,6 +82,20 @@ def scan_status(job_id: str):
         return jsonify(error="SCAN job not found or expired"), 404
     return jsonify(job.public_status())
 
+@app.post("/api/strike")
+def strike():
+    try:
+        payload = execute_strike_request(
+            request,
+            max_file_bytes=app.config["STRIKE_MAX_FILE_BYTES"],
+        )
+        return jsonify(payload), 200
+    except StrikeHttpError as exc:
+        return jsonify(exc.body()), exc.status
+    except Exception:
+        app.logger.exception("Unexpected STRIKE API failure")
+        return jsonify(error={"code": "STRIKE_INTERNAL_ERROR", "message": "STRIKE could not complete the analysis"}), 500
+
 @app.post("/api/reports/<report_id>/orders")
 def create_report_order(report_id: str):
     if report_store.get_public_summary(report_id) is None:
@@ -143,7 +159,7 @@ def full_report(report_id: str):
 
 @app.errorhandler(413)
 def file_too_large(_error):
-    return jsonify(error="file too large; maximum size is 100 MB"), 413
+    return jsonify(error={"code": "PAYLOAD_TOO_LARGE", "message": "request exceeds the configured upload limit"}), 413
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
