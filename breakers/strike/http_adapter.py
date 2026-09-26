@@ -85,8 +85,7 @@ def execute_strike_request(request, *, max_file_bytes: int) -> dict[str, Any]:
             raise StrikeHttpError(400, "INVALID_EXCLUSIONS", message, field="exclusions") from exc
         raise
 
-    return strike_result_dto(result)
-
+    dto = strike_result_dto(result)\n    if dto["status"] == "ACTION_REQUIRED":\n        dto["decision"]["requested_target"] = target\n    return dto\n
 
 def _read_uploads(
     uploads: Iterable[Any],
@@ -201,7 +200,7 @@ def strike_result_dto(result: StrikeResult) -> dict[str, Any]:
             "sources": sources,
             "decision": {
                 "type": "CRITICAL_TARGET_CONFLICT",
-                "requested_target": _requested_target_from_conflict(result),
+                "requested_target": None,
                 "coverage_unit_ids": conflict.get("coverage_unit_ids", []),
                 "options": ["INCLUDE_ALL_CRITICAL", "RESPECT_REQUESTED_TARGET"],
             },
@@ -350,12 +349,6 @@ def strike_result_dto(result: StrikeResult) -> dict[str, Any]:
         "diagnostics": diagnostics,
     }
 
-
-def _requested_target_from_conflict(result: StrikeResult) -> int:
-    # ACTION_REQUIRED happens before TargetSelectionResult exists. The pipeline
-    # deliberately does not persist request transport state in StrikeResult.
-    # The adapter caller adds the request value after serialization.
-    return 0
 
 
 def _diagnostic_dto(item) -> dict[str, Any]:
