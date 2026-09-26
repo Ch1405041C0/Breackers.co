@@ -1,4 +1,5 @@
 from copy import deepcopy
+from dataclasses import replace
 
 import pytest
 
@@ -13,7 +14,7 @@ from breakers.strike.deliverable import (
     DeliverableMode,
     DeliverableSectionConfiguration,
 )
-from breakers.strike.models import ClientExclusion, Source, TestOrigin
+from breakers.strike.models import DefinitionGap, Source, TestOrigin
 from breakers.strike.pipeline import StrikeSourceInput, run_strike
 
 
@@ -129,7 +130,10 @@ def test_partial_existing_preserves_complemented_origin_when_domain_produces_it(
 
 
 def test_definition_gap_stays_gap_and_is_not_converted_to_test():
-    result = run_strike((definition("REQ", "El sistema podría procesar el archivo."),), requested_target=100)
+    result = complete_result()
+    unit = result.coverage.coverage_units[0]
+    gap = DefinitionGap("GAP-X", "Falta definir el comportamiento esperado.", unit.source_refs, (unit.id,))
+    result = replace(result, coverage=replace(result.coverage, definition_gaps=(gap,)))
     gap_section = DeliverableSectionConfiguration(
         "gaps", "Gaps",
         DeliverableContentFilter(include_tests=False, include_definition_gaps=True),
