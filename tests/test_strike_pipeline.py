@@ -64,7 +64,7 @@ def test_client_exclusion_survives_and_prevents_test_design():
 def test_critical_conflict_pauses_without_silently_choosing_policy():
     definitions = tuple(
         definition(f"C-{i}", f"c{i}.txt", f"Regla crítica: el usuario puede cancelar reserva {i}.")
-        for i in range(1, 3)
+        for i in range(1, 5)
     ) + tuple(
         definition(f"N-{i}", f"n{i}.txt", f"El usuario puede consultar reserva {i}.")
         for i in range(1, 7)
@@ -81,7 +81,7 @@ def test_critical_conflict_pauses_without_silently_choosing_policy():
 def test_critical_conflict_continues_with_explicit_policy(policy):
     definitions = tuple(
         definition(f"C-{i}", f"c{i}.txt", f"Regla crítica: el usuario puede cancelar reserva {i}.")
-        for i in range(1, 3)
+        for i in range(1, 5)
     ) + tuple(
         definition(f"N-{i}", f"n{i}.txt", f"El usuario puede consultar reserva {i}.")
         for i in range(1, 7)
