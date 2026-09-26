@@ -208,7 +208,7 @@ Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findin
          <span class="small-label">STRIKE / PRUEBAS EXISTENTES</span><h3>¿Ya tenés pruebas?</h3>
          <p class="muted">Si ya tenés pruebas, STRIKE puede identificar qué cubrís, qué cubrís parcialmente y qué falta.</p>
          <label class="strike-drop" for="strike-test-files"><strong>＋ SUBIR PRUEBAS EXISTENTES</strong><span>Este paso es opcional.</span></label>
-         <input id="strike-test-files" class="strike-file-input" type="file" multiple accept=".txt,.md,.csv">
+         <input id="strike-test-files" class="strike-file-input" type="file" multiple accept=".csv">
          <div id="strike-test-list" class="strike-file-list"></div>
          <p id="strike-no-tests-note" class="strike-note" hidden>Sin pruebas existentes, STRIKE diseñará el plan desde las definiciones disponibles.</p>
          <div class="wizard-actions"><button class="btn outline" type="button" id="strike-back-1">← Atrás</button><div class="strike-action-pair"><button class="btn outline" type="button" id="strike-without-tests">Continuar sin pruebas</button><button class="btn" type="button" id="strike-to-target">Continuar →</button></div></div>
@@ -229,7 +229,7 @@ Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findin
         <div id="strike-analyzing" class="strike-screen" hidden>
          <span class="small-label">STRIKE / ANALIZANDO</span><h3>Construyendo tu plan</h3>
          <div class="strike-progress"><div class="scan-progress-line"><span class="scan-progress-symbol">○</span>Interpretando definiciones</div><div class="scan-progress-line"><span class="scan-progress-symbol">○</span>Identificando cobertura</div><div class="scan-progress-line" id="strike-existing-stage"><span class="scan-progress-symbol">○</span>Comparando pruebas existentes</div><div class="scan-progress-line"><span class="scan-progress-symbol">○</span>Seleccionando el alcance</div><div class="scan-progress-line"><span class="scan-progress-symbol">○</span>Diseñando el plan</div><div class="scan-progress-line"><span class="scan-progress-symbol">○</span>Evaluando requisitos de ejecución</div></div>
-         <div class="strike-integration-note"><strong>Integración pendiente</strong><p>La interfaz está lista. Para ejecutar el análisis real falta conectar un contrato backend de STRIKE. No se simulan resultados desde el navegador.</p></div>
+         <div class="strike-integration-note" id="strike-api-status"><strong>STRIKE</strong><p>● Construyendo tu plan</p></div>
          <div class="wizard-actions"><button class="btn outline" type="button" id="strike-modify-analysis">← Modificar análisis</button><span></span></div>
         </div>
         <div id="strike-decision" class="strike-screen" hidden>
@@ -321,7 +321,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu.classL
 window.matchMedia('(min-width:761px)').addEventListener('change',event=>{if(event.matches)setMenu(false);});
 const productNames=['scan','strike','control'];
 let activeProduct=null,scanWizardStep=1,strikeWizardStep=1;
-let strikeSources=[],strikeTests=[],strikeTarget=null,strikeDeliveryMode=null;
+let strikeSources=[],strikeTests=[],strikeTarget=null,strikeDeliveryMode=null;\nlet strikeCriticalPolicy=null,strikeResult=null,strikeDecision=null;
 
 const guideCopy={
  scan:{
@@ -405,11 +405,71 @@ document.getElementById('strike-to-confirm').addEventListener('click',()=>{if(!s
 document.getElementById('strike-back-1').addEventListener('click',()=>showStrikeStep(1));
 document.getElementById('strike-back-2').addEventListener('click',()=>showStrikeStep(2));
 document.getElementById('strike-back-3').addEventListener('click',()=>showStrikeStep(3));
-document.getElementById('run-strike').addEventListener('click',()=>{document.getElementById('strike-existing-stage').innerHTML=strikeTests.length?'<span class="scan-progress-symbol">○</span>Comparando pruebas existentes':'<span class="scan-progress-symbol">—</span>Pruebas existentes no proporcionadas';showStrikeStep('analyzing');});
-document.getElementById('strike-modify-analysis').addEventListener('click',()=>showStrikeStep(4));
-document.getElementById('strike-result-modify').addEventListener('click',()=>{if(confirm('Cambiar fuentes, pruebas existentes o cobertura requiere volver a analizar.'))showStrikeStep(1);});
+function resetStrikeResult(){
+ strikeCriticalPolicy=null;strikeResult=null;strikeDecision=null;
+ document.querySelectorAll('input[name="strike-critical-policy"]').forEach(input=>input.checked=false);
+ document.getElementById('strike-resolve-decision').disabled=true;
+}
+function strikeErrorMessage(data){
+ const error=data&&data.error;
+ if(!error)return 'STRIKE no pudo completar el análisis.';
+ if(typeof error==='string')return error;
+ return error.message||error.code||'STRIKE no pudo completar el análisis.';
+}
+async function submitStrike(){
+ const status=document.getElementById('strike-api-status');
+ document.getElementById('strike-existing-stage').innerHTML=strikeTests.length?'<span class="scan-progress-symbol">○</span>Comparando pruebas existentes':'<span class="scan-progress-symbol">—</span>Pruebas existentes no proporcionadas';
+ status.innerHTML='<strong>STRIKE</strong><p>● Construyendo tu plan</p>';
+ showStrikeStep('analyzing');
+ const body=new FormData();
+ strikeSources.forEach(file=>body.append('definition_sources[]',file,file.name));
+ strikeTests.forEach(file=>body.append('existing_test_sources[]',file,file.name));
+ body.append('requested_target',String(strikeTarget));
+ body.append('exclusions','[]');
+ if(strikeCriticalPolicy)body.append('critical_policy',strikeCriticalPolicy);
+ try{
+  const response=await fetch('/api/strike',{method:'POST',body});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(strikeErrorMessage(data));
+  if(data.status==='ACTION_REQUIRED'){
+   strikeDecision=data;strikeResult=null;showStrikeStep('decision');return;
+  }
+  if(data.status!=='COMPLETE')throw new Error('STRIKE devolvió un estado no reconocido.');
+  strikeDecision=null;strikeResult=data;renderStrikeResult(data);showStrikeStep('result');
+ }catch(error){
+  status.innerHTML='<strong>No pudimos completar STRIKE</strong><p>'+esc(error.message)+'</p>';
+ }
+}
+function strikeLabel(value){
+ const labels={COVERED:'Cubierto',PARTIAL:'Parcial',UNCOVERED:'Por cubrir',NOT_EVALUABLE:'No evaluable',CRITICAL:'Crítica',RECOMMENDED:'Recomendada',COMPLEMENTARY:'Complementaria',NOT_JUSTIFIED:'Sin clasificación justificada',EXISTING:'Existente',STRIKE_COMPLEMENTED:'Complementada por STRIKE',STRIKE_GENERATED:'Diseñada por STRIKE',EXECUTABLE:'Ejecutable',BLOCKED:'Bloqueada',RESOURCE:'Recurso',DATA:'Datos',STATE:'Estado',ENVIRONMENT:'Ambiente',CREDENTIAL_REQUIREMENT:'Credencial',EXTERNAL_CONDITION:'Condición externa',HUMAN_ACTION:'Acción humana'};
+ return labels[value]||value||'—';
+}
+function strikeDetails(title,items,render){
+ if(!items||!items.length)return '';
+ return '<div class="strike-result-block"><h4>'+esc(title)+'</h4>'+items.map((item,index)=>'<details><summary class="strike-expand">'+esc(render.title(item,index))+'</summary>'+render.body(item)+'</details>').join('')+'</div>';
+}
+function renderStrikeResult(data){
+ const host=document.getElementById('strike-result-content'),scope=data.scope||{},coverage=data.coverage||{},summary=data.coverage_summary||{},plan=data.plan||{},execution=data.execution||{};
+ const units=coverage.units||[],tests=plan.tests||[],gaps=data.definition_gaps||[],requirements=execution.requirements||[];
+ let html='<div class="strike-result-block"><h4>ALCANCE</h4><p>Solicitado: <b>'+esc(scope.requested_target)+'%</b> · Efectivo: <b>'+esc(scope.effective_target)+'%</b></p><p>Qué necesita cobertura: <b>'+esc(coverage.identified_count||0)+'</b> identificadas · <b>'+esc(coverage.selected_count||0)+'</b> seleccionadas</p></div>';
+ html+='<div class="strike-result-block"><h4>ESTADO ACTUAL</h4><p>Cubierto <b>'+esc(summary.covered||0)+'</b> · Parcial <b>'+esc(summary.partial||0)+'</b> · Por cubrir <b>'+esc(summary.uncovered||0)+'</b> · No evaluable <b>'+esc(summary.not_evaluable||0)+'</b></p></div>';
+ html+='<div class="strike-result-block"><h4>PLAN RESULTANTE</h4><p>Pruebas existentes reutilizadas <b>'+esc(plan.existing_reused_count||0)+'</b> · Existentes complementadas <b>'+esc(plan.existing_complemented_count||0)+'</b> · Nuevas diseñadas <b>'+esc(plan.new_designed_count||0)+'</b></p></div>';
+ html+=strikeDetails('COBERTURA',units,{title:u=>u.id+' · '+strikeLabel(u.existing_coverage),body:u=>'<p>'+esc(u.statement)+'</p><p>Importancia: '+esc(strikeLabel(u.importance))+' · '+(u.selected?'Seleccionada':'Fuera del alcance')+'</p>'});
+ html+=strikeDetails('PRUEBAS',tests,{title:t=>t.id+' · '+strikeLabel(t.origin),body:t=>'<p>'+esc(t.description)+'</p>'+(t.preconditions?.length?'<p><b>Precondiciones:</b> '+esc(t.preconditions.join(' · '))+'</p>':'')+(t.steps?.length?'<p><b>Pasos:</b> '+esc(t.steps.join(' · '))+'</p>':'')+(t.expected_result?'<p><b>Resultado esperado:</b> '+esc(t.expected_result)+'</p>':'')+'<p>Estado para ejecutar: '+esc(strikeLabel(t.executability))+'</p>'});
+ html+=strikeDetails('DEFINICIONES PENDIENTES',gaps,{title:g=>g.id,body:g=>'<p>'+esc(g.description)+'</p><p>Fuentes: '+esc((g.source_refs||[]).join(', ')||'—')+'</p>'});
+ html+=strikeDetails('REQUISITOS PARA EJECUTAR',requirements,{title:r=>r.id+' · '+strikeLabel(r.type),body:r=>'<p>'+esc(r.description)+'</p><p>Pruebas relacionadas: '+esc((r.test_ids||[]).join(', ')||'—')+'</p>'});
+ host.innerHTML=html;
+}
+document.getElementById('run-strike').addEventListener('click',()=>{resetStrikeResult();submitStrike();});
+document.getElementById('strike-modify-analysis').addEventListener('click',()=>{resetStrikeResult();showStrikeStep(4);});
+document.getElementById('strike-result-modify').addEventListener('click',()=>{if(confirm('Cambiar fuentes, pruebas existentes o cobertura requiere volver a analizar.')){resetStrikeResult();showStrikeStep(1);}});
 document.querySelectorAll('input[name="strike-critical-policy"]').forEach(input=>input.addEventListener('change',()=>document.getElementById('strike-resolve-decision').disabled=false));
-document.getElementById('strike-resolve-decision').addEventListener('click',()=>showStrikeStep('analyzing'));
+document.getElementById('strike-resolve-decision').addEventListener('click',()=>{
+ const choice=document.querySelector('input[name="strike-critical-policy"]:checked')?.value;
+ if(!choice)return;
+ strikeCriticalPolicy=choice==='include'?'INCLUDE_ALL_CRITICAL':'RESPECT_REQUESTED_TARGET';
+ submitStrike();
+});
 document.getElementById('strike-to-delivery').addEventListener('click',()=>showStrikeStep('delivery'));
 document.getElementById('strike-delivery-back').addEventListener('click',()=>showStrikeStep('result'));
 document.getElementById('strike-review-back').addEventListener('click',()=>showStrikeStep('delivery'));
