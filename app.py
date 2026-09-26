@@ -16,7 +16,7 @@ from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
-app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("BREAKERS_MAX_REQUEST_BYTES", 100 * 1024 * 1024))
+app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 app.config["STRIKE_MAX_FILE_BYTES"] = int(os.environ.get("BREAKERS_STRIKE_MAX_FILE_BYTES", 5 * 1024 * 1024))
 scan_jobs = ScanJobStore(ttl_seconds=900)
 
@@ -159,7 +159,7 @@ def full_report(report_id: str):
 
 @app.errorhandler(413)
 def file_too_large(_error):
-    return jsonify(error={"code": "PAYLOAD_TOO_LARGE", "message": "request exceeds the configured upload limit"}), 413
+    return jsonify(error="file too large; maximum size is 100 MB"), 413
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
