@@ -14,11 +14,23 @@ from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
 from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
 from breakers.strike.exporter import build_strike_export
+from breakers.strike.ollama_provider import OllamaReasoningProvider, OllamaReasoningError
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 app.config["STRIKE_MAX_FILE_BYTES"] = int(os.environ.get("BREAKERS_STRIKE_MAX_FILE_BYTES", 5 * 1024 * 1024))
+app.config["STRIKE_REASONING_PROVIDER"] = os.environ.get("BREAKERS_STRIKE_REASONING_PROVIDER", "none").strip().lower()
+app.config["OLLAMA_MODEL"] = os.environ.get("BREAKERS_OLLAMA_MODEL", "ornith:9b")
+app.config["OLLAMA_BASE_URL"] = os.environ.get("BREAKERS_OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+strike_reasoning_provider = (
+    OllamaReasoningProvider(
+        model=app.config["OLLAMA_MODEL"],
+        base_url=app.config["OLLAMA_BASE_URL"],
+    )
+    if app.config["STRIKE_REASONING_PROVIDER"] == "ollama"
+    else None
+)
 scan_jobs = ScanJobStore(ttl_seconds=900)
 
 DATABASE_PATH = os.environ.get("BREAKERS_DB_PATH", str(ROOT / "data" / "breakers.db"))
@@ -89,10 +101,14 @@ def strike():
         payload = execute_strike_request(
             request,
             max_file_bytes=app.config["STRIKE_MAX_FILE_BYTES"],
+            reasoning_provider=strike_reasoning_provider,
         )
         return jsonify(payload), 200
     except StrikeHttpError as exc:
         return jsonify(exc.body()), exc.status
+    except OllamaReasoningError as exc:
+        app.logger.warning("STRIKE Ollama reasoning unavailable: %s", exc)
+        return jsonify(error={"code": "STRIKE_REASONING_UNAVAILABLE", "message": "El cerebro local de STRIKE no está disponible. Verificá que Ollama esté ejecutándose y que el modelo configurado exista."}), 503
     except Exception:
         app.logger.exception("Unexpected STRIKE API failure")
         return jsonify(error={"code": "STRIKE_INTERNAL_ERROR", "message": "STRIKE could not complete the analysis"}), 500
