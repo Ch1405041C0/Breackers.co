@@ -60,13 +60,24 @@ def _xlsx_bytes(payload: dict[str, Any]) -> bytes:
     for gap in (payload.get("definition_gaps") or []):
         gaps.append([gap.get("id", ""), gap.get("description", ""), ", ".join(map(str, gap.get("source_refs") or []))])
 
-    knowledge = workbook.create_sheet("Riesgos y preguntas QA")
-    knowledge.append(["ID", "Dominio", "Tipo", "Pregunta", "Motivo", "Referencia"])
-    for item in (payload.get("knowledge_findings") or []):
-        knowledge.append([
-            item.get("id", ""), item.get("domain", ""), item.get("kind", ""),
-            item.get("question", ""), item.get("rationale", ""), item.get("knowledge_ref", "")
-        ])
+    observations = workbook.create_sheet("Observaciones de alcance")
+    scope = payload.get("scope") or {}
+    coverage = payload.get("coverage") or {}
+    scope_observations = payload.get("scope_observations") or {}
+    observations.append(["OBSERVACIONES DE ALCANCE", ""])
+    observations.append(["Alcance solicitado", f"{scope.get('requested_target', '')}%"])
+    observations.append(["Coberturas sustentadas por evidencia", coverage.get("identified_count", 0)])
+    observations.append(["Coberturas seleccionadas", coverage.get("selected_count", 0)])
+    observations.append(["Escenarios potenciales fuera de la evidencia", scope_observations.get("potential_scenarios_outside_evidence", 0)])
+    observations.append(["Escenarios adicionales incorporados al plan", scope_observations.get("included_in_plan", 0)])
+    observations.append(["", ""])
+    observations.append(["PERO...", scope_observations.get("message", "")])
+    if scope_observations.get("scan_recommendation"):
+        observations.append(["Ampliar análisis", scope_observations["scan_recommendation"]])
+    observations.append(["", ""])
+    observations.append(["Señales detectadas", "Referencia"])
+    for item in (scope_observations.get("signals") or []):
+        observations.append([item.get("domain", ""), item.get("knowledge_ref", "")])
 
     requirements = workbook.create_sheet("Requisitos para ejecutar")
     requirements.append(["ID", "Tipo", "Descripción", "Pruebas relacionadas"])
