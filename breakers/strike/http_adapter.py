@@ -18,6 +18,7 @@ from .models import (
     TestOrigin,
 )
 from .pipeline import StrikePipelineStatus, StrikeResult, StrikeSourceInput, run_strike
+from .reasoning import ReasoningProvider
 
 
 DEFINITION_EXTENSIONS = {".txt", ".md", ".csv", ".xlsx"}
@@ -45,7 +46,7 @@ class StrikeHttpError(Exception):
         return {"error": error}
 
 
-def execute_strike_request(request, *, max_file_bytes: int) -> dict[str, Any]:
+def execute_strike_request(request, *, max_file_bytes: int, reasoning_provider: ReasoningProvider | None = None) -> dict[str, Any]:
     if not request.content_type or not request.content_type.startswith("multipart/form-data"):
         raise StrikeHttpError(400, "INVALID_REQUEST", "STRIKE requires multipart/form-data")
 
@@ -78,6 +79,7 @@ def execute_strike_request(request, *, max_file_bytes: int) -> dict[str, Any]:
             requested_target=target,
             exclusions=exclusions,
             critical_policy=policy,
+            reasoning_provider=reasoning_provider,
         )
     except UnsupportedSourceFormat as exc:
         raise StrikeHttpError(415, "UNSUPPORTED_SOURCE_FORMAT", str(exc)) from exc
