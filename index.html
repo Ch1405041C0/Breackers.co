@@ -252,8 +252,8 @@ Esperando objetivo autorizado…</div><div id="scan-findings" class="scan-findin
          <span class="small-label">STRIKE / ENTREGA LISTA</span><h3>Revisá cómo vas a recibir el plan.</h3>
          <div id="strike-review-content" class="confirm-list"></div>
          <p class="strike-note">No se modificará el análisis STRIKE.</p>
-         <div class="wizard-actions"><button class="btn outline" type="button" id="strike-review-back">← Editar</button><button class="btn" type="button" disabled aria-disabled="true">Generar entregable</button></div>
-         <p class="scan-warning">La generación se habilitará cuando el exportador XLSX/CSV esté conectado. No se simulan descargas.</p>
+         <div class="wizard-actions"><button class="btn outline" type="button" id="strike-review-back">← Editar</button><button class="btn" type="button" id="strike-generate-deliverable">Generar entregable</button></div>
+         <p class="scan-warning">El archivo se genera con el resultado real de STRIKE.</p>
         </div>
        </div>
       </div>
@@ -487,6 +487,23 @@ function renderDeliveryEditor(mode){
 }
 document.querySelectorAll('[data-delivery-mode]').forEach(button=>button.addEventListener('click',()=>{strikeDeliveryMode=button.dataset.deliveryMode;document.querySelectorAll('[data-delivery-mode]').forEach(x=>x.classList.toggle('active',x===button));renderDeliveryEditor(strikeDeliveryMode);}));
 document.getElementById('strike-to-review').addEventListener('click',()=>{const fmt=document.querySelector('input[name="strike-format"]:checked')?.value||'XLSX';const names={recommended:'Recomendado',custom:'Personalizado',template:'Mi modelo'};document.getElementById('strike-review-content').innerHTML='<p><b>MODO</b><br>'+esc(names[strikeDeliveryMode]||'—')+'</p><p><b>FORMATO</b><br>'+esc(fmt)+'</p><p><b>SECCIONES</b><br>Se completará con la configuración real del Deliverable.</p><p><b>CONTENIDO</b><br>Las cantidades de pruebas, definiciones pendientes y requisitos provendrán del resultado STRIKE real.</p>';showStrikeStep('review');});
+
+ document.getElementById('strike-generate-deliverable').addEventListener('click',async()=>{
+  if(!strikeResult){alert('No hay un resultado STRIKE para exportar.');return}
+  const button=document.getElementById('strike-generate-deliverable');
+  const fmt=document.querySelector('input[name="strike-format"]:checked')?.value||'XLSX';
+  button.disabled=true;button.textContent='Generando…';
+  try{
+   const response=await fetch('/api/strike/export',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({result:strikeResult,format:fmt})});
+   if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data?.error?.message||'No se pudo generar el entregable.')}
+   const blob=await response.blob();
+   const disposition=response.headers.get('Content-Disposition')||'';
+   const match=disposition.match(/filename="?([^";]+)"?/i);
+   const filename=match?.[1]||('BREAKERS-STRIKE-plan.'+fmt.toLowerCase());
+   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  }catch(error){alert(error.message)}
+  finally{button.disabled=false;button.textContent='Generar entregable'}
+ });
 
 const scanModeConfig={
  web:{kind:'text',label:'URL del sitio',placeholder:'https://staging.ejemplo.com',help:'Ingresá una URL propia o un entorno para el que tengas autorización expresa.'},
