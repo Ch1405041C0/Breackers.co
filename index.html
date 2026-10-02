@@ -619,7 +619,7 @@ scanBtn?.addEventListener('click',async()=>{
   if(!r.ok) throw new Error(data.error||'backend no disponible');
   renderScanProgress({percent:5,stage_label:'Objetivo recibido',elapsed_seconds:0,stages:scanStageLabels.map((label,index)=>({label,status:index===0?'active':'pending'}))});
   await pollScan(data.job_id);
- }catch(e){scanConsole.textContent='SCAN no pudo procesar la evidencia.\n'+e.message;}finally{scanBtn.disabled=false}
+ }catch(e){scanConsole.textContent='SCAN no pudo procesar la evidencia.\\n'+e.message;}finally{scanBtn.disabled=false}
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script>
