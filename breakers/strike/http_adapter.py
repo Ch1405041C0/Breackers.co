@@ -341,18 +341,29 @@ def strike_result_dto(result: StrikeResult) -> dict[str, Any]:
             "new_designed_count": len(generated),
             "tests": tests,
         },
-        "knowledge_findings": [
-            {
-                "id": finding.id,
-                "domain": finding.domain,
-                "kind": finding.kind,
-                "question": finding.question,
-                "rationale": finding.rationale,
-                "knowledge_ref": finding.knowledge_ref,
-                "reference_url": finding.reference_url,
-            }
-            for finding in result.knowledge_findings
-        ],
+        "scope_observations": {
+            "potential_scenarios_outside_evidence": len(result.knowledge_findings),
+            "included_in_plan": 0,
+            "message": (
+                f"Se detectaron {len(result.knowledge_findings)} escenarios potenciales adicionales fuera de la información suministrada. "
+                "No fueron incorporados al plan porque STRIKE no inventa comportamiento sin evidencia."
+                if result.knowledge_findings else
+                "No se detectaron escenarios potenciales adicionales con la base de conocimiento actual."
+            ),
+            "scan_recommendation": (
+                "Para ampliar el análisis de riesgos, omisiones y superficie de cobertura, sugerimos analizar el proyecto con BREAKERS SCAN."
+                if result.knowledge_findings else None
+            ),
+            "signals": [
+                {
+                    "id": finding.id,
+                    "domain": finding.domain,
+                    "kind": finding.kind,
+                    "knowledge_ref": finding.knowledge_ref,
+                }
+                for finding in result.knowledge_findings
+            ],
+        },
         "definition_gaps": [
             {
                 "id": gap.id,
