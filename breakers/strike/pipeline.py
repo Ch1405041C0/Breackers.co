@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .coverage import CoverageModelResult, build_coverage_model
+from .agents import AgentTurn, run_analysis_cycle, review_traceability
 from .executability import ExecutabilityResult, analyze_executability
 from .existing_coverage import ExistingCoverageResult, map_existing_coverage
 from .ingestion import NormalizedSource, ingest_source
@@ -52,6 +53,7 @@ class StrikeResult:
     diagnostics: tuple[StrikeDiagnostic, ...]
     knowledge_findings: tuple[KnowledgeFinding, ...] = ()
     evidence_analysis: EvidenceAnalysis | None = None
+    agent_turns: tuple[AgentTurn, ...] = ()
 
 
 def run_strike(
@@ -80,10 +82,12 @@ def run_strike(
         raise ValueError("existing_test_sources must use Source.kind EXISTING_TESTS")
 
     interpretation = interpret_deterministically(normalized_definitions)
-    evidence_analysis = analyze_evidence(
+    agentic = run_analysis_cycle(
         tuple(item.content for item in definition_sources),
         tuple(item.content for item in existing_test_sources),
     )
+    evidence_analysis = agentic.evidence
+    agent_turns = agentic.turns
     knowledge_findings = evidence_analysis.outside_evidence_signals
     coverage = build_coverage_model(interpretation)
     existing = map_existing_coverage(coverage, normalized_existing)
@@ -123,9 +127,23 @@ def run_strike(
             diagnostics,
             knowledge_findings,
             evidence_analysis,
+            agent_turns,
         )
 
     test_design = design_tests(coverage, existing, target)
+    links_by_test: dict[str, tuple[str, ...]] = {
+        test.id: tuple(
+            unit_id
+            for link in test_design.coverage_links
+            if link.test_id == test.id
+            for unit_id in link.coverage_unit_ids
+        )
+        for test in test_design.designed_tests
+    }
+    agent_turns = (*agent_turns, *review_traceability(
+        tuple(test.id for test in test_design.designed_tests),
+        links_by_test,
+    ))
     executability = analyze_executability(test_design, coverage)
     diagnostics = _consolidate_diagnostics(
         interpretation,
@@ -148,6 +166,7 @@ def run_strike(
         diagnostics,
         knowledge_findings,
         evidence_analysis,
+        agent_turns,
     )
 
 
