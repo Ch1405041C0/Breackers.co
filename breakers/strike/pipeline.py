@@ -12,6 +12,7 @@ from .knowledge import KnowledgeFinding
 from .evidence_analysis import EvidenceAnalysis
 from .interpretation import InterpretationResult, interpret_deterministically
 from .models import ClientExclusion, CriticalSelectionPolicy, Source
+from .reasoning import ReasoningProvider
 from .target_selection import (
     TargetSelectionDiagnostic,
     TargetSelectionDiagnosticType,
@@ -63,6 +64,7 @@ def run_strike(
     requested_target: int,
     exclusions: tuple[ClientExclusion, ...] = (),
     critical_policy: CriticalSelectionPolicy | None = None,
+    reasoning_provider: ReasoningProvider | None = None,
 ) -> StrikeResult:
     if not definition_sources:
         raise ValueError("STRIKE requires at least one definition source")
@@ -85,6 +87,7 @@ def run_strike(
     agentic = run_analysis_cycle(
         tuple(item.content for item in definition_sources),
         tuple(item.content for item in existing_test_sources),
+        reasoning_provider=reasoning_provider,
     )
     evidence_analysis = agentic.evidence
     agent_turns = agentic.turns
