@@ -9,7 +9,7 @@ from .executability import ExecutabilityResult, analyze_executability
 from .existing_coverage import ExistingCoverageResult, map_existing_coverage
 from .ingestion import NormalizedSource, ingest_source
 from .knowledge import KnowledgeFinding
-from .evidence_analysis import EvidenceAnalysis, analyze_evidence
+from .evidence_analysis import EvidenceAnalysis
 from .interpretation import InterpretationResult, interpret_deterministically
 from .models import ClientExclusion, CriticalSelectionPolicy, Source
 from .target_selection import (
