@@ -60,6 +60,14 @@ def _xlsx_bytes(payload: dict[str, Any]) -> bytes:
     for gap in (payload.get("definition_gaps") or []):
         gaps.append([gap.get("id", ""), gap.get("description", ""), ", ".join(map(str, gap.get("source_refs") or []))])
 
+    knowledge = workbook.create_sheet("Riesgos y preguntas QA")
+    knowledge.append(["ID", "Dominio", "Tipo", "Pregunta", "Motivo", "Referencia"])
+    for item in (payload.get("knowledge_findings") or []):
+        knowledge.append([
+            item.get("id", ""), item.get("domain", ""), item.get("kind", ""),
+            item.get("question", ""), item.get("rationale", ""), item.get("knowledge_ref", "")
+        ])
+
     requirements = workbook.create_sheet("Requisitos para ejecutar")
     requirements.append(["ID", "Tipo", "Descripción", "Pruebas relacionadas"])
     execution = payload.get("execution") or {}
