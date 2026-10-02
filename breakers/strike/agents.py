@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .evidence_analysis import EvidenceAnalysis, analyze_evidence
+from .reasoning import EvidenceRef, NoReasoningProvider, ReasoningProvider, AnalystResponse, validate_analyst_response
 
 
 class AgentRole(str, Enum):
@@ -30,11 +31,14 @@ class AgenticAnalysis:
     evidence: EvidenceAnalysis
     turns: tuple[AgentTurn, ...]
     review_required: bool
+    reasoning_provider: str = "NONE"
+    analyst_response: AnalystResponse = AnalystResponse()
 
 
 def run_analysis_cycle(
     definition_texts: tuple[str, ...],
     existing_test_texts: tuple[str, ...] = (),
+    reasoning_provider: ReasoningProvider | None = None,
 ) -> AgenticAnalysis:
     """Orchestrate STRIKE's pre-coverage reasoning cycle.
 
@@ -43,6 +47,16 @@ def run_analysis_cycle(
     reasoning behind these roles without changing the rest of STRIKE.
     """
     evidence = analyze_evidence(definition_texts, existing_test_texts)
+    provider = reasoning_provider or NoReasoningProvider()
+    evidence_refs = tuple(
+        EvidenceRef(f"EVID-{index:03d}", text)
+        for index, text in enumerate(evidence.evidence_texts, start=1)
+    )
+    analyst_response = validate_analyst_response(
+        provider.analyze(evidence_refs, evidence.knowledge_matches),
+        {item.id for item in evidence_refs},
+        {item.source.id for item in evidence.knowledge_matches},
+    )
     turns: list[AgentTurn] = [
         AgentTurn(
             1, AgentRole.EVIDENCE,
@@ -52,6 +66,12 @@ def run_analysis_cycle(
         AgentTurn(
             1, AgentRole.ANALYST,
             "Interpret only claims supported by client evidence; do not promote external knowledge to requirements.",
+            (
+                f"reasoning provider: {provider.name}",
+                f"{len(analyst_response.observations)} supported observations",
+                f"{len(analyst_response.outside_evidence)} outside-evidence observations",
+            ),
+            tuple(ref for item in analyst_response.observations for ref in item.evidence_refs),
         ),
         AgentTurn(
             1, AgentRole.KNOWLEDGE,
@@ -66,7 +86,7 @@ def run_analysis_cycle(
             tuple(item.knowledge_ref for item in evidence.outside_evidence_signals),
         ),
     ]
-    return AgenticAnalysis(evidence, tuple(turns), review_required=True)
+    return AgenticAnalysis(evidence, tuple(turns), review_required=True, reasoning_provider=provider.name, analyst_response=analyst_response)
 
 
 def review_traceability(
