@@ -7,7 +7,8 @@ from .coverage import CoverageModelResult, build_coverage_model
 from .executability import ExecutabilityResult, analyze_executability
 from .existing_coverage import ExistingCoverageResult, map_existing_coverage
 from .ingestion import NormalizedSource, ingest_source
-from .knowledge import KnowledgeFinding, analyze_knowledge_gaps
+from .knowledge import KnowledgeFinding
+from .evidence_analysis import EvidenceAnalysis, analyze_evidence
 from .interpretation import InterpretationResult, interpret_deterministically
 from .models import ClientExclusion, CriticalSelectionPolicy, Source
 from .target_selection import (
@@ -50,6 +51,7 @@ class StrikeResult:
     executability: ExecutabilityResult | None
     diagnostics: tuple[StrikeDiagnostic, ...]
     knowledge_findings: tuple[KnowledgeFinding, ...] = ()
+    evidence_analysis: EvidenceAnalysis | None = None
 
 
 def run_strike(
@@ -78,7 +80,11 @@ def run_strike(
         raise ValueError("existing_test_sources must use Source.kind EXISTING_TESTS")
 
     interpretation = interpret_deterministically(normalized_definitions)
-    knowledge_findings = analyze_knowledge_gaps(tuple(item.content for item in definition_sources))
+    evidence_analysis = analyze_evidence(
+        tuple(item.content for item in definition_sources),
+        tuple(item.content for item in existing_test_sources),
+    )
+    knowledge_findings = evidence_analysis.outside_evidence_signals
     coverage = build_coverage_model(interpretation)
     existing = map_existing_coverage(coverage, normalized_existing)
 
@@ -116,6 +122,7 @@ def run_strike(
             None,
             diagnostics,
             knowledge_findings,
+            evidence_analysis,
         )
 
     test_design = design_tests(coverage, existing, target)
@@ -140,6 +147,7 @@ def run_strike(
         executability,
         diagnostics,
         knowledge_findings,
+        evidence_analysis,
     )
 
 
