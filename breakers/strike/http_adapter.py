@@ -341,6 +341,18 @@ def strike_result_dto(result: StrikeResult) -> dict[str, Any]:
             "new_designed_count": len(generated),
             "tests": tests,
         },
+        "knowledge_findings": [
+            {
+                "id": finding.id,
+                "domain": finding.domain,
+                "kind": finding.kind,
+                "question": finding.question,
+                "rationale": finding.rationale,
+                "knowledge_ref": finding.knowledge_ref,
+                "reference_url": finding.reference_url,
+            }
+            for finding in result.knowledge_findings
+        ],
         "definition_gaps": [
             {
                 "id": gap.id,
