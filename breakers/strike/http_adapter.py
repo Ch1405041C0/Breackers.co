@@ -153,6 +153,28 @@ def _read_uploads(
     return tuple(result)
 
 
+
+def _xlsx_to_csv(raw: bytes, *, field: str, filename: str) -> str:
+    try:
+        from openpyxl import load_workbook
+        workbook = load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
+    except Exception as exc:
+        raise StrikeHttpError(400, "INVALID_XLSX", "STRIKE could not read the XLSX workbook", field=field, filename=filename) from exc
+    try:
+        for sheet in workbook.worksheets:
+            rows = [["" if value is None else str(value) for value in row] for row in sheet.iter_rows(values_only=True)]
+            rows = [row for row in rows if any(cell.strip() for cell in row)]
+            if not rows:
+                continue
+            width = max(len(row) for row in rows)
+            output = io.StringIO()
+            csv.writer(output).writerows([row + [""] * (width - len(row)) for row in rows])
+            return output.getvalue()
+    finally:
+        workbook.close()
+    raise StrikeHttpError(400, "EMPTY_SOURCE", "XLSX workbook has no data rows", field=field, filename=filename)
+
+
 def _parse_target(value: str | None) -> int:
     try:
         target = int(value or "")
