@@ -13,6 +13,7 @@ from breakers.pdf_report import build_scan_pdf
 from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
 from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
+from breakers.strike.exporter import build_strike_export
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -95,6 +96,18 @@ def strike():
     except Exception:
         app.logger.exception("Unexpected STRIKE API failure")
         return jsonify(error={"code": "STRIKE_INTERNAL_ERROR", "message": "STRIKE could not complete the analysis"}), 500
+
+@app.post("/api/strike/export")
+def strike_export():
+    data = request.get_json(silent=True) or {}
+    result = data.get("result")
+    if not isinstance(result, dict) or result.get("status") != "COMPLETE":
+        return jsonify(error={"code": "INVALID_STRIKE_RESULT", "message": "A complete STRIKE result is required"}), 400
+    try:
+        content, mimetype, filename = build_strike_export(result, str(data.get("format", "XLSX")))
+    except ValueError as exc:
+        return jsonify(error={"code": "INVALID_EXPORT_FORMAT", "message": str(exc)}), 400
+    return send_file(BytesIO(content), mimetype=mimetype, as_attachment=True, download_name=filename, max_age=0)
 
 @app.post("/api/reports/<report_id>/orders")
 def create_report_order(report_id: str):
