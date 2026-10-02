@@ -341,6 +341,16 @@ def strike_result_dto(result: StrikeResult) -> dict[str, Any]:
             "new_designed_count": len(generated),
             "tests": tests,
         },
+        "knowledge_context": [
+            {
+                "id": match.source.id,
+                "title": match.source.title,
+                "publisher": match.source.publisher,
+                "matched_concepts": list(match.matched_concepts),
+                "purpose": match.source.purpose,
+            }
+            for match in (result.evidence_analysis.knowledge_matches if result.evidence_analysis else ())
+        ],
         "scope_observations": {
             "potential_scenarios_outside_evidence": len(result.knowledge_findings),
             "included_in_plan": 0,
