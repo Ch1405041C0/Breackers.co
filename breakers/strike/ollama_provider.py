@@ -55,8 +55,8 @@ class OllamaReasoningProvider:
         self,
         model: str = "ornith:9b",
         base_url: str = "http://127.0.0.1:11434",
-        timeout_seconds: int = 120,
-        max_output_tokens: int = 1400,
+        timeout_seconds: int = 300,
+        max_output_tokens: int = 700,
     ) -> None:
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -128,10 +128,12 @@ class OllamaReasoningProvider:
                 {"role": "user", "content": user},
             ],
             "stream": False,
+            "think": False,
             "format": schema,
             "options": {
                 "temperature": 0,
                 "num_predict": self.max_output_tokens,
+                "num_ctx": 8192,
             },
         }, ensure_ascii=False).encode("utf-8")
         req = request.Request(
