@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import csv
+import io
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -18,8 +20,8 @@ from .models import (
 from .pipeline import StrikePipelineStatus, StrikeResult, StrikeSourceInput, run_strike
 
 
-DEFINITION_EXTENSIONS = {".txt", ".md", ".csv"}
-EXISTING_TEST_EXTENSIONS = {".csv"}
+DEFINITION_EXTENSIONS = {".txt", ".md", ".csv", ".xlsx"}
+EXISTING_TEST_EXTENSIONS = {".csv", ".xlsx"}
 TARGETS = {25, 50, 75, 100}
 
 
@@ -133,16 +135,21 @@ def _read_uploads(
             raise StrikeHttpError(413, "PAYLOAD_TOO_LARGE", "Uploaded source exceeds the configured per-file limit", field=field, filename=filename)
         if not raw:
             raise StrikeHttpError(400, "EMPTY_SOURCE", "Source content cannot be empty", field=field, filename=filename)
-        try:
-            content = raw.decode("utf-8-sig")
-        except UnicodeDecodeError as exc:
-            raise StrikeHttpError(400, "INVALID_ENCODING", "STRIKE V1 text sources must use UTF-8 encoding", field=field, filename=filename) from exc
+        ingestion_filename = filename
+        if suffix == ".xlsx":
+            content = _xlsx_to_csv(raw, field=field, filename=filename)
+            ingestion_filename = f"{Path(filename).stem}.csv"
+        else:
+            try:
+                content = raw.decode("utf-8-sig")
+            except UnicodeDecodeError as exc:
+                raise StrikeHttpError(400, "INVALID_ENCODING", "STRIKE V1 text sources must use UTF-8 encoding", field=field, filename=filename) from exc
         if not content.strip():
             raise StrikeHttpError(400, "EMPTY_SOURCE", "Source content cannot be empty", field=field, filename=filename)
 
         source_id = f"{prefix}-{index:03d}"
         source = Source(source_id, kind, filename)
-        result.append(StrikeSourceInput(source, filename, content))
+        result.append(StrikeSourceInput(source, ingestion_filename, content))
     return tuple(result)
 
 
