@@ -17,6 +17,12 @@ def test_publish_and_open_round_trip(tmp_path):
     assert "findings" not in raw
     assert "demo" not in raw
 
+    envelope = json.loads(raw)
+    assert envelope["version"] == 2
+    assert envelope["cipher"] == "aes-256-gcm"
+    assert envelope["kdf"] == "pbkdf2-hmac-sha256"
+    assert "tag" not in envelope
+
 
 def test_wrong_passphrase_is_rejected(tmp_path):
     store = ProtectedReportStore(tmp_path)
@@ -35,6 +41,17 @@ def test_tampered_artifact_is_rejected(tmp_path):
 
     with pytest.raises(ProtectedReportError):
         store.open(published.token, "correcta-2026")
+
+
+def test_token_is_authenticated_as_context(tmp_path):
+    store = ProtectedReportStore(tmp_path)
+    published = store.publish({"score": 42}, "correcta-2026")
+    copied_token = "A" + published.token[1:]
+    copied_path = tmp_path / f"{copied_token}.json"
+    copied_path.write_bytes(published.path.read_bytes())
+
+    with pytest.raises(ProtectedReportError):
+        store.open(copied_token, "correcta-2026")
 
 
 def test_short_passphrase_is_rejected(tmp_path):
