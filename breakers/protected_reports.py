@@ -1,20 +1,18 @@
-"""Protected, shareable report artifacts.
-
-This module deliberately keeps sharing separate from report generation.  A
-caller can publish any JSON-serializable report and hand the returned token and
-passphrase to the client through different channels.
-"""
+"""Protected, shareable report artifacts using standard authenticated encryption."""
 
 from __future__ import annotations
 
 import base64
-import hashlib
-import hmac
 import json
 import secrets
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from cryptography.exceptions import InvalidTag
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import hashes
 
 
 class ProtectedReportError(ValueError):
@@ -28,16 +26,17 @@ class PublishedReport:
 
 
 class ProtectedReportStore:
-    """Stores authenticated encrypted JSON without requiring user accounts.
+    """Stores encrypted JSON artifacts without requiring user accounts.
 
-    Encryption uses a SHA-256 based stream derived from a per-artifact salt and
-    passphrase, while HMAC-SHA256 authenticates the complete encrypted payload.
-    The format is versioned so the crypto implementation can be replaced later
-    without changing callers or public links.
+    Version 2 uses PBKDF2-HMAC-SHA256 for passphrase derivation and AES-256-GCM
+    for authenticated encryption. The envelope is versioned so future formats
+    can be introduced without silently changing the cryptographic contract.
     """
 
-    VERSION = 1
-    KDF_ROUNDS = 200_000
+    VERSION = 2
+    KDF_ROUNDS = 600_000
+    SALT_BYTES = 16
+    NONCE_BYTES = 12
 
     def __init__(self, root: str | Path):
         self.root = Path(root)
@@ -48,23 +47,21 @@ class ProtectedReportStore:
             raise ProtectedReportError("passphrase must contain at least 8 characters")
 
         token = secrets.token_urlsafe(18)
-        salt = secrets.token_bytes(16)
-        nonce = secrets.token_bytes(16)
-        key = hashlib.pbkdf2_hmac(
-            "sha256", passphrase.encode("utf-8"), salt, self.KDF_ROUNDS, dklen=32
-        )
+        salt = secrets.token_bytes(self.SALT_BYTES)
+        nonce = secrets.token_bytes(self.NONCE_BYTES)
+        key = self._derive_key(passphrase, salt, self.KDF_ROUNDS)
         plaintext = json.dumps(report, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-        ciphertext = self._xor_stream(plaintext, key, nonce)
-        tag = hmac.new(key, nonce + ciphertext, hashlib.sha256).digest()
+        aad = self._aad(token)
+        ciphertext = AESGCM(key).encrypt(nonce, plaintext, aad)
 
         envelope = {
             "version": self.VERSION,
-            "kdf": "pbkdf2-sha256",
+            "cipher": "aes-256-gcm",
+            "kdf": "pbkdf2-hmac-sha256",
             "rounds": self.KDF_ROUNDS,
             "salt": self._b64(salt),
             "nonce": self._b64(nonce),
             "ciphertext": self._b64(ciphertext),
-            "tag": self._b64(tag),
         }
         path = self.root / f"{token}.json"
         path.write_text(json.dumps(envelope, separators=(",", ":")), encoding="utf-8")
@@ -74,47 +71,51 @@ class ProtectedReportStore:
         path = self._path_for(token)
         try:
             envelope = json.loads(path.read_text(encoding="utf-8"))
+            if envelope.get("version") != self.VERSION:
+                raise ProtectedReportError("unsupported report artifact version")
+            if envelope.get("cipher") != "aes-256-gcm" or envelope.get("kdf") != "pbkdf2-hmac-sha256":
+                raise ProtectedReportError("unsupported report artifact encryption")
+            rounds = int(envelope["rounds"])
+            if rounds != self.KDF_ROUNDS:
+                raise ProtectedReportError("unsupported report artifact KDF parameters")
             salt = self._unb64(envelope["salt"])
             nonce = self._unb64(envelope["nonce"])
             ciphertext = self._unb64(envelope["ciphertext"])
-            expected_tag = self._unb64(envelope["tag"])
-            rounds = int(envelope["rounds"])
+            if len(salt) != self.SALT_BYTES or len(nonce) != self.NONCE_BYTES:
+                raise ProtectedReportError("report artifact has invalid cryptographic parameters")
+        except ProtectedReportError:
+            raise
         except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError) as exc:
             raise ProtectedReportError("report artifact is unavailable or invalid") from exc
 
-        key = hashlib.pbkdf2_hmac(
-            "sha256", passphrase.encode("utf-8"), salt, rounds, dklen=32
-        )
-        actual_tag = hmac.new(key, nonce + ciphertext, hashlib.sha256).digest()
-        if not hmac.compare_digest(actual_tag, expected_tag):
-            raise ProtectedReportError("invalid passphrase or corrupted artifact")
-
+        key = self._derive_key(passphrase, salt, rounds)
         try:
-            plaintext = self._xor_stream(ciphertext, key, nonce)
-            return json.loads(plaintext.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise ProtectedReportError("report artifact could not be decoded") from exc
+            plaintext = AESGCM(key).decrypt(nonce, ciphertext, self._aad(token))
+            decoded = json.loads(plaintext.decode("utf-8"))
+        except (InvalidTag, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ProtectedReportError("invalid passphrase or corrupted artifact") from exc
+        if not isinstance(decoded, dict):
+            raise ProtectedReportError("report artifact has invalid content")
+        return decoded
+
+    @classmethod
+    def _derive_key(cls, passphrase: str, salt: bytes, rounds: int) -> bytes:
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=salt,
+            iterations=rounds,
+        )
+        return kdf.derive(passphrase.encode("utf-8"))
+
+    @staticmethod
+    def _aad(token: str) -> bytes:
+        return f"breakers-protected-report:v2:{token}".encode("utf-8")
 
     def _path_for(self, token: str) -> Path:
         if not token or any(ch not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for ch in token):
             raise ProtectedReportError("invalid report token")
         return self.root / f"{token}.json"
-
-    @staticmethod
-    def _xor_stream(data: bytes, key: bytes, nonce: bytes) -> bytes:
-        output = bytearray(len(data))
-        offset = 0
-        counter = 0
-        while offset < len(data):
-            block = hmac.new(
-                key, b"breakers-report" + nonce + counter.to_bytes(8, "big"), hashlib.sha256
-            ).digest()
-            size = min(len(block), len(data) - offset)
-            for index in range(size):
-                output[offset + index] = data[offset + index] ^ block[index]
-            offset += size
-            counter += 1
-        return bytes(output)
 
     @staticmethod
     def _b64(value: bytes) -> str:
