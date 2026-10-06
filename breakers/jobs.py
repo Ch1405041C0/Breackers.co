@@ -8,6 +8,8 @@ import time
 import uuid
 from typing import Callable
 
+from .events import ScanEventLedger
+
 
 STAGES = (
     ("received", "Objetivo recibido", 5),
@@ -34,16 +36,21 @@ class ScanJob:
     result: dict | None = None
     error: str = ""
     finished_monotonic: float | None = None
+    events: ScanEventLedger = field(default_factory=ScanEventLedger, repr=False)
     lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def progress(self, stage: str) -> None:
         if stage not in STAGE_INDEX:
             raise ValueError(f"unknown SCAN progress stage: {stage}")
+        previous = None
         with self.lock:
             if self.state != "running":
                 return
             if STAGE_INDEX[stage] >= STAGE_INDEX[self.stage]:
+                previous = self.stage
                 self.stage = stage
+        if previous is not None and previous != stage:
+            self.events.record("stage_changed", previous=previous, current=stage)
 
     def public_status(self) -> dict:
         with self.lock:
@@ -69,6 +76,7 @@ class ScanJob:
                 "percent": current["percent"],
                 "elapsed_seconds": elapsed,
                 "stages": stages,
+                "events": self.events.snapshot(),
             }
             if self.state == "completed":
                 payload["result"] = self.result
@@ -101,6 +109,7 @@ class ScanJobStore:
             created_monotonic=time.monotonic(),
             created_at=datetime.now(timezone.utc).isoformat(),
         )
+        job.events.record("job_created", job_id=job.id)
         with self._lock:
             self._jobs[job.id] = job
         return job
@@ -112,6 +121,7 @@ class ScanJobStore:
 
     def start(self, job: ScanJob, work: Callable[[Callable[[str], None]], dict], cleanup_path: str | None = None) -> None:
         def runner():
+            job.events.record("job_started")
             try:
                 result = work(job.progress)
                 if cleanup_path:
@@ -121,13 +131,16 @@ class ScanJobStore:
                     job.result = result
                     job.state = "completed"
                     job.finished_monotonic = time.monotonic()
+                job.events.record("job_completed")
             except Exception as exc:
                 if cleanup_path:
                     shutil.rmtree(cleanup_path, ignore_errors=True)
+                safe_error = _safe_error(exc)
                 with job.lock:
                     job.state = "failed"
-                    job.error = _safe_error(exc)
+                    job.error = safe_error
                     job.finished_monotonic = time.monotonic()
+                job.events.record("job_failed", error=safe_error)
 
         threading.Thread(target=runner, name=f"scan-{job.id[:8]}", daemon=True).start()
 
