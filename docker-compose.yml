@@ -1,0 +1,24 @@
+services:
+  breakers-scan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: breakers-scan
+    ports:
+      - "8080:8080"
+    environment:
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - breakers-data:/app/data
+      - breakers-reports:/app/reports
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=3)\""]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  breakers-data:
+  breakers-reports:
