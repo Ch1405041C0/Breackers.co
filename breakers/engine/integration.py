@@ -4,10 +4,12 @@ from pathlib import Path
 from typing import Any
 
 from breakers.agents import build_core_agent_registry
+from breakers.agents.ai import build_ai_risk_agent
 from breakers.engine.evaluator import default_evaluator
 from breakers.engine.loop import AgenticEngine
 from breakers.engine.planner import default_planner
 from breakers.memory import JsonMemoryStore
+from breakers.providers import ModelProvider, build_model_provider
 
 DEFAULT_MEMORY_PATH = Path(".breakers") / "memory.json"
 
@@ -50,13 +52,22 @@ def analyze_scan_report(
     report: dict[str, Any],
     max_cycles: int = 3,
     memory_store: JsonMemoryStore | None = None,
+    model_provider: ModelProvider | None = None,
 ) -> dict[str, Any]:
     store = memory_store or JsonMemoryStore(DEFAULT_MEMORY_PATH)
     subject = _memory_subject(report)
     previous = store.recall("scan", subject=subject, limit=5)
 
+    registry = build_core_agent_registry()
+    provider = model_provider or build_model_provider()
+    registry.register(
+        "ai_risk",
+        "Uses the configured private or cloud model provider to discover additional QA risks and coverage gaps.",
+        build_ai_risk_agent(provider),
+    )
+
     engine = AgenticEngine(
-        registry=build_core_agent_registry(),
+        registry=registry,
         planner=default_planner,
         evaluator=default_evaluator,
     )
@@ -82,5 +93,9 @@ def analyze_scan_report(
         "subject": subject,
         "recalled": len(previous),
         "persisted": True,
+    }
+    result["model_provider"] = {
+        "name": provider.name,
+        "health": provider.health(),
     }
     return result
