@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from breakers.agents import build_core_agent_registry
 from breakers.engine.evaluator import default_evaluator
 from breakers.engine.loop import AgenticEngine
 from breakers.engine.planner import default_planner
+from breakers.memory import JsonMemoryStore
+
+DEFAULT_MEMORY_PATH = Path(".breakers") / "memory.json"
 
 
 def _risk_values(report: dict[str, Any]) -> list[Any]:
@@ -22,12 +26,13 @@ def _evidence_values(report: dict[str, Any]) -> list[Any]:
     return evidence
 
 
-def context_from_scan_report(report: dict[str, Any]) -> dict[str, Any]:
-    """Translate the existing SCAN contract into the Agentic Engine contract.
+def _memory_subject(report: dict[str, Any]) -> str:
+    source = report.get("source") or {}
+    return str(source.get("target") or source.get("commit_sha") or source.get("type") or "unknown")
 
-    This adapter keeps SCAN backwards compatible while allowing the new engine
-    to reason over evidence already produced by Breakers.
-    """
+
+def context_from_scan_report(report: dict[str, Any], memories: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Translate SCAN output into the Agentic Engine context contract."""
     return {
         "scan_source": report.get("source") or {},
         "scan_analyzers": list(report.get("analyzers") or []),
@@ -37,10 +42,19 @@ def context_from_scan_report(report: dict[str, Any]) -> dict[str, Any]:
         "requested_scenarios": list(report.get("requested_scenarios") or []),
         "discovered_scenarios": list(report.get("discovered_scenarios") or []),
         "requirements": list(report.get("requirements") or []),
+        "memory": list(memories or []),
     }
 
 
-def analyze_scan_report(report: dict[str, Any], max_cycles: int = 3) -> dict[str, Any]:
+def analyze_scan_report(
+    report: dict[str, Any],
+    max_cycles: int = 3,
+    memory_store: JsonMemoryStore | None = None,
+) -> dict[str, Any]:
+    store = memory_store or JsonMemoryStore(DEFAULT_MEMORY_PATH)
+    subject = _memory_subject(report)
+    previous = store.recall("scan", subject=subject, limit=5)
+
     engine = AgenticEngine(
         registry=build_core_agent_registry(),
         planner=default_planner,
@@ -48,7 +62,25 @@ def analyze_scan_report(report: dict[str, Any], max_cycles: int = 3) -> dict[str
     )
     state = engine.run(
         objective="Evaluate SCAN output for quality gaps, risk, coverage, and evidence.",
-        context=context_from_scan_report(report),
+        context=context_from_scan_report(report, memories=previous),
         max_cycles=max_cycles,
     )
-    return state.to_dict()
+    result = state.to_dict()
+    store.remember(
+        "scan",
+        subject,
+        {
+            "run_id": result["run_id"],
+            "cycle": result["cycle"],
+            "findings": result["findings"],
+            "gaps": result["gaps"],
+            "decisions": result["decisions"],
+            "completed_reason": result["completed_reason"],
+        },
+    )
+    result["memory"] = {
+        "subject": subject,
+        "recalled": len(previous),
+        "persisted": True,
+    }
+    return result
