@@ -38,6 +38,19 @@ def _sentences(text: str):
     return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
 
 
+def _extract_docx(path: Path) -> str:
+    from docx import Document
+
+    document = Document(path)
+    chunks = [paragraph.text.strip() for paragraph in document.paragraphs if paragraph.text.strip()]
+    for table in document.tables:
+        for row in table.rows:
+            values = [cell.text.strip() for cell in row.cells if cell.text.strip()]
+            if values:
+                chunks.append(" | ".join(values))
+    return "\n".join(chunks)
+
+
 def analyze_requirements_text(text: str, reference: str = "functional_document"):
     risks = []
     for index, sentence in enumerate(_sentences(text), start=1):
@@ -56,10 +69,13 @@ def analyze_requirements_text(text: str, reference: str = "functional_document")
 
 def analyze_requirements_file(target: str):
     path = Path(target)
-    if path.suffix.lower() not in {".txt", ".md"}:
-        return [], ["El adaptador v0.1 analiza texto/Markdown. PDF y DOCX quedan declarados como fuentes pendientes de extracción."]
+    suffix = path.suffix.lower()
+    if suffix not in {".txt", ".md", ".docx"}:
+        return [], ["El adaptador v0.2 analiza texto, Markdown y DOCX. PDF queda pendiente de extracción."]
     try:
-        text = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+        text = _extract_docx(path) if suffix == ".docx" else path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError, ValueError, KeyError):
         return [], ["No se pudo extraer texto legible del documento."]
+    if not text.strip():
+        return [], ["El documento no contiene texto extraíble para analizar."]
     return analyze_requirements_text(text, path.name), []
