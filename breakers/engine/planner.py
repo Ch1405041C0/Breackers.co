@@ -5,11 +5,10 @@ from .state import AgenticRunState
 
 
 def default_planner(state: AgenticRunState, registry: AgentRegistry) -> list[str]:
-    """Deterministic first planner for Breakers Agentic Engine v1.
+    """Deterministic planner for Breakers Agentic Engine v1.
 
-    Cycle 1 performs broad analysis. Later cycles focus on agents that can
-    reassess gaps and residual risk. This can later be replaced by an LLM-backed
-    planner without changing the engine contract.
+    Rules remain authoritative. When an AI agent is registered it is used as an
+    additional analyst, never as the only source of quality decisions.
     """
 
     available = set(registry.names())
@@ -20,12 +19,14 @@ def default_planner(state: AgenticRunState, registry: AgentRegistry) -> list[str
             "risk",
             "coverage",
             "evidence",
+            "ai_risk",
         ]
     else:
         preferred = [
             "risk",
             "coverage",
             "evidence",
+            "ai_risk",
         ]
 
     return [name for name in preferred if name in available]
