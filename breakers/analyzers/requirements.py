@@ -38,7 +38,7 @@ def _sentences(text: str):
     return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
 
 
-def _extract_docx(path: Path) -> str:
+def _read_docx(path: Path):
     from docx import Document
 
     document = Document(path)
@@ -48,7 +48,11 @@ def _extract_docx(path: Path) -> str:
             values = [cell.text.strip() for cell in row.cells if cell.text.strip()]
             if values:
                 chunks.append(" | ".join(values))
-    return "\n".join(chunks)
+    image_count = sum(
+        1 for rel in document.part.rels.values()
+        if "image" in str(getattr(rel, "reltype", "")).lower()
+    )
+    return "\n".join(chunks), len(document.tables), image_count
 
 
 def analyze_requirements_text(text: str, reference: str = "functional_document"):
@@ -67,15 +71,42 @@ def analyze_requirements_text(text: str, reference: str = "functional_document")
     return risks
 
 
-def analyze_requirements_file(target: str):
+def analyze_requirements_document(target: str):
     path = Path(target)
     suffix = path.suffix.lower()
+    coverage = {
+        "text_analyzed": False,
+        "tables_processed": 0,
+        "images_detected": 0,
+        "images_analyzed": 0,
+        "status": "PARTIAL",
+    }
     if suffix not in {".txt", ".md", ".docx"}:
-        return [], ["El adaptador v0.2 analiza texto, Markdown y DOCX. PDF queda pendiente de extracción."]
+        return [], ["El adaptador v0.2 analiza texto, Markdown y DOCX. PDF queda pendiente de extracción."], coverage
     try:
-        text = _extract_docx(path) if suffix == ".docx" else path.read_text(encoding="utf-8")
+        if suffix == ".docx":
+            text, table_count, image_count = _read_docx(path)
+            coverage["tables_processed"] = table_count
+            coverage["images_detected"] = image_count
+        else:
+            text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError, ValueError, KeyError):
-        return [], ["No se pudo extraer texto legible del documento."]
+        return [], ["No se pudo obtener contenido legible del documento."], coverage
     if not text.strip():
-        return [], ["El documento no contiene texto extraíble para analizar."]
-    return analyze_requirements_text(text, path.name), []
+        return [], ["El documento no contiene texto analizable."], coverage
+
+    risks = analyze_requirements_text(text, path.name)
+    coverage["text_analyzed"] = True
+    coverage["status"] = "COMPLETE" if coverage["images_detected"] == coverage["images_analyzed"] else "PARTIAL"
+    limitations = []
+    if coverage["images_detected"] > coverage["images_analyzed"]:
+        limitations.append(
+            f'{coverage["images_detected"]} imágenes detectadas / {coverage["images_analyzed"]} analizadas. '
+            "La cobertura documental es parcial hasta contar con análisis visual real."
+        )
+    return risks, limitations, coverage
+
+
+def analyze_requirements_file(target: str):
+    risks, limitations, _coverage = analyze_requirements_document(target)
+    return risks, limitations
