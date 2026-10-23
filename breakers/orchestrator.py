@@ -1,7 +1,7 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from .analyzers import analyzers_for, analyze_requirements_file
+from .analyzers import analyzers_for, analyze_requirements_document
 from .engine.integration import analyze_scan_report
 from .inputs import detect_input
 from .inputs.repository import clone_repository, is_remote_repository, repository_commit_sha
@@ -31,12 +31,12 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
     analyzers = analyzers_for(source["type"])
     engines, findings, candidate_risks, limitations = [], [], [], []
     required_engines, unavailable_engines, failed_engines = [], [], []
+    document_analysis = None
 
     _emit(progress, "scanning")
     if source["type"] == "functional_document":
-        candidate_risks, limitations = analyze_requirements_file(target)
+        candidate_risks, limitations, document_analysis = analyze_requirements_document(target)
 
-    # Repository scanners inspect files only; SCAN never executes repository code.
     if source["type"] == "repository":
         required_engines = [scanner_type.name for scanner_type in PASSIVE_SCANNERS]
         for scanner_type in PASSIVE_SCANNERS:
@@ -67,16 +67,16 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
         required_engines=required_engines,
         unavailable_engines=unavailable_engines,
         failed_engines=failed_engines,
+        coverage_complete_override=(document_analysis["status"] == "COMPLETE") if document_analysis else None,
     )
     report["source"] = source
     report["analyzers"] = analyzers
     report["risks"] = [risk.to_dict() for risk in risks]
     report["risk_summary"] = {"identified": len(risks), "limitations": limitations}
     report["risk_contract"] = "v0.1"
+    if document_analysis is not None:
+        report["document_analysis"] = document_analysis
 
-    # Agentic Engine consumes SCAN's existing evidence without changing the
-    # legacy report contract. The result is additive and can be adopted by
-    # STRIKE/CONTROL incrementally.
     report["agentic_analysis"] = analyze_scan_report(report)
     report["agentic_contract"] = "v0.1"
     return report
