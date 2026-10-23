@@ -16,7 +16,7 @@ def test_docx_functional_document_is_extracted_and_analyzed(tmp_path):
 
     assert limitations == []
     assert risks
-    assert any(item.get("area") == "error_handling" for item in risks)
+    assert any(item.area == "error_handling" for item in risks)
 
 
 def test_unsupported_document_reports_real_limitation(tmp_path):
