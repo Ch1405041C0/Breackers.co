@@ -1,8 +1,8 @@
 from pathlib import Path
-import shutil
 from tempfile import TemporaryDirectory
 
 from .analyzers import analyzers_for, analyze_requirements_file
+from .engine.integration import analyze_scan_report
 from .inputs import detect_input
 from .inputs.repository import clone_repository, is_remote_repository, repository_commit_sha
 from .report import build_report
@@ -73,6 +73,12 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
     report["risks"] = [risk.to_dict() for risk in risks]
     report["risk_summary"] = {"identified": len(risks), "limitations": limitations}
     report["risk_contract"] = "v0.1"
+
+    # Agentic Engine consumes SCAN's existing evidence without changing the
+    # legacy report contract. The result is additive and can be adopted by
+    # STRIKE/CONTROL incrementally.
+    report["agentic_analysis"] = analyze_scan_report(report)
+    report["agentic_contract"] = "v0.1"
     return report
 
 
