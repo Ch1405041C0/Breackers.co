@@ -5,6 +5,7 @@ from .analyzers import analyzers_for, analyze_requirements_document
 from .engine.integration import analyze_scan_report
 from .inputs import detect_input
 from .inputs.repository import clone_repository, is_remote_repository, repository_commit_sha
+from .providers import build_vision_provider
 from .report import build_report
 from .risk.engine import assess_risks
 from .scanners import GitleaksScanner, TrivyScanner
@@ -35,7 +36,11 @@ def _scan_local_target(target: str, public_target: str | None = None, source_ove
 
     _emit(progress, "scanning")
     if source["type"] == "functional_document":
-        candidate_risks, limitations, document_analysis = analyze_requirements_document(target)
+        vision_provider = build_vision_provider()
+        candidate_risks, limitations, document_analysis = analyze_requirements_document(
+            target,
+            vision_provider=vision_provider,
+        )
 
     if source["type"] == "repository":
         required_engines = [scanner_type.name for scanner_type in PASSIVE_SCANNERS]
