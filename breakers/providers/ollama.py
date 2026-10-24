@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import base64
 import json
 from typing import Any
 from urllib import error, request as http_request
 
-from .base import ModelRequest, ModelResponse
+from .base import ModelCapabilities, ModelRequest, ModelResponse
 
 
 class OllamaProvider:
@@ -14,6 +15,7 @@ class OllamaProvider:
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = timeout
+        self._capabilities: ModelCapabilities | None = None
 
     def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         body = json.dumps(payload).encode("utf-8")
@@ -26,7 +28,25 @@ class OllamaProvider:
         with http_request.urlopen(req, timeout=self.timeout) as response:
             return json.loads(response.read().decode("utf-8"))
 
+    def capabilities(self) -> ModelCapabilities:
+        if self._capabilities is not None:
+            return self._capabilities
+        try:
+            data = self._post("/api/show", {"model": self.model})
+            declared = {str(item).lower() for item in data.get("capabilities") or []}
+            self._capabilities = ModelCapabilities(
+                text="completion" in declared or not declared,
+                vision="vision" in declared,
+                tools="tools" in declared,
+                thinking="thinking" in declared,
+            )
+        except (OSError, ValueError, error.URLError):
+            self._capabilities = ModelCapabilities()
+        return self._capabilities
+
     def generate(self, request: ModelRequest) -> ModelResponse:
+        if request.images and not self.capabilities().vision:
+            raise ValueError(f"Model {self.model} does not declare vision capability")
         prompt = request.task
         if request.context:
             prompt += "\n\nBREAKERS CONTEXT:\n" + json.dumps(request.context, ensure_ascii=False, default=str)
@@ -37,6 +57,8 @@ class OllamaProvider:
             "stream": False,
             "format": "json",
         }
+        if request.images:
+            payload["images"] = [base64.b64encode(image).decode("ascii") for image in request.images]
         data = self._post("/api/generate", payload)
         return ModelResponse(
             content=str(data.get("response") or ""),
@@ -51,6 +73,12 @@ class OllamaProvider:
             with http_request.urlopen(req, timeout=5) as response:
                 data = json.loads(response.read().decode("utf-8"))
             models = [item.get("name") for item in data.get("models") or []]
-            return {"ok": True, "provider": self.name, "model": self.model, "available_models": models}
+            return {
+                "ok": True,
+                "provider": self.name,
+                "model": self.model,
+                "available_models": models,
+                "capabilities": self.capabilities().to_dict(),
+            }
         except (OSError, ValueError, error.URLError) as exc:
             return {"ok": False, "provider": self.name, "model": self.model, "error": str(exc)}
