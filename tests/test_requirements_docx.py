@@ -1,8 +1,21 @@
+import json
+
 from docx import Document
 from docx.shared import Inches
 from PIL import Image
 
 from breakers.analyzers.requirements import analyze_requirements_document, analyze_requirements_file
+from breakers.providers import ModelResponse
+
+
+class FakeVisionProvider:
+    def generate(self, request):
+        assert request.images
+        return ModelResponse(
+            content=json.dumps({"analysis": "Pantalla con estado de error visible para el usuario."}),
+            provider="fake-vision",
+            model="vision-test",
+        )
 
 
 def test_docx_functional_document_is_extracted_and_analyzed(tmp_path):
@@ -38,6 +51,27 @@ def test_docx_with_image_is_partial_until_image_is_really_analyzed(tmp_path):
     assert coverage["images_analyzed"] == 0
     assert coverage["status"] == "PARTIAL"
     assert limitations
+
+
+def test_docx_image_becomes_complete_only_after_real_vision_response(tmp_path):
+    image_path = tmp_path / "screen.png"
+    Image.new("RGB", (20, 20), "white").save(image_path)
+    path = tmp_path / "with-vision.docx"
+    document = Document()
+    document.add_paragraph("Flujo funcional de consentimiento.")
+    document.add_picture(str(image_path), width=Inches(1))
+    document.save(path)
+
+    _risks, limitations, coverage = analyze_requirements_document(
+        str(path),
+        vision_provider=FakeVisionProvider(),
+    )
+
+    assert limitations == []
+    assert coverage["images_detected"] == 1
+    assert coverage["images_analyzed"] == 1
+    assert coverage["image_analyses"][0]["provider"] == "fake-vision"
+    assert coverage["status"] == "COMPLETE"
 
 
 def test_unsupported_document_reports_real_limitation(tmp_path):
