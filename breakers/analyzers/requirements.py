@@ -1,6 +1,8 @@
+import json
 import re
 from pathlib import Path
 
+from ..providers import ModelRequest
 from ..risk.engine import make_risk
 
 RULES = [
@@ -33,6 +35,8 @@ RULES = [
     },
 ]
 
+VISION_SYSTEM = """You are the Breakers visual QA analyst. Analyze only the supplied image from a functional document. Describe QA-relevant UI, diagrams, flows, labels, states, contradictions, missing paths or ambiguous behavior. Do not invent unreadable content. Return JSON with a single key named analysis containing concise factual text."""
+
 
 def _sentences(text: str):
     return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
@@ -48,11 +52,42 @@ def _read_docx(path: Path):
             values = [cell.text.strip() for cell in row.cells if cell.text.strip()]
             if values:
                 chunks.append(" | ".join(values))
-    image_count = sum(
-        1 for rel in document.part.rels.values()
-        if "image" in str(getattr(rel, "reltype", "")).lower()
-    )
-    return "\n".join(chunks), len(document.tables), image_count
+    images = []
+    for rel in document.part.rels.values():
+        if "image" not in str(getattr(rel, "reltype", "")).lower():
+            continue
+        target_part = getattr(rel, "target_part", None)
+        blob = getattr(target_part, "blob", None)
+        if blob:
+            images.append(bytes(blob))
+    return "\n".join(chunks), len(document.tables), images
+
+
+def _analyze_images(images: list[bytes], vision_provider):
+    analyses = []
+    failures = []
+    if not images or vision_provider is None:
+        return analyses, failures
+    for index, image in enumerate(images, start=1):
+        try:
+            response = vision_provider.generate(ModelRequest(
+                task=f"Analyze embedded document image {index} for QA-relevant evidence.",
+                system=VISION_SYSTEM,
+                images=[image],
+            ))
+            payload = json.loads(response.content or "{}")
+            analysis = str(payload.get("analysis") or "").strip()
+            if not analysis:
+                raise ValueError("vision provider returned no analysis")
+            analyses.append({
+                "image": index,
+                "analysis": analysis,
+                "provider": response.provider,
+                "model": response.model,
+            })
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            failures.append({"image": index, "error": str(exc)})
+    return analyses, failures
 
 
 def analyze_requirements_text(text: str, reference: str = "functional_document"):
@@ -71,7 +106,7 @@ def analyze_requirements_text(text: str, reference: str = "functional_document")
     return risks
 
 
-def analyze_requirements_document(target: str):
+def analyze_requirements_document(target: str, vision_provider=None):
     path = Path(target)
     suffix = path.suffix.lower()
     coverage = {
@@ -79,25 +114,33 @@ def analyze_requirements_document(target: str):
         "tables_processed": 0,
         "images_detected": 0,
         "images_analyzed": 0,
+        "image_analyses": [],
+        "image_failures": [],
         "status": "PARTIAL",
     }
     if suffix not in {".txt", ".md", ".docx"}:
-        return [], ["El adaptador v0.2 analiza texto, Markdown y DOCX. PDF queda pendiente de extracción."], coverage
+        return [], ["El adaptador v0.3 analiza texto, Markdown y DOCX. PDF queda pendiente de extracción."], coverage
     try:
         if suffix == ".docx":
-            text, table_count, image_count = _read_docx(path)
+            text, table_count, images = _read_docx(path)
             coverage["tables_processed"] = table_count
-            coverage["images_detected"] = image_count
+            coverage["images_detected"] = len(images)
         else:
             text = path.read_text(encoding="utf-8")
+            images = []
     except (OSError, UnicodeDecodeError, ValueError, KeyError):
         return [], ["No se pudo obtener contenido legible del documento."], coverage
-    if not text.strip():
-        return [], ["El documento no contiene texto analizable."], coverage
+    if not text.strip() and not images:
+        return [], ["El documento no contiene contenido analizable."], coverage
 
-    risks = analyze_requirements_text(text, path.name)
-    coverage["text_analyzed"] = True
+    risks = analyze_requirements_text(text, path.name) if text.strip() else []
+    coverage["text_analyzed"] = bool(text.strip())
+    image_analyses, image_failures = _analyze_images(images, vision_provider)
+    coverage["image_analyses"] = image_analyses
+    coverage["image_failures"] = image_failures
+    coverage["images_analyzed"] = len(image_analyses)
     coverage["status"] = "COMPLETE" if coverage["images_detected"] == coverage["images_analyzed"] else "PARTIAL"
+
     limitations = []
     if coverage["images_detected"] > coverage["images_analyzed"]:
         limitations.append(
