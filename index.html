@@ -865,6 +865,261 @@ footer{background:#090d0b;border:0}
  .final-cta{padding:31px 0}
  .final-cta h2{font-size:clamp(30px,8vw,40px);letter-spacing:-1.4px}
 }
+
+/* SCAN / BREAKERS HOME VISUAL SYSTEM */
+#product-active:has(#workspace-scan:not([hidden])) #product-guide{
+ --scan-accent:#38aaff;
+ border-color:var(--line);
+ border-radius:4px;
+ background:#0d1411;
+ box-shadow:none;
+}
+#product-active:has(#workspace-scan:not([hidden])) #product-guide .product-symbol{
+ color:var(--scan-accent);
+ border-color:rgba(56,170,255,.4);
+ border-radius:4px;
+ background:rgba(56,170,255,.035);
+}
+#product-active:has(#workspace-scan:not([hidden])) #product-guide h3{
+ color:var(--scan-accent);
+}
+#product-active:has(#workspace-scan:not([hidden])) #product-guide .guide-progress li{
+ border-color:rgba(173,184,170,.16);
+}
+#product-active:has(#workspace-scan:not([hidden])) #product-guide .guide-progress .done{
+ color:#cbd8c6;
+}
+#product-active:has(#workspace-scan:not([hidden])) #product-guide .guide-progress .current{
+ color:var(--scan-accent);
+}
+#workspace-scan{
+ --scan-accent:#38aaff;
+}
+#workspace-scan .btn:not(.outline){
+ border-color:var(--scan-accent);
+ background:var(--scan-accent);
+ color:#07111a;
+}
+#workspace-scan .btn:not(.outline):hover{
+ border-color:#63bdff;
+ background:#63bdff;
+}
+#workspace-scan button:focus-visible,
+#workspace-scan input:focus-visible,
+#workspace-scan select:focus-visible,
+#workspace-scan textarea:focus-visible{
+ outline-color:var(--scan-accent);
+}
+#workspace-scan .scan-engine{
+ border-color:var(--line);
+ border-radius:4px;
+ background:#0d1411;
+ box-shadow:none;
+}
+#workspace-scan .scan-mode{
+ border-color:var(--line);
+ border-radius:7px;
+ background:#111911;
+ color:var(--ink);
+}
+#workspace-scan .scan-mode:hover,
+#workspace-scan .scan-mode.active{
+ border-color:var(--scan-accent);
+ color:var(--scan-accent);
+ background:rgba(56,170,255,.07);
+}
+#workspace-scan .scan-mode:focus-visible{
+ outline:2px solid var(--scan-accent);
+ outline-offset:3px;
+}
+#workspace-scan input[type="checkbox"],
+#workspace-scan input[type="radio"]{
+ accent-color:var(--scan-accent);
+}
+#workspace-scan .scan-console{
+ border-color:var(--line);
+ border-radius:4px;
+ background:#07100c;
+}
+#workspace-scan .scan-progress-bar{
+ background:#17221b;
+}
+#workspace-scan .scan-progress-fill{
+ background:var(--scan-accent);
+}
+#workspace-scan .scan-progress-line.done{
+ color:#79c8f2;
+}
+#workspace-scan .scan-finding{
+ border-color:var(--line);
+}
+#workspace-scan .sev{
+ border-color:rgba(56,170,255,.4);
+ border-radius:4px;
+ color:var(--ink);
+}
+#workspace-scan .scan-summary-head,
+#workspace-scan .scan-summary-label,
+#workspace-scan .scan-summary-score{
+ color:var(--scan-accent);
+}
+#workspace-scan .scan-summary-area{
+ border-color:rgba(173,184,170,.16);
+}
+#workspace-scan .scan-summary-cta{
+ border-color:var(--scan-accent);
+ background:var(--scan-accent);
+ color:#07111a;
+ border-radius:4px;
+}
+#workspace-scan .scan-summary-cta:hover{
+ background:#63bdff;
+ border-color:#63bdff;
+}
+#workspace-scan .scan-action{
+ color:var(--scan-accent);
+}
+#product-active:has(#workspace-strike:not([hidden])) #product-guide{
+ --strike-accent:#ff5364;
+ border-color:var(--line);
+ border-radius:4px;
+ background:linear-gradient(135deg,rgba(255,83,100,.035),transparent 48%),#0d1411;
+ box-shadow:none;
+}
+#product-active:has(#workspace-strike:not([hidden])) #product-guide .product-symbol{
+ color:var(--strike-accent);
+ border-color:rgba(255,83,100,.4);
+ border-radius:4px;
+ background:rgba(255,83,100,.035);
+}
+#product-active:has(#workspace-strike:not([hidden])) #product-guide h3,
+#product-active:has(#workspace-strike:not([hidden])) #product-guide .guide-progress .current{
+ color:var(--strike-accent);
+}
+#product-active:has(#workspace-strike:not([hidden])) #product-guide .guide-progress li{
+ border-color:rgba(173,184,170,.16);
+}
+#workspace-strike{
+ --strike-accent:#ff5364;
+}
+#workspace-strike .strike-workspace{
+ border-color:var(--line);
+ border-radius:4px;
+ background:#0d1411;
+ box-shadow:none;
+}
+#workspace-strike .small-label:not(.strike-warning-label){
+ color:var(--strike-accent);
+}
+#workspace-strike .strike-screen .btn:not(.outline){
+ border-color:var(--strike-accent);
+ background:var(--strike-accent);
+ color:#1b080b;
+}
+#workspace-strike .strike-screen .btn:not(.outline):hover{
+ border-color:#ff7885;
+ background:#ff7885;
+}
+#workspace-strike .strike-screen .btn.outline:hover{
+ border-color:var(--strike-accent);
+ color:var(--strike-accent);
+ background:rgba(255,83,100,.06);
+}
+#workspace-strike .strike-drop{
+ border-color:rgba(255,83,100,.42);
+ border-radius:4px;
+ background:#111511;
+}
+#workspace-strike .strike-drop:hover,
+#workspace-strike .strike-drop:focus-within{
+ border-color:var(--strike-accent);
+}
+#workspace-strike .strike-targets button,
+#workspace-strike .strike-delivery-modes button{
+ border-color:var(--line);
+ border-radius:4px;
+ background:#111911;
+ color:var(--ink);
+}
+#workspace-strike .strike-targets button:hover,
+#workspace-strike .strike-delivery-modes button:hover{
+ border-color:rgba(255,83,100,.65);
+}
+#workspace-strike .strike-targets button.active,
+#workspace-strike .strike-delivery-modes button.active{
+ border-color:var(--strike-accent);
+ background:rgba(255,83,100,.08);
+ color:var(--strike-accent);
+}
+#workspace-strike .strike-choice label,
+#workspace-strike .strike-format label{
+ border-color:rgba(255,83,100,.32);
+ border-radius:4px;
+}
+#workspace-strike .strike-choice label:has(input:checked),
+#workspace-strike .strike-format label:has(input:checked){
+ border-color:var(--strike-accent);
+ background:rgba(255,83,100,.06);
+}
+#workspace-strike input[type="checkbox"],
+#workspace-strike input[type="radio"]{
+ accent-color:var(--strike-accent);
+}
+#workspace-strike button:focus-visible,
+#workspace-strike input:focus-visible{
+ outline-color:var(--strike-accent);
+}
+#workspace-strike .strike-result-block,
+#workspace-strike .strike-template-map,
+#workspace-strike .strike-file-row{
+ border-color:rgba(173,184,170,.18);
+}
+#workspace-strike .strike-file-row button:hover{
+ color:var(--strike-accent);
+}
+#workspace-strike .strike-progress .scan-progress-line.done{
+ color:#ff9aa4;
+}
+#workspace-strike .strike-progress .scan-progress-line.active{
+ color:var(--strike-accent);
+}
+#workspace-strike .strike-expand{
+ color:var(--strike-accent);
+}
+#workspace-strike .strike-integration-note,
+#workspace-strike .strike-section-card{
+ border-color:rgba(173,184,170,.22);
+ border-radius:4px;
+ background:#111911;
+}
+#workspace-strike .strike-screen .form-status{
+ color:var(--strike-accent);
+}
+#product-active:has(#workspace-control:not([hidden])) #product-guide{
+ --control-accent:#80e46c;
+ border-color:var(--line);
+ border-radius:4px;
+ background:#0d1411;
+ box-shadow:none;
+}
+#product-active:has(#workspace-control:not([hidden])) #product-guide .product-symbol{
+ color:var(--control-accent);
+ border-color:rgba(128,228,108,.4);
+ background:rgba(128,228,108,.035);
+}
+#product-active:has(#workspace-control:not([hidden])) #product-guide h3,
+#product-active:has(#workspace-control:not([hidden])) #product-guide .guide-progress .current{
+ color:var(--control-accent);
+}
+#product-active:has(#workspace-control:not([hidden])) #product-guide .guide-progress li{
+ border-color:rgba(173,184,170,.16);
+}
+#workspace-control{
+ --control-accent:#80e46c;
+}
+#workspace-control .small-label{
+ color:var(--control-accent);
+}
 </style>
 </head>
 <body id="inicio">
