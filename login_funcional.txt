@@ -1,0 +1,58 @@
+DOCUMENTO FUNCIONAL – INICIO DE SESIÓN
+BREAKERS – Documento de prueba para STRIKE
+
+1. OBJETIVO
+
+Permitir que un usuario registrado acceda al sistema mediante sus credenciales de usuario y contraseña.
+
+2. CAMPOS
+
+Usuario
+- Obligatorio.
+
+Contraseña
+- Obligatoria.
+- Sensible a mayúsculas y minúsculas.
+- No debe mostrarse en texto plano mientras el usuario la escribe.
+
+3. REGLAS FUNCIONALES
+
+1. El usuario debe ingresar usuario y contraseña para iniciar sesión.
+
+2. Si el usuario y la contraseña son válidos, el sistema debe permitir el acceso.
+
+3. Si el usuario no existe, el sistema debe rechazar el acceso.
+
+4. Si el usuario existe pero la contraseña es incorrecta, el sistema debe rechazar el acceso.
+
+5. Si el campo Usuario está vacío, el sistema no debe permitir iniciar sesión.
+
+6. Si el campo Contraseña está vacío, el sistema no debe permitir iniciar sesión.
+
+7. Si ambos campos están vacíos, el sistema no debe permitir iniciar sesión.
+
+8. Después de 3 intentos consecutivos fallidos, la cuenta debe quedar bloqueada.
+
+9. Una cuenta bloqueada no debe poder iniciar sesión aunque posteriormente se ingresen credenciales correctas.
+
+10. Ante credenciales inválidas, el sistema debe mostrar el mensaje:
+"Usuario o contraseña incorrectos".
+
+11. La contraseña ingresada debe permanecer oculta durante su escritura.
+
+12. El botón "Ingresar" debe ejecutar la autenticación utilizando los valores ingresados en Usuario y Contraseña.
+
+13. Cuando el inicio de sesión sea exitoso, el usuario debe ser redirigido a la pantalla principal del sistema.
+
+14. Una sesión autenticada debe permanecer activa durante un máximo de 30 minutos de inactividad.
+
+15. Al cumplirse 30 minutos de inactividad, el sistema debe cerrar la sesión y solicitar nuevamente las credenciales.
+
+4. DATOS VÁLIDOS DE REFERENCIA
+
+Usuario: tester01
+Contraseña: Breakers2026!
+
+5. RESULTADO GENERAL ESPERADO
+
+El sistema debe permitir el acceso únicamente a usuarios autorizados con credenciales válidas, impedir accesos inválidos, aplicar el bloqueo definido ante intentos fallidos y controlar correctamente la expiración de la sesión.

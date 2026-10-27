@@ -39,7 +39,7 @@ def test_scan_post_returns_job_id_and_polling_result(monkeypatch, tmp_path):
     _stores(monkeypatch, tmp_path)
     monkeypatch.setattr(scan_app, "scan_jobs", ScanJobStore(ttl_seconds=60))
 
-    def fake_run_scan(target, progress=None):
+    def fake_run_scan(target, progress=None, job_id=None):
         for stage in ("received", "identifying", "planning", "scanning", "checking", "evidence", "prioritizing", "reporting"):
             progress(stage)
         return {"analysis_status": "partial", "score": None, "findings": []}
@@ -75,7 +75,7 @@ def test_uploaded_file_lives_for_job_and_workspace_is_cleaned(monkeypatch, tmp_p
     monkeypatch.setattr(scan_app, "scan_jobs", ScanJobStore(ttl_seconds=60))
     seen = {}
 
-    def fake_run_scan(target, progress=None):
+    def fake_run_scan(target, progress=None, job_id=None):
         path = Path(target)
         seen["target"] = path
         seen["exists_during_scan"] = path.exists()

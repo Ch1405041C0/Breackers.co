@@ -1,5 +1,22 @@
+import json
+
 from breakers.engine.integration import analyze_scan_report
 from breakers.memory import JsonMemoryStore
+from breakers.providers import ModelResponse
+
+
+class TestProvider:
+    name = "test"
+
+    def generate(self, request):
+        return ModelResponse(
+            content=json.dumps({"findings": [], "gaps": [], "decisions": []}),
+            provider=self.name,
+            model="test-model",
+        )
+
+    def health(self):
+        return {"ok": True}
 
 
 def test_memory_store_persists_and_recalls(tmp_path):
@@ -21,8 +38,9 @@ def test_agentic_scan_recalls_previous_run(tmp_path):
         "requirements": ["login works"],
     }
 
-    first = analyze_scan_report(report, memory_store=store)
-    second = analyze_scan_report(report, memory_store=store)
+    provider = TestProvider()
+    first = analyze_scan_report(report, memory_store=store, model_provider=provider)
+    second = analyze_scan_report(report, memory_store=store, model_provider=provider)
 
     assert first["memory"]["recalled"] == 0
     assert second["memory"]["recalled"] == 1

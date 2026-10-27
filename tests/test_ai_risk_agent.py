@@ -28,6 +28,14 @@ class OfflineProvider(FakeProvider):
     def generate(self, request):
         raise ConnectionError("provider unavailable")
 
+    def health(self):
+        return {"ok": False}
+
+
+class FailingProvider(FakeProvider):
+    def generate(self, request):
+        raise TimeoutError("Ollama generation exceeded its configured timeout")
+
 
 def test_ai_agent_returns_structured_model_analysis():
     agent = build_ai_risk_agent(FakeProvider())
@@ -43,3 +51,55 @@ def test_ai_failure_does_not_stop_breakers():
     assert result["findings"] == []
     assert result["gaps"] == []
     assert result["decisions"][0]["type"] == "ai_analysis_unavailable"
+
+
+def test_ai_agent_sends_deduplicated_source_context_only():
+    provider = FakeProvider()
+    captured = {}
+    captured["schema"] = None
+    original_generate = provider.generate
+
+    def capture(request):
+        captured["context"] = request.context
+        captured["schema"] = request.response_schema
+        return original_generate(request)
+
+    provider.generate = capture
+    agent = build_ai_risk_agent(provider)
+    agent({
+        "objective": "objective",
+        "cycle": 3,
+        "context": {
+            "requirements": ["login", "login"],
+            "risks": [{"id": "R1"}],
+            "evidence": [{"id": "E1"}],
+            "limitations": [],
+            "requested_scenarios": ["valid login"],
+            "discovered_scenarios": ["locked account"],
+            "memory": [{"payload": {"findings": [{"value": "old"}]}}],
+        },
+        "findings": [{"value": "duplicate risk"}],
+        "gaps": [{"value": "duplicate gap"}],
+    })
+
+    assert captured["context"] == {
+        "requirements": ["login"],
+        "risks": [{"id": "R1"}],
+        "evidence": [{"id": "E1"}],
+        "limitations": [],
+        "requested_scenarios": ["valid login"],
+        "discovered_scenarios": ["locked account"],
+    }
+    assert captured["schema"]["required"] == ["findings", "gaps", "decisions"]
+
+
+def test_ai_generation_error_is_preserved_and_distinguished_from_unavailable():
+    result = build_ai_risk_agent(FailingProvider())({
+        "objective": "login",
+        "cycle": 1,
+        "context": {},
+    })
+    decision = result["decisions"][0]
+    assert decision["type"] == "ai_analysis_failed"
+    assert decision["error_type"] == "TimeoutError"
+    assert decision["error"] == "Ollama generation exceeded its configured timeout"

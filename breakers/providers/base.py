@@ -26,6 +26,7 @@ class ModelRequest:
     context: dict[str, Any] = field(default_factory=dict)
     system: str = ""
     images: list[bytes] = field(default_factory=list)
+    response_schema: dict[str, Any] | None = None
 
 
 @dataclass

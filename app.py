@@ -15,6 +15,7 @@ from breakers.storage import SQLiteStore
 from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
 from breakers.strike.exporter import build_strike_export
 from breakers.strike.ollama_provider import OllamaReasoningProvider, OllamaReasoningError
+from breakers.providers.factory import configured_ollama_base_url
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -22,7 +23,7 @@ app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 app.config["STRIKE_MAX_FILE_BYTES"] = int(os.environ.get("BREAKERS_STRIKE_MAX_FILE_BYTES", 5 * 1024 * 1024))
 app.config["STRIKE_REASONING_PROVIDER"] = os.environ.get("BREAKERS_STRIKE_REASONING_PROVIDER", "none").strip().lower()
 app.config["OLLAMA_MODEL"] = os.environ.get("BREAKERS_OLLAMA_MODEL", "ornith:9b")
-app.config["OLLAMA_BASE_URL"] = os.environ.get("BREAKERS_OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+app.config["OLLAMA_BASE_URL"] = configured_ollama_base_url()
 strike_reasoning_provider = (
     OllamaReasoningProvider(
         model=app.config["OLLAMA_MODEL"],
@@ -56,7 +57,7 @@ def _start_scan_job(target: str, cleanup_path: str | None = None):
     job = scan_jobs.create()
 
     def scan_once(progress):
-        full_report = run_scan(target, progress=progress)
+        full_report = run_scan(target, progress=progress, job_id=job.id)
         return report_store.save_scan_result(full_report)
 
     scan_jobs.start(job, scan_once, cleanup_path=cleanup_path)

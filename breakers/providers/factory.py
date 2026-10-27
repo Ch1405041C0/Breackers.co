@@ -5,6 +5,15 @@ import os
 from .ollama import OllamaProvider
 
 
+def configured_ollama_base_url() -> str:
+    """Support both the SCAN and legacy STRIKE environment variable names."""
+    return (
+        os.getenv("BREAKERS_OLLAMA_URL")
+        or os.getenv("BREAKERS_OLLAMA_BASE_URL")
+        or "http://127.0.0.1:11434"
+    )
+
+
 def _env_timeout(name: str, default: int) -> int:
     raw = os.getenv(name, str(default)).strip()
     try:
@@ -19,7 +28,7 @@ def _env_timeout(name: str, default: int) -> int:
 def _build_provider(provider: str, *, model: str, timeout: int):
     if provider == "ollama":
         return OllamaProvider(
-            base_url=os.getenv("BREAKERS_OLLAMA_URL", "http://127.0.0.1:11434"),
+            base_url=configured_ollama_base_url(),
             model=model,
             timeout=timeout,
         )

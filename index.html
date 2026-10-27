@@ -1924,13 +1924,27 @@ function renderScanProgress(data){
 function moneyARS(amount){return new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(amount)}
 function renderScanResult(data){
  const status=data.analysis_status||'incomplete',counts=data.by_severity||{},areas=Array.isArray(data.areas)?data.areas:[];
+ if(status==='failed'){renderScanFailure(data.priority_message||'SCAN no pudo producir un informe válido.');return}
  const score=status==='completed'&&data.score!==null&&data.score!==undefined?Number(data.score):null;
+ const conclusive=status!=='incomplete'&&data.technical_evidence_sufficient!==false;
+ const heading=status==='completed'?'SCAN COMPLETO':status==='incomplete'?'SCAN INCOMPLETO':'SCAN PARCIAL';
+ const symbol=status==='completed'?'✓':'!';
  const severity=[[counts.CRITICAL,'crítico','críticos'],[counts.HIGH,'alto','altos'],[counts.MEDIUM,'medio','medios'],[counts.LOW,'bajo','bajos']].map(x=>'<span><strong>'+Number(x[0]||0)+'</strong> '+(Number(x[0]||0)===1?x[1]:x[2])+'</span>').join('<span aria-hidden="true">·</span>');
  const areaLabel=areas.length===1?'PRINCIPAL ÁREA DE RIESGO':'PRINCIPALES ÁREAS DE RIESGO';
  const areaRows=areas.map(x=>'<div class="scan-summary-area"><span class="scan-summary-area-name">'+esc(x.label)+'</span><span class="scan-summary-area-count">'+Number(x.count||0)+' '+(Number(x.count||0)===1?'hallazgo':'hallazgos')+'</span></div>').join('');
- scanConsole.innerHTML='<div class="scan-summary"><div class="scan-summary-head"><span>✓</span><span>SCAN COMPLETO</span></div><div class="scan-summary-score-label">SCORE</div><div class="scan-summary-score">'+(score===null?'—':score+' <span>/ 100</span>')+'</div><div class="scan-summary-total">'+Number(data.total_findings||0)+' hallazgos detectados</div><div class="scan-summary-severity">'+severity+'</div><div class="scan-summary-risk"><div class="scan-summary-label">'+areaLabel+'</div>'+(areaRows||'<div class="scan-summary-area"><span class="scan-summary-area-name">Sin áreas con hallazgos</span></div>')+'<p class="scan-summary-message">'+esc(data.priority_message||'')+'</p><button class="scan-summary-cta" id="request-full-report" type="button"><span>SOLICITAR INFORME COMPLETO</span><span class="arrow" aria-hidden="true">→</span></button></div></div>';
+ const results=conclusive
+  ?'<div class="scan-summary-total">'+Number(data.total_findings||0)+' hallazgos detectados</div><div class="scan-summary-severity">'+severity+'</div><div class="scan-summary-risk"><div class="scan-summary-label">'+areaLabel+'</div>'+(areaRows||'<div class="scan-summary-area"><span class="scan-summary-area-name">Sin áreas con hallazgos</span></div>')+'</div>'
+  :'<div class="scan-summary-total">Sin resultados concluyentes</div><p class="scan-summary-message">'+esc(data.results_message||'No se ejecutó suficiente cobertura técnica para determinar si existen hallazgos.')+'</p>';
+ const statusLabels={executed:'Ejecutado',available:'Disponible',unavailable:'No disponible',error:'Error',not_required:'No requerido'};
+ const analyzerRows=(data.analyzer_statuses||[]).map(item=>'<div class="scan-summary-area"><span class="scan-summary-area-name">'+esc(item.name)+'</span><span class="scan-summary-area-count">'+esc(statusLabels[item.status]||'Estado desconocido')+'</span></div>').join('');
+ const componentStatus=status==='incomplete'?'<div class="scan-summary-risk"><div class="scan-summary-label">ESTADO DE MOTORES</div>'+analyzerRows+'</div>':'';
+ scanConsole.innerHTML='<div class="scan-summary"><div class="scan-summary-head"><span>'+symbol+'</span><span>'+heading+'</span></div>'+(status==='incomplete'?'<p class="scan-summary-message">'+esc(data.priority_message||'El objetivo fue recibido, pero no pudo completarse toda la cobertura requerida.')+'</p>':'')+'<div class="scan-summary-score-label">SCORE</div><div class="scan-summary-score">'+(score===null?'—':score+' <span>/ 100</span>')+'</div>'+results+componentStatus+'<button class="scan-summary-cta" id="request-full-report" type="button"><span>SOLICITAR INFORME COMPLETO</span><span class="arrow" aria-hidden="true">→</span></button></div>';
  scanFindings.innerHTML='';
  document.getElementById('request-full-report')?.addEventListener('click',()=>showCommercialStep(data.report_id));
+}
+function renderScanFailure(message){
+ scanConsole.innerHTML='<div class="scan-summary"><div class="scan-summary-head"><span>!</span><span>SCAN FALLIDO</span></div><p class="scan-summary-message">'+esc(message||'SCAN no pudo producir un informe válido.')+'</p></div>';
+ scanFindings.innerHTML='';
 }
 async function showCommercialStep(reportId){
  scanFindings.innerHTML='';
@@ -1948,9 +1962,9 @@ async function pollScan(jobId){
   const r=await fetch('/api/scan/'+encodeURIComponent(jobId),{cache:'no-store'});
   const data=await r.json();
   if(!r.ok) throw new Error(data.error||'No pudimos consultar el estado de SCAN.');
-  renderScanProgress(data);
   if(data.state==='completed'){renderScanResult(data.result||{});return}
-  if(data.state==='failed') throw new Error(data.error||'SCAN no pudo completar el análisis.');
+  if(data.state==='failed'){renderScanFailure(data.error);return}
+  renderScanProgress(data);
   await new Promise(resolve=>setTimeout(resolve,1000));
  }
 }
@@ -1976,7 +1990,7 @@ scanBtn?.addEventListener('click',async()=>{
   if(!r.ok) throw new Error(data.error||'backend no disponible');
   renderScanProgress({percent:5,stage_label:'Objetivo recibido',elapsed_seconds:0,stages:scanStageLabels.map((label,index)=>({label,status:index===0?'active':'pending'}))});
   await pollScan(data.job_id);
- }catch(e){scanConsole.textContent='SCAN no pudo procesar la evidencia.\\n'+e.message;}finally{scanBtn.disabled=false}
+ }catch(e){renderScanFailure(e.message);}finally{scanBtn.disabled=false}
 });
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script>

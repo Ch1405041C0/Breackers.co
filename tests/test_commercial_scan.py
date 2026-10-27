@@ -48,7 +48,7 @@ def test_public_summary_is_whitelisted_and_same_analysis(monkeypatch, tmp_path):
     reports, _ = configure_app(monkeypatch, tmp_path)
     calls = {"count": 0}
 
-    def fake_scan(target, progress=None):
+    def fake_scan(target, progress=None, job_id=None):
         calls["count"] += 1
         return FULL
 

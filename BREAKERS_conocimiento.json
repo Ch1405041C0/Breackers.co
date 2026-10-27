@@ -1,0 +1,950 @@
+{
+  "esquema_version": "1.0",
+  "proyecto": "BREAKERS CO",
+  "fecha_revision": "2026-09-22",
+  "proposito": "Convertir investigación, observación de competencia y experiencia QA en capacidades propias, oportunidades y decisiones verificables.",
+  "estado": "Fichero inicial de investigación y diseño. No integrado a un motor ni a una base consultable en ejecución.",
+  "decisiones": [
+    "Construir soluciones propias de calidad.",
+    "Conservar los tres productos SCAN, STRIKE y CONTROL.",
+    "Usar las referencias para investigar competencia, capacidades, experiencia de usuario, operación y oportunidades.",
+    "Aplicar la exclusión editorial solicitada a esta base y a la página revisada.",
+    "Conservar las técnicas generales de QA de la documentación propia.",
+    "Mantener separación entre conocimiento comprobado, propuesta y funcionalidad implementada."
+  ],
+  "reglas_de_conocimiento": [
+    "Cada ficha tiene origen y límites de revisión.",
+    "Las afirmaciones comerciales no equivalen a resultados de una prueba.",
+    "Las oportunidades son hipótesis por validar, no ventajas exclusivas demostradas.",
+    "No almacenar credenciales ni datos reales de terceros.",
+    "La falta de evidencia se registra como no verificable.",
+    "La incorporación de un enlace no implica contratación ni integración."
+  ],
+  "fuentes": [
+    {
+      "id": "F01",
+      "nombre": "ZAP",
+      "urls": [
+        "https://www.zaproxy.org/",
+        "https://www.zaproxy.org/docs/automate/"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "automatizacion"
+      ],
+      "productos": [
+        "SCAN",
+        "CONTROL"
+      ],
+      "observado": "La documentación presenta opciones de automatización de pruebas de seguridad web y un Automation Framework con planes y trabajos.",
+      "oportunidad_propuesta": "Definir trabajos de seguridad repetibles y convertir sus hallazgos en evidencias vinculadas a una versión del sistema.",
+      "por_validar": "Autenticación, alcance autorizado, falsos positivos y recursos necesarios para cada aplicación.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F02",
+      "nombre": "Alias de Gmail",
+      "urls": [
+        "https://distritodigital.biz/como-crear-infinitas-cuentas-de-correo-con-gmail/"
+      ],
+      "usos": [
+        "datos_de_prueba",
+        "analisis_critico"
+      ],
+      "productos": [
+        "STRIKE"
+      ],
+      "observado": "Los alias con etiquetas permiten dirigir mensajes al mismo buzón; no crean cuentas de Google independientes.",
+      "oportunidad_propuesta": "Diseñar pruebas de registro, duplicados y recuperación con correlación por escenario.",
+      "por_validar": "Reglas de normalización del sistema y si acepta etiquetas; usar cuentas y buzones de prueba controlados.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F03",
+      "nombre": "Ethereum Waffle",
+      "urls": [
+        "https://ethereum-waffle.readthedocs.io/en/latest/basic-testing.html#creating-a-provider"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "reproducibilidad"
+      ],
+      "productos": [
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "La documentación explica proveedores de prueba y operaciones con contratos; también se consultaron fixtures, mocks y aserciones.",
+      "oportunidad_propuesta": "Aplicar el patrón preparar actores y datos, ejecutar, verificar y restaurar el estado. Integración EVM solo para ese dominio.",
+      "por_validar": "Compatibilidad y mantenimiento de versiones antes de seleccionar esta dependencia.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F04",
+      "nombre": "Temp Mail",
+      "urls": [
+        "https://temp-mail.org/es/"
+      ],
+      "usos": [
+        "datos_de_prueba",
+        "capacidad_tecnica"
+      ],
+      "productos": [
+        "STRIKE"
+      ],
+      "observado": "El sitio ofrece correo temporal y documentación de API; la disponibilidad de mensajes tiene límites temporales.",
+      "oportunidad_propuesta": "Diseñar un adaptador intercambiable para probar recepción y expiración de mensajes.",
+      "por_validar": "Cuotas, duración, restricciones y acceso al proveedor; no considerar permanente un buzón temporal.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F05",
+      "nombre": "SonarQube: artículo de instalación",
+      "urls": [
+        "https://www.c-sharpcorner.com/article/step-by-step-sonarqube-setup-and-run-sonarqube-scanner"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "analisis_critico"
+      ],
+      "productos": [
+        "SCAN",
+        "CONTROL"
+      ],
+      "observado": "El artículo usa versiones antiguas. Se contrastaron aspectos de configuración, cobertura y quality gates con documentación oficial durante la revisión.",
+      "oportunidad_propuesta": "Relacionar problemas de código, exclusiones y reglas con evidencia de cada revisión y con pruebas de comportamiento.",
+      "por_validar": "Revalidar instalación, nombres de parámetros y compatibilidad en la documentación de la versión elegida.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F06",
+      "nombre": "JMeter",
+      "urls": [
+        "https://somospnt.com/blog/91-load-testing-con-jmeter",
+        "https://jmeter.apache.org/download_jmeter.cgi"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "automatizacion"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "El artículo introduce planes de carga. La revisión distinguió usuarios concurrentes, ramp-up y throughput, y contrastó la ejecución sin interfaz para carga con Apache.",
+      "oportunidad_propuesta": "Construir escenarios de rendimiento con datos, pausas, aserciones, métricas y umbrales definidos por negocio.",
+      "por_validar": "Volumen real, entorno, capacidad del generador, monitoreo y límites aceptables del producto.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F07",
+      "nombre": "WeTransfer",
+      "urls": [
+        "https://wetransfer.com/"
+      ],
+      "usos": [
+        "operacion",
+        "entrega_de_evidencia"
+      ],
+      "productos": [
+        "CONTROL"
+      ],
+      "observado": "Es una referencia de experiencia de envío de archivos mediante enlaces o correo; se consultó ayuda pública porque la portada no se pudo leer completamente.",
+      "oportunidad_propuesta": "Diseñar entregas simples de evidencia con vencimiento visible y un registro permanente independiente.",
+      "por_validar": "Necesidades de retención, acceso y trazabilidad; no equivale a un repositorio de resultados.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F08",
+      "nombre": "bitegarden",
+      "urls": [
+        "https://www.bitegarden.com/"
+      ],
+      "usos": [
+        "competencia_adyacente",
+        "reportes",
+        "oportunidad"
+      ],
+      "productos": [
+        "SCAN",
+        "CONTROL"
+      ],
+      "observado": "Presenta productos que amplían reportes, análisis de seguridad y administración alrededor de SonarQube.",
+      "oportunidad_propuesta": "Estudiar cómo convierte resultados técnicos en informes útiles; diferenciar BREAKERS con trazabilidad y decisiones entre fuentes.",
+      "por_validar": "Valor de esa diferencia mediante casos reales. Las capacidades comerciales no se probaron en una cuenta.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F09",
+      "nombre": "LatinCloud",
+      "urls": [
+        "https://latincloud.com/"
+      ],
+      "usos": [
+        "infraestructura",
+        "operacion"
+      ],
+      "productos": [
+        "CONTROL"
+      ],
+      "observado": "Se consultaron páginas públicas de infraestructura y VPS; la portada tuvo problemas de acceso durante la revisión.",
+      "oportunidad_propuesta": "Definir requisitos de ejecución aislada, respaldo y observabilidad que puedan implementarse sobre distintos entornos.",
+      "por_validar": "Arquitectura y recursos de BREAKERS; ninguna elección de proveedor ni contratación está decidida.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F10",
+      "nombre": "Lucid",
+      "urls": [
+        "https://lucid.co/"
+      ],
+      "usos": [
+        "experiencia_de_usuario",
+        "modelado",
+        "oportunidad"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE"
+      ],
+      "observado": "Presenta herramientas de diagramación, colaboración y planificación.",
+      "oportunidad_propuesta": "Conectar visualmente reglas, flujos, riesgos y pruebas para ayudar a comprender cobertura y dependencias.",
+      "por_validar": "Qué representación mejora realmente las decisiones de un QA y si conviene generarla dentro de BREAKERS.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F11",
+      "nombre": "Twilio",
+      "urls": [
+        "https://www.twilio.com/es-mx"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "datos_de_prueba"
+      ],
+      "productos": [
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "Ofrece capacidades de comunicación y verificación. Los mecanismos de prueba consultados no simulan universalmente todos los productos ni callbacks.",
+      "oportunidad_propuesta": "Modelar OTP, reintentos, expiración, duplicados y entrega como estados de una comunicación.",
+      "por_validar": "Contrato y comportamiento del canal específico; distinguir simulación de entrega real.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F12",
+      "nombre": "VIN Generator",
+      "urls": [
+        "https://vingenerator.org/"
+      ],
+      "usos": [
+        "datos_de_prueba"
+      ],
+      "productos": [
+        "STRIKE"
+      ],
+      "observado": "El sitio genera ejemplos de VIN con opciones de vehículo. No se confirmó una API ni exclusividad de los identificadores generados.",
+      "oportunidad_propuesta": "Mantener conjuntos reproducibles de datos válidos e inválidos con resultado esperado.",
+      "por_validar": "Reglas del dominio y colisiones; un valor generado no prueba que un vehículo exista o que sea completamente ficticio.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F13",
+      "nombre": "Sauce Labs",
+      "urls": [
+        "https://saucelabs.com/"
+      ],
+      "usos": [
+        "competencia",
+        "compatibilidad",
+        "oportunidad"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "Presenta ejecución en navegadores y dispositivos y capacidades de automatización asistida por IA. Se revisó su oferta pública, sin prueba práctica del servicio.",
+      "oportunidad_propuesta": "Investigar cobertura de plataformas, diagnóstico y evidencia de fallos; evaluar qué puede resolver BREAKERS con su propia arquitectura.",
+      "por_validar": "Rendimiento y calidad reales de las funciones anunciadas. La oferta comercial no demuestra ventaja exclusiva de BREAKERS.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F14",
+      "nombre": "Hacker Highschool",
+      "urls": [
+        "https://www.hackerhighschool.org/lessons.html"
+      ],
+      "usos": [
+        "formacion_tecnica",
+        "seguridad"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE"
+      ],
+      "observado": "El índice reúne lecciones de redes, sistemas, seguridad y análisis forense.",
+      "oportunidad_propuesta": "Identificar temas para elaborar guías propias de investigación y preguntas de diagnóstico.",
+      "por_validar": "Lectura de lecciones individuales y condiciones de reutilización antes de incorporar contenido completo.",
+      "alcance_revision": "Se revisó el índice de lecciones; no se leyeron todos los manuales."
+    },
+    {
+      "id": "F15",
+      "nombre": "QAlified: pruebas de API",
+      "urls": [
+        "https://qalified.com/es/blog/postman-para-api-testing/"
+      ],
+      "usos": [
+        "capacidad_tecnica",
+        "competencia",
+        "analisis"
+      ],
+      "productos": [
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "El artículo presenta pruebas con Postman. La revisión destacó colecciones, scripts y validación de comportamiento; un HTTP 200 no demuestra una regla de negocio.",
+      "oportunidad_propuesta": "Diseñar aserciones de contrato, permisos, estados e integridad de datos para cada operación.",
+      "por_validar": "Formato de colecciones y ejecutor compatibles con el proyecto antes de integrar una herramienta concreta.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F16",
+      "nombre": "QAlified: testing e IA",
+      "urls": [
+        "https://qalified.com/es/ia-testing/"
+      ],
+      "usos": [
+        "competencia",
+        "posicionamiento",
+        "oportunidad"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "La oferta pública distingue probar sistemas de IA y utilizar IA en testing; presenta además una herramienta propia de evaluación.",
+      "oportunidad_propuesta": "Definir resultados verificables y un flujo de revisión humana para la automatización asistida.",
+      "por_validar": "Capacidades reales, calidad y límites mediante casos comparables; no se utilizó el producto competidor.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F17",
+      "nombre": "QAlified: evaluación de LLM",
+      "urls": [
+        "https://qalified.com/es/blog/mejores-herramientas-evaluacion-llm/",
+        "https://qalified.com/es/blog/estrategias-testing-llm/"
+      ],
+      "usos": [
+        "competencia",
+        "capacidad_tecnica",
+        "oportunidad"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "Se revisaron estrategias de conjuntos de evaluación, regresión, RAG y jueces. Las categorías y afirmaciones sobre herramientas requirieron contraste con documentación primaria.",
+      "oportunidad_propuesta": "Separar reglas determinísticas de evaluaciones por modelo, calibrar contra revisores humanos y conservar cada configuración.",
+      "por_validar": "Confiabilidad de cada métrica, variabilidad y cobertura del dominio; una nota global no reemplaza revisar fallos críticos.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F18",
+      "nombre": "Drimcom",
+      "urls": [
+        "https://drimcom.com.ar/"
+      ],
+      "usos": [
+        "mercado",
+        "posicionamiento"
+      ],
+      "productos": [],
+      "observado": "Las páginas consultadas presentan acompañamiento estratégico a empresas. El acceso directo a la portada fue incompleto.",
+      "oportunidad_propuesta": "Estudiar cómo traducir problemas técnicos a necesidades del negocio y segmentar clientes.",
+      "por_validar": "Encaje concreto para BREAKERS. No se lo clasifica como competidor técnico directo por esta revisión.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F19",
+      "nombre": "Agencia SINC",
+      "urls": [
+        "https://www.agenciasinc.es/"
+      ],
+      "usos": [
+        "investigacion",
+        "vigilancia_tecnologica"
+      ],
+      "productos": [],
+      "observado": "Es una fuente de noticias científicas; no se seleccionó en esta conversación un estudio específico para implementar.",
+      "oportunidad_propuesta": "Usar noticias como punto de entrada a investigaciones originales que puedan mejorar la evaluación de sistemas.",
+      "por_validar": "Métodos, datos y limitaciones de cada trabajo primario antes de convertir una noticia en capacidad de producto.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F20",
+      "nombre": "Overemployed",
+      "urls": [
+        "https://overemployed.com/"
+      ],
+      "usos": [
+        "mercado",
+        "contexto_laboral"
+      ],
+      "productos": [],
+      "observado": "El sitio aborda trabajo remoto y simultaneidad de empleos. No aporta por sí mismo una técnica de calidad de software.",
+      "oportunidad_propuesta": "Conservar como referencia secundaria sobre organización del trabajo; su utilidad comercial para BREAKERS es una hipótesis.",
+      "por_validar": "No priorizar desarrollo a partir de esta referencia sin identificar un problema concreto de cliente.",
+      "alcance_revision": "Página o documentación consultada durante esta conversación; revisión selectiva, no exhaustiva."
+    },
+    {
+      "id": "F21",
+      "nombre": "Caso de gestión de stock compartido en la conversación",
+      "urls": [],
+      "usos": [
+        "caso_de_estudio",
+        "reglas_de_negocio"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "Se observó una pantalla administrativa con listado de productos, precios y stock. La observación fue de lectura.",
+      "oportunidad_propuesta": "Preparar un caso propio, con datos sintéticos, sobre consistencia de stock, precios, permisos y operaciones repetidas.",
+      "por_validar": "Reglas funcionales, entorno y alcance antes de ejecutar pruebas. El acceso visual no demuestra seguridad ni vulnerabilidades.",
+      "alcance_revision": "Observación limitada al listado; no se almacenan dirección de acceso, credenciales ni datos de terceros en este fichero."
+    },
+    {
+      "id": "F22",
+      "nombre": "Documentación propia de QA Agent",
+      "urls": [],
+      "usos": [
+        "conocimiento_propio",
+        "arquitectura",
+        "metodologia"
+      ],
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "observado": "Se leyeron los siete documentos del proyecto sobre visión, cobertura, casos, patrones, arquitectura, automatización y roadmap.",
+      "oportunidad_propuesta": "Usarlos como continuidad de diseño: preguntas y supuestos explícitos, trazabilidad y revisión crítica de los resultados.",
+      "por_validar": "Las etapas del roadmap describen una propuesta; no acreditan que los motores o conectores estén implementados.",
+      "alcance_revision": "Lectura del contenido de los siete documentos 01 a 07 de QA Agent / Conversaciones Convertidas."
+    }
+  ],
+  "fichas": [
+    {
+      "id": "P01",
+      "problema": "Requisitos incompletos producen huecos de cobertura",
+      "productos": [
+        "SCAN",
+        "STRIKE"
+      ],
+      "fuentes": [
+        "F22"
+      ],
+      "causas_a_investigar": [
+        "Reglas implícitas",
+        "Estados o perfiles sin describir"
+      ],
+      "como_investigar": [
+        "Identificar reglas, actores y estados con su ubicación en la fuente.",
+        "Separar requisitos confirmados, hipótesis y preguntas.",
+        "Relacionar cada riesgo con escenarios de prueba."
+      ],
+      "evidencia_esperada": [
+        "Referencia al requisito",
+        "Preguntas abiertas",
+        "Mapa de riesgo y cobertura"
+      ],
+      "correccion_y_reprueba": "Confirmar reglas con el responsable del producto y regenerar solo los casos afectados.",
+      "limites": "La ausencia de un requisito impide decidir el resultado esperado; registrar no verificable.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P02",
+      "problema": "Una API responde correctamente pero incumple la regla de negocio",
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F15",
+        "F22"
+      ],
+      "causas_a_investigar": [
+        "Aserciones limitadas al código HTTP",
+        "Permisos o persistencia no revisados"
+      ],
+      "como_investigar": [
+        "Definir resultado de negocio, contrato y permisos.",
+        "Ejecutar escenarios positivos, negativos, repetidos y con distintos perfiles.",
+        "Comprobar estado final en las fuentes autorizadas."
+      ],
+      "evidencia_esperada": [
+        "Request y response anonimizados",
+        "Aserciones y resultado de negocio",
+        "Datos antes y después cuando corresponda"
+      ],
+      "correccion_y_reprueba": "Corregir contrato o lógica y repetir el caso más la regresión de operaciones relacionadas.",
+      "limites": "No inferir datos internos ni permisos no provistos; un transporte exitoso no certifica una operación.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P03",
+      "problema": "La aplicación se degrada bajo concurrencia",
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F06"
+      ],
+      "causas_a_investigar": [
+        "Saturación de servicios o base de datos",
+        "Datos o pausas irreales",
+        "Generador de carga insuficiente"
+      ],
+      "como_investigar": [
+        "Definir mezcla de operaciones y objetivos acordados.",
+        "Preparar entorno y datos, aumentar carga gradualmente y registrar métricas.",
+        "Correlacionar latencia y errores con recursos del sistema y del generador."
+      ],
+      "evidencia_esperada": [
+        "Plan y configuración",
+        "p95/p99, throughput y errores",
+        "Monitoreo de ambas partes y versión del sistema"
+      ],
+      "correccion_y_reprueba": "Identificar el cuello de botella, corregir y comparar bajo el mismo escenario.",
+      "limites": "No convertir usuarios concurrentes en RPS sin medición ni fijar umbrales universales.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P04",
+      "problema": "Un resultado de seguridad se interpreta sin contexto",
+      "productos": [
+        "SCAN",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F01",
+        "F05",
+        "F14"
+      ],
+      "causas_a_investigar": [
+        "Cobertura incompleta",
+        "Exclusiones desconocidas",
+        "Hallazgos sin validación"
+      ],
+      "como_investigar": [
+        "Definir activos, alcance, credenciales de prueba y reglas.",
+        "Distinguir análisis de código de observaciones de ejecución.",
+        "Revisar cada hallazgo relevante y registrar evidencia reproducible."
+      ],
+      "evidencia_esperada": [
+        "Herramienta y versión",
+        "Reglas y exclusiones",
+        "Evidencia y estado de revisión"
+      ],
+      "correccion_y_reprueba": "Corregir causas confirmadas y volver a comprobar el escenario y su regresión.",
+      "limites": "Un gate verde o un acceso exitoso no demuestran seguridad completa. Las pruebas activas necesitan alcance definido.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P05",
+      "problema": "Correos o códigos de verificación generan pruebas inestables",
+      "productos": [
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F02",
+        "F04",
+        "F11"
+      ],
+      "causas_a_investigar": [
+        "Mensajes confundidos entre casos",
+        "Expiración o retrasos",
+        "Normalización de identidad no definida"
+      ],
+      "como_investigar": [
+        "Usar identificadores de correlación por caso.",
+        "Modelar espera, reintento, entrega y vencimiento.",
+        "Verificar duplicados e identidad según las reglas del sistema."
+      ],
+      "evidencia_esperada": [
+        "ID de correlación",
+        "Tiempos y estados",
+        "Resultado esperado de expiración y reintento"
+      ],
+      "correccion_y_reprueba": "Aislar datos y corregir manejo de estados; repetir también los errores de canal.",
+      "limites": "Un alias no constituye un usuario independiente. Los simuladores de comunicación tienen un alcance específico.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P06",
+      "problema": "Una prueba no puede reproducirse",
+      "productos": [
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F03",
+        "F12"
+      ],
+      "causas_a_investigar": [
+        "Datos aleatorios no guardados",
+        "Estado compartido",
+        "Dependencias variables"
+      ],
+      "como_investigar": [
+        "Guardar semilla o conjunto de datos y configuración.",
+        "Preparar precondiciones y aislar dependencias.",
+        "Restablecer el estado y repetir la ejecución."
+      ],
+      "evidencia_esperada": [
+        "Dataset versionado",
+        "Precondiciones",
+        "Procedimiento de restauración"
+      ],
+      "correccion_y_reprueba": "Eliminar dependencias accidentales y comprobar que el mismo escenario obtiene un resultado comparable.",
+      "limites": "El patrón es general; las funciones específicas de Waffle aplican a su entorno EVM.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P07",
+      "problema": "Una mejora del modelo introduce regresiones en IA",
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F16",
+        "F17"
+      ],
+      "causas_a_investigar": [
+        "Dataset poco representativo",
+        "Jueces sin calibrar",
+        "Cambio de modelo, prompt o recuperación"
+      ],
+      "como_investigar": [
+        "Versionar ejemplos, prompt, modelo y configuración.",
+        "Aplicar primero las reglas que tengan un resultado determinístico.",
+        "Evaluar lo variable con métricas explícitas, revisión humana y repeticiones justificadas."
+      ],
+      "evidencia_esperada": [
+        "Resultados por caso",
+        "Configuración y baseline",
+        "Discrepancias con revisión humana"
+      ],
+      "correccion_y_reprueba": "Corregir la causa específica y reevaluar el conjunto representativo, incluyendo los fallos críticos.",
+      "limites": "Una media alta puede ocultar casos graves. No afirmar precisión absoluta a partir de un juez de modelo.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P08",
+      "problema": "Una entrega se aprueba sin evidencia suficiente",
+      "productos": [
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F05",
+        "F08",
+        "F22"
+      ],
+      "causas_a_investigar": [
+        "Resultados ausentes o antiguos",
+        "Reglas de salida implícitas",
+        "Versiones mezcladas"
+      ],
+      "como_investigar": [
+        "Vincular cada resultado a versión, entorno y caso.",
+        "Aplicar reglas de aceptación explícitas.",
+        "Mostrar fallos, bloqueos y datos faltantes con sus razones."
+      ],
+      "evidencia_esperada": [
+        "Run ID",
+        "Versión y entorno",
+        "Decisión explicada por regla"
+      ],
+      "correccion_y_reprueba": "Completar o repetir evidencia faltante antes de reevaluar la entrega.",
+      "limites": "Cero resultados no equivale a aprobado; no promediar un fallo crítico hasta ocultarlo.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P09",
+      "problema": "Un flujo funciona solo en algunas plataformas",
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F13"
+      ],
+      "causas_a_investigar": [
+        "Matriz de dispositivos incompleta",
+        "Diferencias de navegador, permisos o resolución"
+      ],
+      "como_investigar": [
+        "Priorizar plataformas por uso y riesgo.",
+        "Ejecutar el mismo flujo con datos controlados.",
+        "Separar problemas de aplicación, entorno y automatización."
+      ],
+      "evidencia_esperada": [
+        "Plataforma y versión",
+        "Pasos y datos",
+        "Captura o log de reproducción"
+      ],
+      "correccion_y_reprueba": "Corregir la incompatibilidad y repetir las combinaciones afectadas.",
+      "limites": "Una ejecución de escritorio no acredita comportamiento móvil ni cobertura de todos los dispositivos.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    },
+    {
+      "id": "P10",
+      "problema": "Stock o precios inconsistentes después de una operación",
+      "productos": [
+        "SCAN",
+        "STRIKE",
+        "CONTROL"
+      ],
+      "fuentes": [
+        "F21",
+        "F22"
+      ],
+      "causas_a_investigar": [
+        "Actualizaciones parciales",
+        "Operación duplicada",
+        "Permisos o redondeos incorrectos"
+      ],
+      "como_investigar": [
+        "Confirmar reglas de venta, reserva, devolución y precios.",
+        "Diseñar límites y transiciones con datos sintéticos.",
+        "Comparar estados antes y después, incluyendo reintentos y operaciones concurrentes cuando estén autorizadas."
+      ],
+      "evidencia_esperada": [
+        "Reglas confirmadas",
+        "Estado inicial y final",
+        "Identificador de operación y permisos usados"
+      ],
+      "correccion_y_reprueba": "Corregir atomicidad, validación o estado y repetir el escenario más los flujos relacionados.",
+      "limites": "Es un caso de diseño: no se ejecutaron ventas, cambios de stock ni pruebas intrusivas en el sistema observado.",
+      "estado": "ficha_de_diseno_no_ejecutada"
+    }
+  ],
+  "productos": [
+    {
+      "id": "SCAN",
+      "proposito": "Identificar riesgos y huecos de evidencia para decidir dónde investigar primero.",
+      "estado": "Especificación inicial; motor no implementado en esta entrega.",
+      "entradas": [
+        "Requisitos, flujos o documentación",
+        "Alcance y reglas de negocio",
+        "Evidencias disponibles y versión"
+      ],
+      "salidas": [
+        "Riesgos priorizados con justificación",
+        "Preguntas y supuestos diferenciados",
+        "Mapa de cobertura y acciones sugeridas"
+      ],
+      "primera_version": [
+        "Analizar documentación provista",
+        "Vincular afirmaciones con fuentes",
+        "Exportar un diagnóstico estructurado"
+      ],
+      "criterios": [
+        "Una afirmación sin respaldo figura como hipótesis.",
+        "Cada riesgo tiene una causa, impacto y referencia o falta de evidencia.",
+        "La falta de información produce preguntas, nunca hallazgos inventados."
+      ]
+    },
+    {
+      "id": "STRIKE",
+      "proposito": "Transformar riesgos y reglas en un plan de pruebas que pueda ejecutarse.",
+      "estado": "Especificación inicial; motor no implementado en esta entrega.",
+      "entradas": [
+        "Diagnóstico SCAN o riesgos cargados manualmente",
+        "Reglas confirmadas",
+        "Entorno, datos y restricciones"
+      ],
+      "salidas": [
+        "Casos con precondiciones, pasos y resultado esperado",
+        "Datos reproducibles y candidatos a automatizar",
+        "Trazabilidad y prioridades"
+      ],
+      "primera_version": [
+        "Diseñar casos y datos desde reglas confirmadas",
+        "Exportar un plan en JSON y formato legible",
+        "Separar casos ejecutables de casos bloqueados por preguntas"
+      ],
+      "criterios": [
+        "Cada caso referencia un riesgo o requisito.",
+        "Los casos incluyen negativos y límites pertinentes.",
+        "Un resultado esperado desconocido se marca pendiente; no se inventa."
+      ]
+    },
+    {
+      "id": "CONTROL",
+      "proposito": "Seguir los resultados entre versiones y explicar si se cumplen los criterios de salida.",
+      "estado": "Especificación inicial; motor no implementado en esta entrega.",
+      "entradas": [
+        "Plan de pruebas versionado",
+        "Resultados y evidencias de ejecución",
+        "Reglas de salida y baseline"
+      ],
+      "salidas": [
+        "Comparación de versiones",
+        "Fallos, bloqueos y faltantes identificados",
+        "Decisión explicada y paquete de evidencias"
+      ],
+      "primera_version": [
+        "Importar resultados en un formato común",
+        "Validar asociación a caso, entorno y versión",
+        "Aplicar reglas de salida sin ocultar fallos críticos"
+      ],
+      "criterios": [
+        "Evidencia ausente produce no verificable.",
+        "El resultado identifica la regla incumplida.",
+        "Un fallo crítico no desaparece en una media global.",
+        "No confundir un error del ejecutor con un fallo confirmado del producto."
+      ]
+    }
+  ],
+  "backlog": [
+    {
+      "id": "CORE-01",
+      "prioridad": "P0",
+      "producto": "Común",
+      "trabajo": "Definir contrato de requisito, riesgo, caso, ejecución y evidencia.",
+      "aceptacion": "IDs estables, versión y estado de verificación en cada entidad.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "CORE-02",
+      "prioridad": "P0",
+      "producto": "Común",
+      "trabajo": "Construir consulta de fichas por problema y producto.",
+      "aceptacion": "Devuelve referencias y distingue observación de propuesta.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "SCAN-01",
+      "prioridad": "P0",
+      "producto": "SCAN",
+      "trabajo": "Extraer reglas y preguntas de un documento de ejemplo.",
+      "aceptacion": "Ninguna regla confirmada carece de fuente; vacíos explícitos.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "SCAN-02",
+      "prioridad": "P0",
+      "producto": "SCAN",
+      "trabajo": "Priorizar riesgos con factores visibles.",
+      "aceptacion": "El usuario puede revisar impacto, probabilidad y justificación.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "STRIKE-01",
+      "prioridad": "P0",
+      "producto": "STRIKE",
+      "trabajo": "Convertir un riesgo en casos ejecutables.",
+      "aceptacion": "Pasos, datos, precondiciones, resultado y vínculo presentes.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "STRIKE-02",
+      "prioridad": "P0",
+      "producto": "STRIKE",
+      "trabajo": "Exportar plan y conjunto de datos.",
+      "aceptacion": "El archivo permite reconstruir el mismo escenario.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "CONTROL-01",
+      "prioridad": "P0",
+      "producto": "CONTROL",
+      "trabajo": "Importar resultados y validar integridad.",
+      "aceptacion": "Rechaza IDs desconocidos y versiones incompatibles con motivo.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "CONTROL-02",
+      "prioridad": "P0",
+      "producto": "CONTROL",
+      "trabajo": "Aplicar reglas de salida.",
+      "aceptacion": "Un caso crítico fallido bloquea y uno sin evidencia queda no verificable.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "E2E-01",
+      "prioridad": "P0",
+      "producto": "Común",
+      "trabajo": "Probar el recorrido de los tres productos con un caso sintético de stock.",
+      "aceptacion": "Requisito, riesgo, caso y resultado quedan conectados; no usa el sistema externo.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "WEB-01",
+      "prioridad": "P1",
+      "producto": "Página",
+      "trabajo": "Conectar un canal real para recibir consultas.",
+      "aceptacion": "Validación, envío comprobado y confirmación solo tras éxito.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "WEB-02",
+      "prioridad": "P1",
+      "producto": "Página",
+      "trabajo": "Publicar la versión revisada en el sitio existente.",
+      "aceptacion": "Dominio y proyecto de despliegue identificados; versión publicada comprobada.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "CONNECT-01",
+      "prioridad": "P1",
+      "producto": "Común",
+      "trabajo": "Elegir el primer conector después de validar el flujo común.",
+      "aceptacion": "Selección por problema demostrado, con alcance y versión compatibles.",
+      "estado": "pendiente"
+    },
+    {
+      "id": "AI-01",
+      "prioridad": "P2",
+      "producto": "Común",
+      "trabajo": "Añadir evaluación de sistemas de IA.",
+      "aceptacion": "Dataset, configuración, métricas y revisión humana versionados.",
+      "estado": "pendiente"
+    }
+  ],
+  "cambios_pagina": [
+    "Contenido centrado en resultados y alcance de SCAN, STRIKE y CONTROL.",
+    "Retiro del manifiesto y las menciones solicitadas.",
+    "Nombre unificado como BREAKERS CO.",
+    "Ejemplos identificados como demostraciones.",
+    "Retiro de cifras de ahorro, garantías y promesas absolutas sin evidencia.",
+    "HTML autónomo con estilos y lógica incluidos.",
+    "Preparación y descarga local de un resumen; no simula envío de consultas."
+  ],
+  "limites_entrega": [
+    "Se actualiza el HTML identificado en los archivos; no se ha publicado en un dominio.",
+    "No se dispone de los motores de los tres productos para modificarlos en esta entrega.",
+    "Los nuevos documentos son una especificación y una base de investigación.",
+    "La revisión de referencias externas fue selectiva; no comprende todos los documentos enlazados.",
+    "La búsqueda textual revisó la página, siete documentos de QA, tres PDFs de fundamentos y dos archivos de casos; no inspeccionó imágenes ni el contenido de los ZIP históricos."
+  ],
+  "verificacion_entrega": [
+    "JSON válido; IDs de fuentes y referencias de fichas consistentes.",
+    "Página revisada mediante análisis estático: sintaxis JavaScript, IDs, enlaces internos, etiquetas de formulario y relación de pestañas.",
+    "No se completó la prueba visual ni interactiva: el navegador disponible bloqueó la apertura del archivo local.",
+    "La navegación, el formulario y la descarga requieren una prueba de aceptación en un navegador habilitado antes de publicar."
+  ],
+  "siguiente_hito": "Implementar CORE-01, SCAN-01, STRIKE-01 y CONTROL-01/02 sobre un caso sintético compartido."
+}

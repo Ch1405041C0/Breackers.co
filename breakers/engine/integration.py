@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
+from time import perf_counter
 from typing import Any
 
 from breakers.agents import build_core_agent_registry
@@ -9,9 +11,19 @@ from breakers.engine.evaluator import default_evaluator
 from breakers.engine.loop import AgenticEngine
 from breakers.engine.planner import default_planner
 from breakers.memory import JsonMemoryStore
+from breakers.observability import log_scan_event
 from breakers.providers import ModelProvider, build_model_provider
 
 DEFAULT_MEMORY_PATH = Path(".breakers") / "memory.json"
+
+
+def _safe_ai_error(value: Any) -> str | None:
+    if value is None:
+        return None
+    message = str(value)[:500]
+    if re.search(r"(?i)\b(token|password|secret|api[_-]?key)\b", message):
+        return "Provider error details redacted because they may contain credentials."
+    return re.sub(r"(https?://)[^/@\s]+:[^/@\s]+@", r"\1[REDACTED]@", message)
 
 
 def _risk_values(report: dict[str, Any]) -> list[Any]:
@@ -53,6 +65,7 @@ def analyze_scan_report(
     max_cycles: int = 3,
     memory_store: JsonMemoryStore | None = None,
     model_provider: ModelProvider | None = None,
+    job_id: str | None = None,
 ) -> dict[str, Any]:
     store = memory_store or JsonMemoryStore(DEFAULT_MEMORY_PATH)
     subject = _memory_subject(report)
@@ -60,15 +73,110 @@ def analyze_scan_report(
 
     registry = build_core_agent_registry()
     provider = model_provider or build_model_provider()
+    ai_handler = build_ai_risk_agent(provider)
+
+    def observed_ai_risk_agent(payload: dict[str, Any]) -> dict[str, Any]:
+        started = perf_counter()
+        cycle = payload.get("cycle")
+        log_scan_event(
+            "analyzer_started",
+            job_id,
+            name="IA",
+            status="started",
+            cycle=cycle,
+            model=getattr(provider, "model", None),
+        )
+        try:
+            result = ai_handler(payload)
+        except Exception:
+            log_scan_event(
+                "analyzer_failed",
+                job_id,
+                name="IA",
+                status="error",
+                cycle=cycle,
+                duration_ms=round((perf_counter() - started) * 1000),
+                error="El análisis de IA produjo un error inesperado.",
+            )
+            raise
+        agent_duration_ms = round((perf_counter() - started) * 1000)
+        ai_decision = next(
+            (
+                decision for decision in reversed(result.get("decisions") or [])
+                if decision.get("type") in {
+                    "ai_analysis_completed",
+                    "ai_analysis_unavailable",
+                    "ai_analysis_failed",
+                }
+            ),
+            {},
+        )
+        telemetry = {
+            "model": ai_decision.get("model"),
+            "provider": ai_decision.get("provider", provider.name),
+            "duration_ms": ai_decision.get("duration_ms", agent_duration_ms),
+            "agent_duration_ms": agent_duration_ms,
+            "context_bytes": ai_decision.get("context_bytes"),
+            "payload_bytes": ai_decision.get("payload_bytes"),
+            "thinking_enabled": ai_decision.get("thinking_enabled"),
+            "prompt_eval_count": ai_decision.get("prompt_eval_count"),
+            "eval_count": ai_decision.get("eval_count"),
+            "ollama_total_duration_ms": ai_decision.get("ollama_total_duration_ms"),
+        }
+        if ai_decision.get("type") == "ai_analysis_unavailable":
+            log_scan_event(
+                "analyzer_unavailable",
+                job_id,
+                name="IA",
+                status="unavailable",
+                cycle=cycle,
+                **telemetry,
+                error_type=ai_decision.get("error_type"),
+                error=_safe_ai_error(ai_decision.get("error")),
+            )
+        elif ai_decision.get("type") == "ai_analysis_failed":
+            log_scan_event(
+                "analyzer_failed",
+                job_id,
+                name="IA",
+                status="error",
+                cycle=cycle,
+                **telemetry,
+                error_type=ai_decision.get("error_type"),
+                error=_safe_ai_error(ai_decision.get("error")),
+            )
+        else:
+            log_scan_event(
+                "analyzer_completed",
+                job_id,
+                name="IA",
+                status="executed",
+                cycle=cycle,
+                **telemetry,
+            )
+        return result
+
     registry.register(
         "ai_risk",
         "Uses the configured private or cloud model provider to discover additional QA risks and coverage gaps.",
-        build_ai_risk_agent(provider),
+        observed_ai_risk_agent,
     )
+
+    def logging_planner(state, agent_registry):
+        planned = default_planner(state, agent_registry)
+        if state.cycle > 1:
+            planned = [agent for agent in planned if agent != "ai_risk"]
+        log_scan_event(
+            "agents_planned",
+            job_id,
+            cycle=state.cycle,
+            agents=planned,
+        )
+        return planned
 
     engine = AgenticEngine(
         registry=registry,
-        planner=default_planner,
+        planner=logging_planner,
         evaluator=default_evaluator,
     )
     state = engine.run(
@@ -77,6 +185,17 @@ def analyze_scan_report(
         max_cycles=max_cycles,
     )
     result = state.to_dict()
+    executed_agents = [
+        item["agent"]
+        for item in result["observations"]
+        if item.get("kind") == "agent_completed"
+    ]
+    log_scan_event(
+        "agents_executed",
+        job_id,
+        agents=executed_agents,
+        total=len(executed_agents),
+    )
     store.remember(
         "scan",
         subject,

@@ -1,0 +1,1 @@
+El usuario puede cancelar una reserva activa. 

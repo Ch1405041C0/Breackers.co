@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from time import perf_counter
 from typing import Any
 
 from breakers.providers import ModelProvider, ModelRequest
@@ -9,8 +10,29 @@ from breakers.providers import ModelProvider, ModelRequest
 SYSTEM_PROMPT = """You are the Breakers Risk Analyst.
 Analyze only the supplied QA evidence. Identify quality risks, coverage gaps and scenarios the requested scope may have missed.
 Never invent evidence. Distinguish observed facts from hypotheses.
-Return JSON with keys: findings, gaps, decisions. Each key must contain a JSON array.
+Be concise. Return only JSON with keys findings, gaps and decisions. Each array item must be an object.
 """
+
+AI_RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "findings": {"type": "array", "items": {"type": "object"}},
+        "gaps": {"type": "array", "items": {"type": "object"}},
+        "decisions": {"type": "array", "items": {"type": "object"}},
+    },
+    "required": ["findings", "gaps", "decisions"],
+    "additionalProperties": False,
+}
+
+
+def _unique_values(values: Any) -> list[Any]:
+    if not isinstance(values, list):
+        return []
+    unique: dict[str, Any] = {}
+    for value in values:
+        key = json.dumps(value, sort_keys=True, ensure_ascii=False, default=str)
+        unique.setdefault(key, value)
+    return list(unique.values())
 
 
 def build_ai_risk_agent(provider: ModelProvider):
@@ -18,44 +40,78 @@ def build_ai_risk_agent(provider: ModelProvider):
 
     def ai_risk_agent(payload: dict[str, Any]) -> dict[str, Any]:
         context = payload.get("context") or {}
+        ai_context = {
+            key: _unique_values(context.get(key))
+            for key in (
+                "requirements",
+                "risks",
+                "evidence",
+                "limitations",
+                "requested_scenarios",
+                "discovered_scenarios",
+            )
+        }
         request = ModelRequest(
             task="Analyze this SCAN context for additional QA risks and coverage gaps.",
             system=SYSTEM_PROMPT,
-            context={
-                "objective": payload.get("objective"),
-                "cycle": payload.get("cycle"),
-                "requirements": context.get("requirements") or [],
-                "risks": context.get("risks") or [],
-                "evidence": context.get("evidence") or [],
-                "limitations": context.get("limitations") or [],
-                "requested_scenarios": context.get("requested_scenarios") or [],
-                "discovered_scenarios": context.get("discovered_scenarios") or [],
-                "memory": context.get("memory") or [],
-                "engine_findings": payload.get("findings") or [],
-                "engine_gaps": payload.get("gaps") or [],
-            },
+            context=ai_context,
+            response_schema=AI_RESPONSE_SCHEMA,
         )
+        context_bytes = len(json.dumps(ai_context, ensure_ascii=False, default=str).encode("utf-8"))
+        started = perf_counter()
+        response = None
+        call_metadata: dict[str, Any] = {}
         try:
             response = provider.generate(request)
+            call_metadata = (response.raw or {}).get("_breakers_observability") or {}
             data = json.loads(response.content)
             if not isinstance(data, dict):
                 raise ValueError("model response is not a JSON object")
-            findings = list(data.get("findings") or [])
-            gaps = list(data.get("gaps") or [])
-            decisions = list(data.get("decisions") or [])
+            findings = data.get("findings")
+            gaps = data.get("gaps")
+            decisions = data.get("decisions")
+            if not all(isinstance(value, list) for value in (findings, gaps, decisions)):
+                raise ValueError("model response must contain findings, gaps and decisions arrays")
+            if any(not isinstance(item, dict) for values in (findings, gaps, decisions) for item in values):
+                raise ValueError("model response array items must be JSON objects")
+            metadata = call_metadata
             decisions.append({
                 "type": "ai_analysis_completed",
                 "provider": response.provider,
                 "model": response.model,
+                "duration_ms": metadata.get("duration_ms", round((perf_counter() - started) * 1000)),
+                "context_bytes": metadata.get("context_bytes", context_bytes),
+                "payload_bytes": metadata.get("payload_bytes"),
+                "thinking_enabled": metadata.get("thinking_enabled"),
+                "prompt_eval_count": metadata.get("prompt_eval_count"),
+                "eval_count": metadata.get("eval_count"),
+                "ollama_total_duration_ms": metadata.get("ollama_total_duration_ms"),
             })
             return {"findings": findings, "gaps": gaps, "decisions": decisions}
         except Exception as exc:
-            # AI is an enhancement, not a single point of failure. Deterministic
-            # Breakers agents continue operating when the provider is unavailable.
+            metadata = getattr(exc, "metadata", {}) or call_metadata
+            try:
+                provider_health = provider.health()
+            except Exception:
+                provider_health = {"ok": True}
+            failed = provider_health.get("ok") is not False
             return {
                 "findings": [],
                 "gaps": [],
-                "decisions": [{"type": "ai_analysis_unavailable", "provider": provider.name, "error": str(exc)}],
+                "decisions": [{
+                    "type": "ai_analysis_failed" if failed else "ai_analysis_unavailable",
+                    "provider": provider.name,
+                    "model": metadata.get(
+                        "model",
+                        response.model if response is not None else getattr(provider, "model", None),
+                    ),
+                    "error": str(exc),
+                    "error_type": type(exc).__name__,
+                    "duration_ms": metadata.get("duration_ms", round((perf_counter() - started) * 1000)),
+                    "context_bytes": metadata.get("context_bytes", context_bytes),
+                    "payload_bytes": metadata.get("payload_bytes"),
+                    "thinking_enabled": False,
+                }],
             }
 
     return ai_risk_agent

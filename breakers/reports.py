@@ -11,6 +11,45 @@ from .storage import SQLiteStore
 
 AREA_LABELS = {"dependency": "Dependencias y componentes", "configuration": "Seguridad y configuración", "secret": "Secretos / credenciales", "quality": "Calidad general"}
 
+
+def _analyzer_statuses(full_report: dict) -> list[dict[str, str]]:
+    required = set(full_report.get("required_engines") or [])
+    executed = set(full_report.get("engines") or [])
+    unavailable = set(full_report.get("unavailable_engines") or [])
+    failed = {item.get("engine") for item in full_report.get("failed_engines") or []}
+
+    statuses = []
+    for name in ("Trivy", "Gitleaks"):
+        if name not in required:
+            status = "not_required"
+        elif name in executed:
+            status = "executed"
+        elif name in unavailable:
+            status = "unavailable"
+        elif name in failed:
+            status = "error"
+        else:
+            status = "available"
+        statuses.append({"name": name, "status": status})
+
+    agentic = full_report.get("agentic_analysis") or {}
+    decisions = agentic.get("decisions") or []
+    decision_types = {item.get("type") for item in decisions if isinstance(item, dict)}
+    health = (agentic.get("model_provider") or {}).get("health") or {}
+    if "ai_analysis_completed" in decision_types:
+        ai_status = "executed"
+    elif "ai_analysis_unavailable" in decision_types:
+        ai_status = "unavailable" if health.get("ok") is False else "error"
+    elif "ai_analysis_failed" in decision_types:
+        ai_status = "error"
+    elif health.get("ok") is False:
+        ai_status = "unavailable"
+    else:
+        ai_status = "available"
+    statuses.append({"name": "IA", "status": ai_status})
+    return statuses
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -20,11 +59,16 @@ def build_public_summary(scan_id: str, report_id: str, full_report: dict) -> dic
     areas = Counter(AREA_LABELS.get(str(item.get("category") or "quality"), "Otros controles") for item in findings)
     status = full_report.get("analysis_status") or "incomplete"
     score = full_report.get("score") if status == "completed" else None
-    total = len(findings)
+    technical_evidence_sufficient = status != "incomplete" and (
+        bool(full_report.get("engines")) or not full_report.get("required_engines")
+    )
+    total = len(findings) if technical_evidence_sufficient else None
     if status == "partial":
         message = "Pudimos completar parte del análisis. Algunos controles no pudieron finalizar."
     elif status == "incomplete":
-        message = "No hay evidencia suficiente para asignar un score."
+        message = "El objetivo fue recibido, pero no pudo completarse toda la cobertura requerida."
+    elif status == "failed":
+        message = "SCAN no pudo producir un informe válido."
     elif severities.get("CRITICAL", 0) or severities.get("HIGH", 0):
         message = "Encontramos problemas que requieren atención antes de una próxima entrega."
     elif total:
@@ -34,9 +78,25 @@ def build_public_summary(scan_id: str, report_id: str, full_report: dict) -> dic
     return {
         "scan_id": scan_id, "report_id": report_id, "analysis_status": status, "score": score,
         "total_findings": total,
-        "by_severity": {key: severities.get(key, 0) for key in ("CRITICAL", "HIGH", "MEDIUM", "LOW")},
-        "areas": [{"label": label, "count": count} for label, count in areas.most_common()],
-        "priority_message": message, "full_report_available": True,
+        "technical_evidence_sufficient": technical_evidence_sufficient,
+        "analyzer_statuses": _analyzer_statuses(full_report),
+        "by_severity": (
+            {key: severities.get(key, 0) for key in ("CRITICAL", "HIGH", "MEDIUM", "LOW")}
+            if technical_evidence_sufficient
+            else None
+        ),
+        "areas": (
+            [{"label": label, "count": count} for label, count in areas.most_common()]
+            if technical_evidence_sufficient
+            else []
+        ),
+        "priority_message": message,
+        "results_message": (
+            "No se ejecutó suficiente cobertura técnica para determinar si existen hallazgos."
+            if not technical_evidence_sufficient
+            else ""
+        ),
+        "full_report_available": True,
     }
 
 class ReportStore:

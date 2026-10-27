@@ -9,6 +9,7 @@ import uuid
 from typing import Callable
 
 from .events import ScanEventLedger
+from .observability import log_scan_event
 
 
 STAGES = (
@@ -132,6 +133,12 @@ class ScanJobStore:
                     job.state = "completed"
                     job.finished_monotonic = time.monotonic()
                 job.events.record("job_completed")
+                log_scan_event(
+                    "job_completed",
+                    job.id,
+                    analysis_status=result.get("analysis_status"),
+                    score=result.get("score"),
+                )
             except Exception as exc:
                 if cleanup_path:
                     shutil.rmtree(cleanup_path, ignore_errors=True)
@@ -141,6 +148,12 @@ class ScanJobStore:
                     job.error = safe_error
                     job.finished_monotonic = time.monotonic()
                 job.events.record("job_failed", error=safe_error)
+                log_scan_event(
+                    "job_failed",
+                    job.id,
+                    error="SCAN no pudo completar el análisis.",
+                    error_type=type(exc).__name__,
+                )
 
         threading.Thread(target=runner, name=f"scan-{job.id[:8]}", daemon=True).start()
 
