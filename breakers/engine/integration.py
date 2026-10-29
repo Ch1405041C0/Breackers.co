@@ -121,6 +121,9 @@ def analyze_scan_report(
             "thinking_enabled": ai_decision.get("thinking_enabled"),
             "prompt_eval_count": ai_decision.get("prompt_eval_count"),
             "eval_count": ai_decision.get("eval_count"),
+            "prompt_tokens": ai_decision.get("prompt_tokens"),
+            "completion_tokens": ai_decision.get("completion_tokens"),
+            "total_tokens": ai_decision.get("total_tokens"),
             "ollama_total_duration_ms": ai_decision.get("ollama_total_duration_ms"),
         }
         if ai_decision.get("type") == "ai_analysis_unavailable":

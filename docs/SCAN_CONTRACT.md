@@ -32,6 +32,11 @@ BREAKERS must not manufacture findings when evidence is insufficient. It records
 - Both SCAN and STRIKE accept `BREAKERS_OLLAMA_URL`; `BREAKERS_OLLAMA_BASE_URL` remains supported as a fallback for existing deployments.
 - SCAN sends one bounded AI analysis per run, uses Ollama JSON-schema output, and disables Qwen thinking with `think: false`. Structured `analyzer_completed`, `analyzer_failed`, and `analyzer_unavailable` logs include the actual model, elapsed time, context/payload byte counts, and generation token counts when available.
 
+## Local LiteLLM Gateway
+- Select the OpenAI-compatible provider with `BREAKERS_MODEL_PROVIDER=litellm`.
+- Configure `BREAKERS_LITELLM_URL` and `BREAKERS_LITELLM_MODEL`; `BREAKERS_LITELLM_API_KEY` is optional.
+- SCAN sends chat-completion requests to `/v1/chat/completions`, requests JSON-schema output when the caller provides a schema, validates the resulting SCAN structure, and records the returned model, latency, context/payload sizes, and token usage when provided by the gateway.
+
 ## Product boundary
 SCAN identifies and correlates risk. STRIKE converts accepted/prioritized risk into executable test strategy. CONTROL tracks risk, execution and evidence across versions.
 

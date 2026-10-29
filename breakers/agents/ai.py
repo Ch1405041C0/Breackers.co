@@ -85,6 +85,9 @@ def build_ai_risk_agent(provider: ModelProvider):
                 "thinking_enabled": metadata.get("thinking_enabled"),
                 "prompt_eval_count": metadata.get("prompt_eval_count"),
                 "eval_count": metadata.get("eval_count"),
+                "prompt_tokens": metadata.get("prompt_tokens"),
+                "completion_tokens": metadata.get("completion_tokens"),
+                "total_tokens": metadata.get("total_tokens"),
                 "ollama_total_duration_ms": metadata.get("ollama_total_duration_ms"),
             })
             return {"findings": findings, "gaps": gaps, "decisions": decisions}
@@ -110,7 +113,10 @@ def build_ai_risk_agent(provider: ModelProvider):
                     "duration_ms": metadata.get("duration_ms", round((perf_counter() - started) * 1000)),
                     "context_bytes": metadata.get("context_bytes", context_bytes),
                     "payload_bytes": metadata.get("payload_bytes"),
-                    "thinking_enabled": False,
+                    "thinking_enabled": metadata.get("thinking_enabled"),
+                    "prompt_tokens": metadata.get("prompt_tokens"),
+                    "completion_tokens": metadata.get("completion_tokens"),
+                    "total_tokens": metadata.get("total_tokens"),
                 }],
             }
 

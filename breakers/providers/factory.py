@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 
+from .litellm import LiteLLMProvider
 from .ollama import OllamaProvider
 
 
@@ -32,6 +33,16 @@ def _build_provider(provider: str, *, model: str, timeout: int):
             model=model,
             timeout=timeout,
         )
+    if provider == "litellm":
+        base_url = os.getenv("BREAKERS_LITELLM_URL", "").strip()
+        if not base_url:
+            raise ValueError("BREAKERS_LITELLM_URL must be set when using LiteLLM")
+        return LiteLLMProvider(
+            base_url=base_url,
+            model=model,
+            timeout=timeout,
+            api_key=os.getenv("BREAKERS_LITELLM_API_KEY"),
+        )
     raise ValueError(f"Unsupported model provider: {provider}")
 
 
@@ -42,7 +53,12 @@ def build_model_provider():
     explicitly; Breakers never silently sends customer material to a third party.
     """
     provider = os.getenv("BREAKERS_MODEL_PROVIDER", "ollama").strip().lower()
-    model = os.getenv("BREAKERS_OLLAMA_MODEL", "qwen3:8b")
+    if provider == "litellm":
+        model = os.getenv("BREAKERS_LITELLM_MODEL", "").strip()
+        if not model:
+            raise ValueError("BREAKERS_LITELLM_MODEL must be set when using LiteLLM")
+    else:
+        model = os.getenv("BREAKERS_OLLAMA_MODEL", "qwen3:8b")
     timeout = _env_timeout("BREAKERS_MODEL_TIMEOUT", 120)
     return _build_provider(provider, model=model, timeout=timeout)
 
