@@ -6,6 +6,7 @@ import tempfile
 from io import BytesIO
 from werkzeug.utils import secure_filename
 
+from breakers.inputs import identify_input
 from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
 from breakers.orders import OrderStore
@@ -62,6 +63,25 @@ def _start_scan_job(target: str, cleanup_path: str | None = None):
 
     scan_jobs.start(job, scan_once, cleanup_path=cleanup_path)
     return jsonify(job_id=job.id, state="running"), 202
+
+@app.post("/api/scan/identify")
+def identify_scan_input():
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        uploaded = request.files.get("file")
+        input_type = str(request.form.get("input_type", "")).strip().lower()
+        if uploaded is None or not uploaded.filename:
+            return jsonify(error="file required"), 400
+        target = secure_filename(uploaded.filename)
+    else:
+        data = request.get_json(silent=True) or {}
+        input_type = str(data.get("input_type", "")).strip().lower()
+        target = str(data.get("target", "")).strip()
+
+    try:
+        source = identify_input(target, input_type)
+    except ValueError as exc:
+        return jsonify(error=str(exc)), 400
+    return jsonify(source=source), 200
 
 @app.post("/api/scan")
 def scan():
