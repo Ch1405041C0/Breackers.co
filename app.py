@@ -11,6 +11,7 @@ from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
 from breakers.orders import OrderStore
 from breakers.pdf_report import build_scan_pdf
+from breakers.planning import plan_scan_engines
 from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
 from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
@@ -82,6 +83,26 @@ def identify_scan_input():
     except ValueError as exc:
         return jsonify(error=str(exc)), 400
     return jsonify(source=source), 200
+
+@app.post("/api/scan/plan")
+def plan_scan_input():
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        uploaded = request.files.get("file")
+        input_type = str(request.form.get("input_type", "")).strip().lower()
+        if uploaded is None or not uploaded.filename:
+            return jsonify(error="file required"), 400
+        target = secure_filename(uploaded.filename)
+    else:
+        data = request.get_json(silent=True) or {}
+        input_type = str(data.get("input_type", "")).strip().lower()
+        target = str(data.get("target", "")).strip()
+
+    try:
+        source = identify_input(target, input_type)
+        plan = plan_scan_engines(source)
+    except ValueError as exc:
+        return jsonify(error=str(exc)), 400
+    return jsonify(source=source, plan=plan), 200
 
 @app.post("/api/scan")
 def scan():
