@@ -8,8 +8,8 @@ from breakers.providers import ModelProvider, ModelRequest
 
 
 SYSTEM_PROMPT = """You are the Breakers Risk Analyst.
-Analyze only the supplied QA evidence. Identify quality risks, coverage gaps and scenarios the requested scope may have missed.
-Never invent evidence. Distinguish observed facts from hypotheses.
+Analyze only the supplied QA evidence and quality context. Use the supplied quality criteria as evaluation targets, not as proof of compliance. Identify quality risks, coverage gaps and scenarios the requested scope may have missed.
+Never invent evidence. Distinguish observed facts from hypotheses. Never claim ISO or other standards compliance from incomplete evidence.
 Be concise. Return only JSON with keys findings, gaps and decisions. Each array item must be an object.
 """
 
@@ -35,6 +35,14 @@ def _unique_values(values: Any) -> list[Any]:
     return list(unique.values())
 
 
+def _quality_values(payload: dict[str, Any], finding_type: str) -> list[Any]:
+    return _unique_values([
+        item.get("value", item)
+        for item in payload.get("findings") or []
+        if item.get("type") == finding_type
+    ])
+
+
 def build_ai_risk_agent(provider: ModelProvider):
     """Create an AI risk agent while keeping the engine provider-agnostic."""
 
@@ -51,8 +59,11 @@ def build_ai_risk_agent(provider: ModelProvider):
                 "discovered_scenarios",
             )
         }
+        ai_context["quality_context"] = _quality_values(payload, "quality_context")
+        ai_context["quality_criteria"] = _quality_values(payload, "quality_criterion")
+        ai_context["quality_evidence_needs"] = _quality_values(payload, "quality_evidence_need")
         request = ModelRequest(
-            task="Analyze this SCAN context for additional QA risks and coverage gaps.",
+            task="Analyze this SCAN context for additional QA risks and coverage gaps against the supplied quality criteria.",
             system=SYSTEM_PROMPT,
             context=ai_context,
             response_schema=AI_RESPONSE_SCHEMA,
