@@ -4,6 +4,7 @@ import json
 from typing import Any
 
 from breakers.engine.registry import AgentRegistry
+from breakers.quality import build_quality_context, build_quality_criteria
 
 
 def _context(payload: dict[str, Any]) -> dict[str, Any]:
@@ -25,6 +26,68 @@ def _previous_values(context: dict[str, Any], key: str, finding_type: str | None
             if finding_type is None or item.get("type") == finding_type:
                 values.append(item.get("value", item))
     return values
+
+
+def _finding_values(payload: dict[str, Any], finding_type: str) -> list[Any]:
+    return [
+        item.get("value", item)
+        for item in payload.get("findings") or []
+        if item.get("type") == finding_type
+    ]
+
+
+def quality_context_agent(payload: dict[str, Any]) -> dict[str, Any]:
+    context = _context(payload)
+    source = context.get("scan_source") or context.get("source") or {}
+    hints = context.get("quality_hints") or {}
+    quality_context = build_quality_context(source, hints)
+    findings = [{"type": "quality_context", "value": quality_context}]
+    findings.extend(
+        {
+            "type": "quality_context_unknown",
+            "value": field,
+            "blocking": False,
+        }
+        for field in quality_context.get("unknowns") or []
+    )
+    return {
+        "findings": findings,
+        "decisions": [{
+            "type": "quality_context_established",
+            "confidence": quality_context.get("confidence"),
+            "frameworks": [item.get("id") for item in quality_context.get("frameworks") or []],
+            "compliance_claimed": False,
+        }],
+    }
+
+
+def quality_criteria_agent(payload: dict[str, Any]) -> dict[str, Any]:
+    contexts = _finding_values(payload, "quality_context")
+    if not contexts:
+        return {
+            "findings": [],
+            "decisions": [{"type": "quality_criteria_skipped", "reason": "quality_context_missing"}],
+        }
+    criteria = build_quality_criteria(contexts[-1])
+    findings: list[dict[str, Any]] = []
+    for criterion in criteria:
+        findings.append({"type": "quality_criterion", "value": criterion})
+        findings.append({
+            "type": "quality_evidence_need",
+            "value": {
+                "criterion_id": criterion["id"],
+                "focus": criterion["focus"],
+                "evidence_required": list(criterion["evidence_required"]),
+            },
+        })
+    return {
+        "findings": findings,
+        "decisions": [{
+            "type": "quality_criteria_established",
+            "count": len(criteria),
+            "measurement_required": True,
+        }],
+    }
 
 
 def requirements_agent(payload: dict[str, Any]) -> dict[str, Any]:
@@ -109,8 +172,34 @@ def evidence_agent(payload: dict[str, Any]) -> dict[str, Any]:
     return {"findings": findings, "gaps": gaps, "decisions": decisions}
 
 
-def build_core_agent_registry() -> AgentRegistry:
+def build_quality_agent_registry() -> AgentRegistry:
     registry = AgentRegistry()
+    registry.register(
+        "quality_context",
+        "Establishes grounded product context, applicable quality frameworks and unknowns without claiming compliance.",
+        quality_context_agent,
+    )
+    registry.register(
+        "quality_criteria",
+        "Turns the quality context into explicit measurable BREAKERS criteria and evidence needs.",
+        quality_criteria_agent,
+    )
+    return registry
+
+
+def build_core_agent_registry(*, include_quality: bool = False) -> AgentRegistry:
+    registry = AgentRegistry()
+    if include_quality:
+        registry.register(
+            "quality_context",
+            "Establishes grounded product context, applicable quality frameworks and unknowns without claiming compliance.",
+            quality_context_agent,
+        )
+        registry.register(
+            "quality_criteria",
+            "Turns the quality context into explicit measurable BREAKERS criteria and evidence needs.",
+            quality_criteria_agent,
+        )
     registry.register("requirements", "Identifies explicit requirements and missing requirement context.", requirements_agent)
     registry.register("risk", "Surfaces known product and quality risks and compares them with previous runs.", risk_agent)
     registry.register("coverage", "Contrasts requested scope, discovered scenarios, and historical coverage gaps.", coverage_agent)
