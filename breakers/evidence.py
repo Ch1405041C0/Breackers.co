@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Any
 
 
@@ -29,12 +30,26 @@ _SAFE_REPOSITORY_CONTEXT_FILES = {
     "swagger.yml",
 }
 
+_CREDENTIAL_PATTERNS = (
+    re.compile(r"(?i)(api[_-]?key|token|secret|password|passwd|pwd)(\s*[:=]\s*)([^\s,;]+)"),
+    re.compile(r"(?i)(authorization\s*:\s*bearer\s+)([^\s,;]+)"),
+    re.compile(r"(https?://)([^/@\s:]+):([^/@\s]+)@"),
+)
+
+
+def _sanitize_text(text: str) -> str:
+    value = str(text or "")
+    value = _CREDENTIAL_PATTERNS[0].sub(r"\1\2[REDACTED]", value)
+    value = _CREDENTIAL_PATTERNS[1].sub(r"\1[REDACTED]", value)
+    value = _CREDENTIAL_PATTERNS[2].sub(r"\1[REDACTED]@", value)
+    return value
+
 
 def _bounded_fragments(text: str, reference: str) -> list[dict[str, str]]:
     fragments: list[dict[str, str]] = []
     total = 0
     for index, raw in enumerate(text.replace("\r\n", "\n").split("\n"), start=1):
-        value = raw.strip()
+        value = _sanitize_text(raw.strip())
         if not value:
             continue
         value = value[:MAX_FRAGMENT_CHARS]
@@ -111,7 +126,7 @@ def _repository_fragments(path: Path) -> list[dict[str, str]]:
 
 
 def collect_evidence_fragments(target: str, source: dict[str, Any]) -> list[dict[str, str]]:
-    """Collect a bounded, non-secret-oriented semantic sample for quality agents.
+    """Collect a bounded, redacted semantic sample for quality agents.
 
     Repository sampling deliberately avoids source files, .env files and credential-like
     artifacts. The purpose is to understand product/context signals, not to replace scanners.
