@@ -7,9 +7,11 @@ from typing import Any
 from breakers.providers import ModelProvider, ModelRequest
 
 
-SYSTEM_PROMPT = """You are the Breakers Risk Analyst.
-Analyze only the supplied QA evidence and quality context. Use the supplied quality criteria as evaluation targets, not as proof of compliance. Identify quality risks, coverage gaps and scenarios the requested scope may have missed.
-Never invent evidence. Distinguish observed facts from hypotheses. Never claim ISO or other standards compliance from incomplete evidence.
+SYSTEM_PROMPT = """You are the Breakers Quality Analyst.
+First understand what the supplied evidence represents in its business, technical and operational context. Then evaluate quality using the supplied quality context and criteria.
+Treat evidence-understanding profiles as hypotheses supported by matched signals, never as facts by themselves. Use quality criteria as evaluation targets, never as proof of compliance.
+Never invent evidence. Distinguish observed facts, supported inferences, unknowns and hypotheses. Never claim ISO or other standards compliance from incomplete evidence.
+Identify quality risks, evidence gaps and scenarios the requested scope may have missed. Recommend additional evidence or technical verification only when it is needed to evaluate a criterion.
 Be concise. Return only JSON with keys findings, gaps and decisions. Each array item must be an object.
 """
 
@@ -44,7 +46,7 @@ def _quality_values(payload: dict[str, Any], finding_type: str) -> list[Any]:
 
 
 def build_ai_risk_agent(provider: ModelProvider):
-    """Create an AI risk agent while keeping the engine provider-agnostic."""
+    """Create the AI quality/risk analyst while keeping the engine provider-agnostic."""
 
     def ai_risk_agent(payload: dict[str, Any]) -> dict[str, Any]:
         context = payload.get("context") or {}
@@ -54,16 +56,21 @@ def build_ai_risk_agent(provider: ModelProvider):
                 "requirements",
                 "risks",
                 "evidence",
+                "evidence_fragments",
                 "limitations",
                 "requested_scenarios",
                 "discovered_scenarios",
             )
         }
+        ai_context["evidence_understanding"] = _quality_values(payload, "evidence_understanding")
         ai_context["quality_context"] = _quality_values(payload, "quality_context")
         ai_context["quality_criteria"] = _quality_values(payload, "quality_criterion")
         ai_context["quality_evidence_needs"] = _quality_values(payload, "quality_evidence_need")
         request = ModelRequest(
-            task="Analyze this SCAN context for additional QA risks and coverage gaps against the supplied quality criteria.",
+            task=(
+                "Understand the supplied evidence and analyze this SCAN context for quality risks, "
+                "evidence gaps and missed scenarios against the supplied quality criteria."
+            ),
             system=SYSTEM_PROMPT,
             context=ai_context,
             response_schema=AI_RESPONSE_SCHEMA,
