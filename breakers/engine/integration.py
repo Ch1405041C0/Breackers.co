@@ -45,13 +45,20 @@ def _memory_subject(report: dict[str, Any]) -> str:
     return str(source.get("target") or source.get("commit_sha") or source.get("type") or "unknown")
 
 
-def context_from_scan_report(report: dict[str, Any], memories: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+def context_from_scan_report(
+    report: dict[str, Any],
+    memories: list[dict[str, Any]] | None = None,
+    evidence_fragments: list[dict[str, Any]] | None = None,
+    quality_hints: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Translate SCAN output into the Agentic Engine context contract."""
     return {
         "scan_source": report.get("source") or {},
         "scan_analyzers": list(report.get("analyzers") or []),
         "risks": _risk_values(report),
         "evidence": _evidence_values(report),
+        "evidence_fragments": list(evidence_fragments or []),
+        "quality_hints": dict(quality_hints or {}),
         "limitations": list((report.get("risk_summary") or {}).get("limitations") or []),
         "requested_scenarios": list(report.get("requested_scenarios") or []),
         "discovered_scenarios": list(report.get("discovered_scenarios") or []),
@@ -66,12 +73,14 @@ def analyze_scan_report(
     memory_store: JsonMemoryStore | None = None,
     model_provider: ModelProvider | None = None,
     job_id: str | None = None,
+    evidence_fragments: list[dict[str, Any]] | None = None,
+    quality_hints: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     store = memory_store or JsonMemoryStore(DEFAULT_MEMORY_PATH)
     subject = _memory_subject(report)
     previous = store.recall("scan", subject=subject, limit=5)
 
-    registry = build_core_agent_registry()
+    registry = build_core_agent_registry(include_quality=True)
     provider = model_provider or build_model_provider()
     ai_handler = build_ai_risk_agent(provider)
 
@@ -161,7 +170,7 @@ def analyze_scan_report(
 
     registry.register(
         "ai_risk",
-        "Uses the configured private or cloud model provider to discover additional QA risks and coverage gaps.",
+        "Uses the configured private or cloud model provider to refine semantic context and discover additional QA risks and coverage gaps.",
         observed_ai_risk_agent,
     )
 
@@ -183,8 +192,13 @@ def analyze_scan_report(
         evaluator=default_evaluator,
     )
     state = engine.run(
-        objective="Evaluate SCAN output for quality gaps, risk, coverage, and evidence.",
-        context=context_from_scan_report(report, memories=previous),
+        objective="Understand supplied evidence, establish quality context and evaluate SCAN output for quality gaps, risk, coverage, and evidence.",
+        context=context_from_scan_report(
+            report,
+            memories=previous,
+            evidence_fragments=evidence_fragments,
+            quality_hints=quality_hints,
+        ),
         max_cycles=max_cycles,
     )
     result = state.to_dict()
