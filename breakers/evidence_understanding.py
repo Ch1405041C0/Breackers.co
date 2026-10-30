@@ -57,29 +57,32 @@ KNOWLEDGE_PROFILES: dict[str, dict[str, Any]] = {
     },
     "ai_ml": {
         "knowledge_basis": "ISTQB AI Testing",
+        "minimum_matches": 2,
         "signals": [
-            "machine learning", "aprendizaje automatico", "model", "modelo", "dataset", "training data",
+            "machine learning", "aprendizaje automatico", "ml model", "modelo de ml", "dataset", "training data",
             "datos de entrenamiento", "bias", "sesgo", "explainability", "explicabilidad", "concept drift",
-            "deriva", "non-deterministic", "no determinista", "ground truth", "test oracle", "oraculo",
+            "deriva de concepto", "non-deterministic", "no determinista", "ground truth", "test oracle", "oraculo de prueba",
         ],
         "evidence_types": ["ai_system", "ml_model", "dataset", "ai_acceptance_criteria"],
         "quality_focus": ["data_quality", "functional_suitability", "reliability", "explainability", "bias", "safety"],
     },
     "devops": {
         "knowledge_basis": "ISTQB Quality in DevOps",
+        "minimum_matches": 2,
         "signals": [
-            "ci/cd", "pipeline", "continuous integration", "integracion continua", "continuous delivery",
-            "continuous deployment", "deployment", "release", "devops", "dora", "monitoring", "observability",
-            "observabilidad", "pull request",
+            "ci/cd", "continuous integration", "integracion continua", "continuous delivery",
+            "continuous deployment", "devops", "dora", "monitoring", "observability",
+            "observabilidad", "pull request", "quality gate", "deployment pipeline",
         ],
         "evidence_types": ["delivery_pipeline", "quality_gate", "operational_evidence", "traceability_evidence"],
         "quality_focus": ["traceability", "reliability", "maintainability", "process_quality", "measurement"],
     },
     "test_automation": {
         "knowledge_basis": "ISTQB Test Automation Strategy",
+        "minimum_matches": 2,
         "signals": [
             "test automation", "automatizacion de pruebas", "automation framework", "marco de automatizacion",
-            "test script", "script de prueba", "roi", "return on investment", "retorno de inversion",
+            "test script", "script de prueba", "return on investment", "retorno de inversion",
             "test data", "datos de prueba", "test environment", "entorno de prueba",
         ],
         "evidence_types": ["automation_strategy", "automation_assets", "test_environment", "test_data_dependency"],
@@ -106,19 +109,22 @@ KNOWLEDGE_PROFILES: dict[str, dict[str, Any]] = {
     },
     "gambling": {
         "knowledge_basis": "ISTQB Gambling Industry Tester",
+        "minimum_matches": 2,
         "signals": [
-            "gambling", "wager", "wagering", "casino", "lottery", "lottery", "rng",
-            "random number generator", "jackpot", "jurisdiction", "geolocation", "player privacy",
+            "gambling", "wager", "wagering", "casino", "lottery", "loteria", "rng",
+            "random number generator", "generador de numeros aleatorios", "jackpot", "jurisdiction", "jurisdiccion",
+            "geolocation", "geolocalizacion", "player privacy", "privacidad del jugador",
         ],
         "evidence_types": ["regulated_domain_rules", "gambling_logic", "jurisdictional_requirements"],
         "quality_focus": ["functional_suitability", "security", "integrity", "compliance_evidence", "reliability"],
     },
     "game": {
         "knowledge_basis": "ISTQB Game Testing",
+        "minimum_matches": 2,
         "signals": [
-            "gameplay", "game mechanics", "mecanicas de juego", "game controller", "controlador",
-            "graphics", "graficos", "sound", "audio", "multiplayer", "multiplatform", "localization",
-            "localizacion", "player",
+            "gameplay", "game mechanics", "mecanicas de juego", "game controller", "controlador de juego",
+            "game graphics", "graficos del juego", "game sound", "audio del juego", "multiplayer", "multijugador",
+            "multiplatform", "multiplataforma", "game localization", "localizacion del juego",
         ],
         "evidence_types": ["game_design", "game_mechanics", "game_runtime", "game_content"],
         "quality_focus": ["functional_suitability", "usability", "compatibility", "performance_efficiency", "localization_quality"],
@@ -176,8 +182,8 @@ def understand_evidence(context: dict[str, Any]) -> dict[str, Any]:
     """Classify what the supplied evidence means before quality reasoning.
 
     This layer is intentionally conservative. Profile matches are hypotheses grounded in
-    content signals, not declarations about the product. The AI analyst may refine them,
-    but downstream logic can always distinguish observed facts from inferred profiles.
+    content signals, not declarations about the product. Ambiguous domain profiles require
+    more than one independent signal to reduce false positives.
     """
     source = context.get("scan_source") or context.get("source") or {}
     text = _evidence_text(context)
@@ -189,9 +195,10 @@ def understand_evidence(context: dict[str, Any]) -> dict[str, Any]:
 
     for profile_id, profile in KNOWLEDGE_PROFILES.items():
         matched = [signal for signal in profile["signals"] if _normalize(signal) in text]
-        if not matched:
+        minimum_matches = int(profile.get("minimum_matches", 1))
+        if len(matched) < minimum_matches:
             continue
-        confidence = "high" if len(matched) >= 4 else "medium" if len(matched) >= 2 else "low"
+        confidence = "high" if len(matched) >= max(4, minimum_matches + 2) else "medium" if len(matched) >= max(2, minimum_matches) else "low"
         profiles.append({
             "id": profile_id,
             "knowledge_basis": profile["knowledge_basis"],
@@ -222,7 +229,7 @@ def understand_evidence(context: dict[str, Any]) -> dict[str, Any]:
         unknowns.append("repository_purpose")
 
     return {
-        "contract": "evidence-understanding/v0.1",
+        "contract": "evidence-understanding/v0.2",
         "observed": observed,
         "inferred_profiles": profiles,
         "semantic_evidence_types": semantic_types,
@@ -232,5 +239,6 @@ def understand_evidence(context: dict[str, Any]) -> dict[str, Any]:
             "profile_matches_are_evidence": False,
             "inferences_require_validation": True,
             "missing_context_is_reported": True,
+            "ambiguous_profiles_require_multiple_signals": True,
         },
     }
