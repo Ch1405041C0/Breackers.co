@@ -7,14 +7,17 @@ from .state import AgenticRunState
 def default_planner(state: AgenticRunState, registry: AgentRegistry) -> list[str]:
     """Deterministic planner for Breakers Agentic Engine v1.
 
-    Rules remain authoritative. When an AI agent is registered it is used as an
-    additional analyst, never as the only source of quality decisions.
+    Rules remain authoritative. When quality-context agents are registered they run
+    first so downstream agents reason against explicit criteria. An AI agent is an
+    additional analyst, never the only source of quality decisions.
     """
 
     available = set(registry.names())
 
     if state.cycle <= 1:
         preferred = [
+            "quality_context",
+            "quality_criteria",
             "requirements",
             "risk",
             "coverage",
