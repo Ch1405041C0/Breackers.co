@@ -133,8 +133,9 @@ def collect_evidence_fragments(target: str, source: dict[str, Any]) -> list[dict
     """
     path = Path(target)
     source_type = str(source.get("type") or "").strip().lower()
+    input_type = str(source.get("input_type") or "").strip().lower()
 
-    if source_type == "repository" and path.is_dir():
+    if (source_type == "repository" or input_type == "repository") and path.is_dir():
         return _repository_fragments(path)
     if path.is_file():
         return _document_fragments(path)
