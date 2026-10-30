@@ -72,7 +72,7 @@ def test_repository_type_alone_does_not_invent_business_domain():
         source={"input_type": "repository", "subtype": "repository", "target": "repo"},
     ))
     assert result["observed"]["technical_evidence_types"] == ["source_code_repository"]
-    assert "repository_purpose" not in result["unknowns"]
+    assert result["inferred_profiles"] == []
     assert result["policy"]["profile_matches_are_evidence"] is False
 
 
@@ -108,7 +108,29 @@ def test_quality_preflight_runs_agents_in_order_without_engines_or_model_calls()
     assert result["execution"]["model_calls_started"] is False
 
 
-def test_quality_preflight_preserves_observed_inferred_unknown_distinction():
+def test_performance_preflight_turns_context_into_measurement_criteria():
+    result = run_quality_preflight(
+        {"input_type": "file", "subtype": "document", "target": "performance.md"},
+        evidence_fragments=[{
+            "reference": "performance.md#fragment-1",
+            "text": "Response time and throughput shall be measured for concurrent users using a load profile.",
+        }],
+    )
+    context = next(
+        item["value"] for item in result["findings"]
+        if item.get("type") == "quality_context"
+    )
+    criteria = [
+        item["value"] for item in result["findings"]
+        if item.get("type") == "quality_criterion"
+    ]
+    assert "performance_efficiency" in context["quality_focus"]
+    assert "measurement" in context["quality_focus"]
+    assert any(item["focus"] == "performance_efficiency" for item in criteria)
+    assert all(item["measurement_required"] is True for item in criteria)
+
+
+def test_unknown_document_does_not_receive_software_framework_or_fake_criteria():
     result = run_quality_preflight(
         {"input_type": "file", "subtype": "document", "target": "unknown.md"},
         evidence_fragments=[{"reference": "unknown.md#fragment-1", "text": "Project notes."}],
@@ -117,6 +139,16 @@ def test_quality_preflight_preserves_observed_inferred_unknown_distinction():
         item["value"] for item in result["findings"]
         if item.get("type") == "evidence_understanding"
     )
+    context = next(
+        item["value"] for item in result["findings"]
+        if item.get("type") == "quality_context"
+    )
+    criteria = [item for item in result["findings"] if item.get("type") == "quality_criterion"]
+
     assert understanding["observed"]["technical_evidence_types"] == ["document"]
     assert understanding["inferred_profiles"] == []
     assert understanding["unknowns"]
+    assert context["frameworks"] == []
+    assert context["quality_focus"] == []
+    assert "semantic_context" in context["unknowns"]
+    assert criteria == []
