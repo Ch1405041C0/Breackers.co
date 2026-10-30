@@ -4,6 +4,7 @@ import json
 from typing import Any
 
 from breakers.engine.registry import AgentRegistry
+from breakers.evidence_understanding import understand_evidence
 from breakers.quality import build_quality_context, build_quality_criteria
 
 
@@ -36,11 +37,45 @@ def _finding_values(payload: dict[str, Any], finding_type: str) -> list[Any]:
     ]
 
 
+def evidence_understanding_agent(payload: dict[str, Any]) -> dict[str, Any]:
+    understanding = understand_evidence(_context(payload))
+    return {
+        "findings": [{"type": "evidence_understanding", "value": understanding}],
+        "decisions": [{
+            "type": "evidence_understanding_completed",
+            "profiles": [item.get("id") for item in understanding.get("inferred_profiles") or []],
+            "semantic_types": list(understanding.get("semantic_evidence_types") or []),
+            "unknowns": list(understanding.get("unknowns") or []),
+        }],
+    }
+
+
 def quality_context_agent(payload: dict[str, Any]) -> dict[str, Any]:
     context = _context(payload)
     source = context.get("scan_source") or context.get("source") or {}
-    hints = context.get("quality_hints") or {}
+    hints = dict(context.get("quality_hints") or {})
+
+    understandings = _finding_values(payload, "evidence_understanding")
+    evidence_understanding = understandings[-1] if understandings else {}
+    inferred_focus = list(evidence_understanding.get("quality_focus_hints") or [])
+    existing_priorities = hints.get("quality_priorities") or []
+    if isinstance(existing_priorities, str):
+        existing_priorities = [existing_priorities]
+    hints["quality_priorities"] = list(dict.fromkeys([*existing_priorities, *inferred_focus]))
+    hints["evidence_profiles"] = [
+        {
+            "id": item.get("id"),
+            "confidence": item.get("confidence"),
+            "status": item.get("status", "INFERRED"),
+        }
+        for item in evidence_understanding.get("inferred_profiles") or []
+    ]
+    hints["semantic_evidence_types"] = list(evidence_understanding.get("semantic_evidence_types") or [])
+
     quality_context = build_quality_context(source, hints)
+    quality_context["evidence_understanding_contract"] = evidence_understanding.get("contract")
+    quality_context["inferred_profiles"] = list(evidence_understanding.get("inferred_profiles") or [])
+
     findings = [{"type": "quality_context", "value": quality_context}]
     findings.extend(
         {
@@ -175,6 +210,11 @@ def evidence_agent(payload: dict[str, Any]) -> dict[str, Any]:
 def build_quality_agent_registry() -> AgentRegistry:
     registry = AgentRegistry()
     registry.register(
+        "evidence_understanding",
+        "Classifies what the supplied evidence means using grounded QA context profiles without turning inference into fact.",
+        evidence_understanding_agent,
+    )
+    registry.register(
         "quality_context",
         "Establishes grounded product context, applicable quality frameworks and unknowns without claiming compliance.",
         quality_context_agent,
@@ -190,6 +230,11 @@ def build_quality_agent_registry() -> AgentRegistry:
 def build_core_agent_registry(*, include_quality: bool = False) -> AgentRegistry:
     registry = AgentRegistry()
     if include_quality:
+        registry.register(
+            "evidence_understanding",
+            "Classifies what the supplied evidence means using grounded QA context profiles without turning inference into fact.",
+            evidence_understanding_agent,
+        )
         registry.register(
             "quality_context",
             "Establishes grounded product context, applicable quality frameworks and unknowns without claiming compliance.",
