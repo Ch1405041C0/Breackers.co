@@ -16,8 +16,11 @@ def test_text_evidence_is_collected_as_bounded_fragments(tmp_path: Path):
     assert fragments[0]["reference"].startswith("requirements.md#fragment-")
 
 
-def test_repository_sampling_uses_context_files_and_ignores_env_and_source(tmp_path: Path):
-    (tmp_path / "README.md").write_text("Payment API with authentication and response time objectives", encoding="utf-8")
+def test_repository_sampling_uses_context_files_ignores_source_and_redacts_credentials(tmp_path: Path):
+    (tmp_path / "README.md").write_text(
+        "Payment API with authentication and response time objectives\nAPI_KEY=VISIBLE_IN_README",
+        encoding="utf-8",
+    )
     (tmp_path / "package.json").write_text('{"name": "payments"}', encoding="utf-8")
     (tmp_path / ".env").write_text("API_KEY=SHOULD_NOT_BE_COLLECTED", encoding="utf-8")
     (tmp_path / "app.py").write_text("SECRET = 'SHOULD_NOT_BE_COLLECTED'", encoding="utf-8")
@@ -27,6 +30,8 @@ def test_repository_sampling_uses_context_files_and_ignores_env_and_source(tmp_p
 
     assert "Payment API" in combined
     assert "payments" in combined
+    assert "VISIBLE_IN_README" not in combined
+    assert "API_KEY=[REDACTED]" in combined
     assert "SHOULD_NOT_BE_COLLECTED" not in combined
     assert all(".env" not in item["reference"] for item in fragments)
     assert all("app.py" not in item["reference"] for item in fragments)
