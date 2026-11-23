@@ -103,7 +103,7 @@ def test_identical_requests_have_deterministic_dto(client):
 
 @pytest.mark.parametrize(
     "channel,name",
-    (("definition", "requirements.xlsx"), ("existing", "tests.xlsx"), ("existing", "tests.txt"), ("existing", "tests.md")),
+    (("definition", "requirements.pdf"), ("existing", "tests.pdf"), ("existing", "tests.txt"), ("existing", "tests.md")),
 )
 def test_unsupported_source_formats_return_415(client, channel, name):
     if channel == "definition":
@@ -112,6 +112,12 @@ def test_unsupported_source_formats_return_415(client, channel, name):
         response = post_strike(client, [simple_definition()], existing=[(name, "content")])
     assert response.status_code == 415
     assert response.get_json()["error"]["code"] == "UNSUPPORTED_SOURCE_FORMAT"
+
+
+def test_invalid_xlsx_returns_400(client):
+    response = post_strike(client, [("requirements.xlsx", b"not a workbook")])
+    assert response.status_code == 400
+    assert response.get_json()["error"]["code"] == "INVALID_XLSX"
 
 
 def test_empty_source_returns_400(client):
