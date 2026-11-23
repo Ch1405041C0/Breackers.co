@@ -4,4 +4,5 @@ pytest-playwright>=0.7,<1
 playwright>=1.50,<2
 reportlab>=4.2,<5
 openpyxl>=3.1,<4
+python-docx>=1.1,<2
 cryptography>=43.0,<47

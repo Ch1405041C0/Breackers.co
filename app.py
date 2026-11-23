@@ -6,15 +6,18 @@ import tempfile
 from io import BytesIO
 from werkzeug.utils import secure_filename
 
+from breakers.inputs import identify_input
 from breakers.jobs import ScanJobStore
 from breakers.orchestrator import run_scan
 from breakers.orders import OrderStore
 from breakers.pdf_report import build_scan_pdf
+from breakers.planning import plan_scan_engines
 from breakers.reports import ReportStore
 from breakers.storage import SQLiteStore
 from breakers.strike.http_adapter import StrikeHttpError, execute_strike_request
 from breakers.strike.exporter import build_strike_export
 from breakers.strike.ollama_provider import OllamaReasoningProvider, OllamaReasoningError
+from breakers.providers.factory import configured_ollama_base_url
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -22,7 +25,7 @@ app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 app.config["STRIKE_MAX_FILE_BYTES"] = int(os.environ.get("BREAKERS_STRIKE_MAX_FILE_BYTES", 5 * 1024 * 1024))
 app.config["STRIKE_REASONING_PROVIDER"] = os.environ.get("BREAKERS_STRIKE_REASONING_PROVIDER", "none").strip().lower()
 app.config["OLLAMA_MODEL"] = os.environ.get("BREAKERS_OLLAMA_MODEL", "ornith:9b")
-app.config["OLLAMA_BASE_URL"] = os.environ.get("BREAKERS_OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+app.config["OLLAMA_BASE_URL"] = configured_ollama_base_url()
 strike_reasoning_provider = (
     OllamaReasoningProvider(
         model=app.config["OLLAMA_MODEL"],
@@ -56,11 +59,50 @@ def _start_scan_job(target: str, cleanup_path: str | None = None):
     job = scan_jobs.create()
 
     def scan_once(progress):
-        full_report = run_scan(target, progress=progress)
+        full_report = run_scan(target, progress=progress, job_id=job.id)
         return report_store.save_scan_result(full_report)
 
     scan_jobs.start(job, scan_once, cleanup_path=cleanup_path)
     return jsonify(job_id=job.id, state="running"), 202
+
+@app.post("/api/scan/identify")
+def identify_scan_input():
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        uploaded = request.files.get("file")
+        input_type = str(request.form.get("input_type", "")).strip().lower()
+        if uploaded is None or not uploaded.filename:
+            return jsonify(error="file required"), 400
+        target = secure_filename(uploaded.filename)
+    else:
+        data = request.get_json(silent=True) or {}
+        input_type = str(data.get("input_type", "")).strip().lower()
+        target = str(data.get("target", "")).strip()
+
+    try:
+        source = identify_input(target, input_type)
+    except ValueError as exc:
+        return jsonify(error=str(exc)), 400
+    return jsonify(source=source), 200
+
+@app.post("/api/scan/plan")
+def plan_scan_input():
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        uploaded = request.files.get("file")
+        input_type = str(request.form.get("input_type", "")).strip().lower()
+        if uploaded is None or not uploaded.filename:
+            return jsonify(error="file required"), 400
+        target = secure_filename(uploaded.filename)
+    else:
+        data = request.get_json(silent=True) or {}
+        input_type = str(data.get("input_type", "")).strip().lower()
+        target = str(data.get("target", "")).strip()
+
+    try:
+        source = identify_input(target, input_type)
+        plan = plan_scan_engines(source)
+    except ValueError as exc:
+        return jsonify(error=str(exc)), 400
+    return jsonify(source=source, plan=plan), 200
 
 @app.post("/api/scan")
 def scan():

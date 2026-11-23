@@ -1,0 +1,4842 @@
+[
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-vtj4cw6b\\ATF-_Consentimiento_V251016.docx",
+    "payload": {
+      "run_id": "fea473de6eea485990c679c0c362a2ce",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-vtj4cw6b\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-vtj4cw6b\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-vtj4cw6b\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "720a09064c89468698dc330a74956dd5",
+    "created_at": "2026-10-23T23:04:40.825957+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-bc40t0fc\\ATF-_Consentimiento_V251016.docx",
+    "payload": {
+      "run_id": "f3f17bba6c074ed790ea35e042eb4ce3",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-bc40t0fc\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-bc40t0fc\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-bc40t0fc\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "b59449045660497a8610f8cbf5b2e35f",
+    "created_at": "2026-10-24T01:27:54.172464+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-24tbf3kn\\ATF-_Consentimiento_V251016.docx",
+    "payload": {
+      "run_id": "75f2d54f26b246bfb7023c375bfcf1d2",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-24tbf3kn\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-24tbf3kn\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-24tbf3kn\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "67ec0a0452974a0591cf0376533335f6",
+    "created_at": "2026-10-24T02:00:11.769850+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-0rayggam\\ATF-_Consentimiento_V251016.docx",
+    "payload": {
+      "run_id": "97c849c0c2734cd0b85053f6e2aa216a",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-0rayggam\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-0rayggam\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-0rayggam\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "0b0da9c08414483c9d4a059b15fe9be8",
+    "created_at": "2026-10-24T03:35:52.666023+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-h5fnzfym\\ATF-_Consentimiento_V251016.docx",
+    "payload": {
+      "run_id": "134852243a8f4af181257a6518d6d504",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-h5fnzfym\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-h5fnzfym\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-5763B970",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla de límite requiere comportamiento de borde",
+            "hypothesis": "Existe un límite de negocio y conviene verificar qué ocurre debajo, exactamente en el límite y por encima.",
+            "status": "identified",
+            "confidence": 0.65,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-38",
+                "excerpt": "se encuentra vigente, manteniéndose el plazo de acreditación máximo previsto definido en las normas sobre “Sistemas Nacional de Pagos – transferencias–“, y"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-40",
+                "excerpt": "Brindar al cliente ordenante la posibilidad de establecer parámetros de uso de los servicios de billetera digital (por ejemplo: límites de montos por periodos y cantidad de operaciones)."
+              }
+            ],
+            "missing_evidence": [
+              "comportamiento en el límite",
+              "comportamiento fuera del límite"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-15EEAFD8",
+            "area": "business_rules",
+            "severity": "MEDIUM",
+            "title": "Regla condicional requiere camino alternativo",
+            "hypothesis": "Se define una condición y puede faltar el comportamiento cuando esa condición no se cumple.",
+            "status": "identified",
+            "confidence": 0.99,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-57",
+                "excerpt": "Cuando de la billetera genera una transferencia, llega al banco con un tipo de transferencia específico mediante el servicio de LINK y se procesa."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-62",
+                "excerpt": "Cuando se realiza la vinculación de una cuenta desde el micrositio, ¿Vuelva directamente a la billetera de la cual fue invocada o se debe mostrar algún mensaje de transacción exitosa?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-65",
+                "excerpt": "Qué sucede si falla el servicio?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-71",
+                "excerpt": "A la hora de mostrar el listado de cuentas disponibles para vincular ¿Cómo detecto si la cuenta ya fue previamente vinculada?"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-106",
+                "excerpt": "En caso de realizar Test de regresión, de Sistema y de Integración, los criterios a aplicar serán los siguientes:"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-111",
+                "excerpt": "Test de Sistema: Consiste en verificar que todos los programas o componentes del subsistema se comportan igual que cuando se los probó individualmente."
+              }
+            ],
+            "missing_evidence": [
+              "camino alternativo",
+              "estado esperado cuando la condición es falsa"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "RISK-070BD5FC",
+            "area": "error_handling",
+            "severity": "HIGH",
+            "title": "Flujo de error o excepción potencialmente incompleto",
+            "hypothesis": "El requisito menciona una condición de error/excepción pero puede no definir completamente recuperación, mensaje o estado final.",
+            "status": "identified",
+            "confidence": 0.95,
+            "evidence": [
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-66",
+                "excerpt": "Se debe mostrar mensaje que indique el error para tal fin."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-103",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Unidad explicitados sin errores, y además cumplen con las Interfaces entre servicios definidas en el Diseño."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-104",
+                "excerpt": "El ó los programas fuente probados resuelven todos los casos de prueba de Test de Funcionalidad explicitados sin errores."
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-124",
+                "excerpt": "Análisis funcional: Flujos y Diseño de Pantallas + servicios + reglas negocio + criterios aceptación + mensajes de Error"
+              },
+              {
+                "source_type": "functional_document",
+                "reference": "ATF-_Consentimiento_V251016.docx#fragment-137",
+                "excerpt": "Servicios & Errores"
+              }
+            ],
+            "missing_evidence": [
+              "estado final o recuperación",
+              "mensaje al usuario",
+              "resultado esperado"
+            ],
+            "suggested_action": "Aclarar la regla antes de convertirla en desarrollo y pruebas."
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\breakers-scan-h5fnzfym\\ATF-_Consentimiento_V251016.docx"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "risk_review_required",
+          "count": 3
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "4e62478a139041d1bbe32db5c9cd92a2",
+    "created_at": "2026-10-25T19:44:45.177894+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "43c85700f04344249019fba8aa7dc26f",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "a427451dbd11484ca3f8385ec8e194c2",
+    "created_at": "2026-10-25T20:06:12.347042+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "5573fe3ebd784d05ab9b34f5fbe96fe5",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "cde0f8b3070e4d9a8a558aad2a54f2a5",
+    "created_at": "2026-10-25T20:30:36.415395+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "744888af619f409b89da45c5f13b2e7a",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "bc676af207ab4346815b9c6172e6265e",
+    "created_at": "2026-10-25T20:30:44.743486+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "e2ed0a01cae740b68c467ae833aa4021",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-6\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "0a0be0dd7e174bfd94ca5abbba0af1b3",
+    "created_at": "2026-10-25T20:30:52.994803+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_local_repository_still_ru0\\repo",
+    "payload": {
+      "run_id": "99a55c3fbe284217bf2fef988be8be87",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "a18d362f3d8e43828c18f3fa589083df",
+    "created_at": "2026-10-25T20:31:42.988171+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/acme/demo",
+    "payload": {
+      "run_id": "e72c91a9fbea4eac8bb3793f4e48644e",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "f6e3f66e612c4021bc49e789ef9e146d",
+    "created_at": "2026-10-25T20:31:51.213513+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "2b0bf809d22f40d9b90ae2eec81082f3",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "9bdd54d4a7c64ddd8e60bde1314e0e03",
+    "created_at": "2026-10-25T20:31:55.948000+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "6c633727b019472286cec9e09d7c6b7b",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "80433f4e8b1440e99ffb9733580dc37e",
+    "created_at": "2026-10-25T20:32:05.516566+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "e695ad8f9ef94265a5ba608680ff04c1",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-7\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "d3675cb82bc949fa8102bcaf85ca6d49",
+    "created_at": "2026-10-25T20:32:13.851508+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "0d098ccc719f459bb6ace170fee483f6",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "1f2372b872c240e5b1c9eb11efb4928b",
+    "created_at": "2026-10-25T20:33:25.463419+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "5e64d1d91f954d8fa8a86969ad86303b",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "d8f95b1137e640c381ad80f0bcd72dc3",
+    "created_at": "2026-10-25T20:33:33.768875+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "3896de51956a47a98471e74bd117e2c5",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-8\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "e1f42fb000f5495d8c7bc227b61ce68c",
+    "created_at": "2026-10-25T20:33:42.024733+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "231900bdbf6443aa9a31d73e163b518e",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "14de8bca9f674cd29f7f19ca8a130b72",
+    "created_at": "2026-10-25T20:35:48.798632+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "42fa36145b4a41b9bb76473572fba525",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "3eaf15e7a06942fcb859b0c08edab547",
+    "created_at": "2026-10-25T20:35:57.100698+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "c91f710c9a5b411387725e97862dee36",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-9\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "d0dd44c65b2d4a39988da983d824fb5d",
+    "created_at": "2026-10-25T20:36:05.344514+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_local_repository_still_ru0\\repo",
+    "payload": {
+      "run_id": "701f238016d14e0492e8a5caf16ce34f",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "5f2008c382484624b0f8e21755ef78f5",
+    "created_at": "2026-10-25T20:36:42.165177+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/acme/demo",
+    "payload": {
+      "run_id": "a7ae21a37c224d83b5b44b133fcd50ee",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "cbf03945a60b4a059dabb1222c40dcae",
+    "created_at": "2026-10-25T20:36:50.398060+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "51f9991667a64246ada893665baf7066",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "5799a6aaed344f978a10e498f69fad36",
+    "created_at": "2026-10-25T20:36:54.748269+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "035c45983fd74996a346e398d756f2fe",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "ee69ec1748f54684a81b812f91e98ff3",
+    "created_at": "2026-10-25T20:37:03.862924+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "f1837ec4293c4ca59320ac3568ef5808",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-10\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "f1fe177df88545838ef9a7d20fb30da2",
+    "created_at": "2026-10-25T20:37:12.118849+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_local_repository_still_ru0\\repo",
+    "payload": {
+      "run_id": "d91a159d88914750bc94a041670004ec",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_local_repository_still_ru0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "b148cd48a4794954932a38f4e19c369e",
+    "created_at": "2026-10-25T20:39:13.359331+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/acme/demo",
+    "payload": {
+      "run_id": "0dd7a3bef3954599bde967555f57adad",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/acme/demo",
+              "workspace": "temporary_clone",
+              "commit_sha": "cccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "8009e28889494cc2a48e4d650ec15812",
+    "created_at": "2026-10-25T20:39:21.524870+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "620e11684e2b4d6799452dc95eaf2708",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "180ea937bbce4079920b786c99538987",
+    "created_at": "2026-10-25T20:39:25.908810+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "c9e6b00919714e8eb9b52020071963e5",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "21ee027abb644a0ab56afaf7e64d3fad",
+    "created_at": "2026-10-25T20:39:35.006862+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "80458a4115394a01aaf835c6e7679ed9",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-12\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "928ae6688b6440e39816416ccd015809",
+    "created_at": "2026-10-25T20:39:43.221629+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "c49a92a959ba4ac5bd0d7157af8eb89e",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "91984dac0ae14989909c30b0f2a23c90",
+    "created_at": "2026-10-25T20:49:49.294755+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "8a4ca943869e4a7184afe912076de070",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "e3c56cf9e4374db58baccf873be29c40",
+    "created_at": "2026-10-25T21:03:55.577977+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "ae9056110eea4e0193cba22bd60199d3",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "3b1aa920df0e43feaab3ecd7972d26cb",
+    "created_at": "2026-10-25T21:24:39.473088+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "a989c490bc8b451d9466c4117a093278",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "996596159edd41119a23f0cd295fd8ce",
+    "created_at": "2026-10-25T21:26:58.591833+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "c14bdeaf89e4496780f03fb131f45c67",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "3ab521d3592c4343bc86e5109f9775c0",
+    "created_at": "2026-10-25T21:45:18.193529+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "9a249d8bc5ab44bab5e21b4e3c3580bc",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "2d5633d9ee4144289b2488e0b4066462",
+    "created_at": "2026-10-26T02:18:08.981723+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "197476c42fe047ba8ab0c53b14799c62",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        },
+        {
+          "type": "ai_analysis_unavailable",
+          "provider": "ollama",
+          "error": "timed out"
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "6584ce57bbe8499da514d338c7b79b3b",
+    "created_at": "2026-10-26T02:31:39.601109+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "0ad90048d16b47e48f31158060cbec60",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "test",
+          "model": "test-model",
+          "duration_ms": 0,
+          "context_bytes": 366,
+          "payload_bytes": null,
+          "thinking_enabled": null,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "ollama_total_duration_ms": null
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "1d55eed274db4be9aeb4ed7b96d1a789",
+    "created_at": "2026-10-26T02:43:30.277362+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "e1f6c7cbe45448ba856b30afa1e48b12",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "test",
+          "model": "test-model",
+          "duration_ms": 0,
+          "context_bytes": 366,
+          "payload_bytes": null,
+          "thinking_enabled": null,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "ollama_total_duration_ms": null
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "2fe5f814e23a4670b088e10eb1fb2d6b",
+    "created_at": "2026-10-26T02:43:55.630248+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "4044ef0929fa4efcbe966714ccf60724",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "test",
+          "model": "test-model",
+          "duration_ms": 0,
+          "context_bytes": 366,
+          "payload_bytes": null,
+          "thinking_enabled": null,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "ollama_total_duration_ms": null
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "a6637e27d21e4b6bbb4fc48a51aea07e",
+    "created_at": "2026-10-26T02:45:40.897900+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "072cf49627674cb5bbec3e95a5ea36f4",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "missing_requirements",
+          "description": "No requirements have been provided for analysis, making it impossible to assess alignment with functional or non-functional criteria."
+        },
+        {
+          "type": "missing_risks",
+          "description": "No risks have been identified or documented, which limits the ability to evaluate potential threats to the system or process."
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        },
+        {
+          "type": "incomplete_evidence",
+          "description": "The scan source is provided, but no additional context about the system under test, test cases, or expected outcomes is available."
+        },
+        {
+          "type": "missing_scenarios",
+          "description": "No requested or discovered scenarios are provided, which prevents the identification of coverage gaps or risk scenarios."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "no_analysis_possible",
+          "description": "Due to the lack of requirements, risks, scenarios, and additional context, no meaningful QA risk analysis or coverage assessment can be performed."
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "ollama",
+          "model": "qwen3:8b",
+          "duration_ms": 81979,
+          "context_bytes": 304,
+          "payload_bytes": 1228,
+          "thinking_enabled": false,
+          "prompt_eval_count": 191,
+          "eval_count": 231,
+          "ollama_total_duration_ms": 81863
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "2ba685ab371740eca1009c7b517433e0",
+    "created_at": "2026-10-26T02:47:03.580349+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "5bb3387e525d45fa9bde496772e516a8",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "missing_requirements",
+          "description": "No requirements have been specified, making it impossible to assess compliance or alignment with expected outcomes."
+        },
+        {
+          "type": "missing_risks",
+          "description": "No risks have been identified, which prevents a thorough risk assessment and mitigation planning."
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-16\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        },
+        {
+          "type": "scenario_coverage_gap",
+          "description": "No requested or discovered scenarios have been provided, which limits the ability to evaluate the system's behavior under various conditions."
+        },
+        {
+          "type": "evidence_limitation",
+          "description": "The scan source is a local repository path, but no actual scan results or artifacts are provided, limiting the ability to analyze the system's state."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "action_required",
+          "description": "The analysis cannot proceed without additional requirements, risks, and scenarios. The scan source needs to be evaluated with actual data or artifacts."
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "ollama",
+          "model": "qwen3:8b",
+          "duration_ms": 81470,
+          "context_bytes": 304,
+          "payload_bytes": 1228,
+          "thinking_enabled": false,
+          "prompt_eval_count": 192,
+          "eval_count": 228,
+          "ollama_total_duration_ms": 81387
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "12d33760afd54458b660bc4859c08cad",
+    "created_at": "2026-10-26T02:48:25.255715+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "requirements.md",
+    "payload": {
+      "run_id": "02a3e618f70d435d901815405e9519b1",
+      "cycle": 1,
+      "findings": [
+        {
+          "type": "requirement",
+          "value": "User can log in"
+        },
+        {
+          "type": "risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "recurring_risk",
+          "value": {
+            "id": "AUTH",
+            "severity": "medium"
+          }
+        },
+        {
+          "type": "scenario_outside_requested_scope",
+          "value": "locked account"
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "requirement_evidence",
+            "value": "login"
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "functional_document",
+              "target": "requirements.md"
+            }
+          }
+        }
+      ],
+      "gaps": [],
+      "decisions": [
+        {
+          "type": "risk_review_required",
+          "count": 1
+        },
+        {
+          "type": "risk_delta",
+          "recurring": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "scope_gap_detected",
+          "requested": 1,
+          "discovered": 2,
+          "outside_scope": 1
+        },
+        {
+          "type": "coverage_delta",
+          "persistent": 1,
+          "new": 0,
+          "resolved": 0
+        },
+        {
+          "type": "ai_analysis_completed",
+          "provider": "test",
+          "model": "test-model",
+          "duration_ms": 0,
+          "context_bytes": 366,
+          "payload_bytes": null,
+          "thinking_enabled": null,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "ollama_total_duration_ms": null
+        }
+      ],
+      "completed_reason": "evaluation_satisfied"
+    },
+    "record_id": "a552067e790b4894a9f0619eb88631d9",
+    "created_at": "2026-10-26T02:50:04.678033+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_progress_follows0\\repo",
+    "payload": {
+      "run_id": "378ac73aeab54e2aa6ad20373c7ab2ff",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_progress_follows0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_failed",
+          "provider": "ollama",
+          "model": "qwen3:8b",
+          "error": "Unterminated string starting at: line 29 column 22 (char 1180)",
+          "error_type": "JSONDecodeError",
+          "duration_ms": 87184,
+          "context_bytes": 304,
+          "payload_bytes": 1228,
+          "thinking_enabled": false
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "3e34019df7a545938f9f1796b1604438",
+    "created_at": "2026-10-26T02:51:32.656496+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_remains_compatib0\\repo",
+    "payload": {
+      "run_id": "55b92b267a0f48a194ed087a72855e89",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "risk",
+          "description": "The scan source is a temporary repository path, which may not be representative of the actual production or target environment."
+        },
+        {
+          "type": "risk",
+          "description": "No requirements or risks have been explicitly defined, leading to a lack of context for assessing the scan's relevance and scope."
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "C:\\Users\\epidater\\AppData\\Local\\Temp\\pytest-of-epidater\\pytest-17\\test_run_scan_remains_compatib0\\repo"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        },
+        {
+          "type": "coverage",
+          "description": "The scan context lacks defined requirements, making it impossible to evaluate if the scan covers all necessary areas."
+        },
+        {
+          "type": "coverage",
+          "description": "No discovered scenarios or requested scenarios are provided, which limits the ability to assess the scan's completeness and alignment with business needs."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_completed",
+          "provider": "ollama",
+          "model": "qwen3:8b",
+          "duration_ms": 53841,
+          "context_bytes": 304,
+          "payload_bytes": 1228,
+          "thinking_enabled": false,
+          "prompt_eval_count": 192,
+          "eval_count": 180,
+          "ollama_total_duration_ms": 53797
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "b06b097868ef4d93ac868151fa39800d",
+    "created_at": "2026-10-26T02:52:26.647579+00:00"
+  },
+  {
+    "namespace": "scan",
+    "subject": "https://github.com/Ch1405041C0/Breackers.co",
+    "payload": {
+      "run_id": "bc470e46af1c4963b7c212b5dcacbfab",
+      "cycle": 3,
+      "findings": [
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        },
+        {
+          "type": "evidence",
+          "value": {
+            "type": "scan_source",
+            "value": {
+              "type": "repository",
+              "target": "https://github.com/Ch1405041C0/Breackers.co",
+              "workspace": "temporary_clone",
+              "commit_sha": "e08017e43f64b556cd5a2e72b3a1bb3c0117699b"
+            }
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "type": "missing_requirements",
+          "message": "No explicit requirements were supplied."
+        }
+      ],
+      "decisions": [
+        {
+          "type": "ai_analysis_failed",
+          "provider": "ollama",
+          "model": "qwen3:8b",
+          "error": "Unterminated string starting at: line 29 column 22 (char 1198)",
+          "error_type": "JSONDecodeError",
+          "duration_ms": 118616,
+          "context_bytes": 326,
+          "payload_bytes": 1240,
+          "thinking_enabled": false
+        }
+      ],
+      "completed_reason": "max_cycles_reached"
+    },
+    "record_id": "959f147e37c244c5bc75c935af2070ac",
+    "created_at": "2026-10-27T19:36:04.846810+00:00"
+  }
+]

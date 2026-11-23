@@ -1,6 +1,12 @@
 import os
 
+import pytest
 
+
+@pytest.mark.skipif(
+    not os.getenv("BREAKERS_TARGET_URL"),
+    reason="BREAKERS_TARGET_URL is required for the deployed demo gate",
+)
 def test_hotfix_can_save(page):
     target = os.environ["BREAKERS_TARGET_URL"]
     page.goto(target)

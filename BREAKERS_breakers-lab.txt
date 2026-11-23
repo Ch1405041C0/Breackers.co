@@ -1,0 +1,16 @@
+﻿BREAKERS CO · RESUMEN DE PROYECTO
+
+Proyecto: breakers-lab
+Tipo: Aplicación web
+Producto a explorar: SCAN
+Momento: En desarrollo
+Evidencia disponible: Varias de las anteriores
+
+Problema y objetivo:
+ver si tengo algun bug
+
+Primer paso propuesto:
+Reunir las reglas del flujo, su documentación y las dudas que impiden evaluar el riesgo.
+
+Estado: resumen preparado por el usuario. No constituye un diagnóstico ni una prueba ejecutada.
+No se envió información desde este formulario.
